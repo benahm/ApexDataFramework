@@ -63,6 +63,10 @@ public class QB {
 		return new Field(name).op(operator,fieldValue);
 	}
 
+	public static FieldCriteria fieldExpr(String name, Op operator, List<String> fieldValues){
+		return new Field(name).op(operator,fieldValues);
+	}
+
 	public String toSOQL(){
 		//TODO
 		return null;
@@ -92,7 +96,7 @@ public class QB {
 		}
 
 		public override String toString(){
-			return 'NOT '+criteria.toString();
+			return 'NOT ('+criteria.toString()+')';
 		}
 	}
 
@@ -321,7 +325,7 @@ public class QB {
 				if(operator == Op.EQ){
 					return fieldName+' IN (\''+String.join(fieldValues,'\',\'')+'\')';
 				} else if(this.operator == Op.NE){
-					return fieldName+' NOT IN ('+String.join(fieldValues,',')+')';
+					return fieldName+' NOT IN (\''+String.join(fieldValues,'\',\'')+'\')';
 				} else {
 					throw new CriteriaException('Only the operators EQUAL & NOTEQUAL can handle a list of values');
 				}
