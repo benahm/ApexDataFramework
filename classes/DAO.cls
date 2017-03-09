@@ -1,7 +1,7 @@
 /**
 * @author benahm
 * @date 2017
-* @description QueryBuilder class
+* @description DAO Class
 */
 public with sharing class DAO {
 
