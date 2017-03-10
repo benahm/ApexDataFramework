@@ -20,7 +20,7 @@ public class QB {
 	* @param Criteria
 	* @return NotCriteria 
 	*/
-	public static NotCriteria not_x(INT_Criteria ctr){
+	public static NotCriteria not_x(ICriteria ctr){
 		return new NotCriteria(ctr) ;
 	}
 
@@ -30,7 +30,7 @@ public class QB {
 	* @param ctr2 : the second criteria
 	* @return AndCriteria
 	*/
-	public static AndCriteria and_x(INT_Criteria ctr1, INT_Criteria ctr2){
+	public static AndCriteria and_x(ICriteria ctr1, ICriteria ctr2){
 		return new AndCriteria(ctr1,ctr2);
 	}
 
@@ -40,7 +40,7 @@ public class QB {
 	* @param ctr2 : the second criteria
 	* @return OrCriteria
 	*/
-	public static INT_Criteria or_x(INT_Criteria ctr1, INT_Criteria ctr2){
+	public static ICriteria or_x(ICriteria ctr1, ICriteria ctr2){
 		return null;
 	}
 
@@ -67,31 +67,69 @@ public class QB {
 		return new Field(name).op(operator,fieldValues);
 	}
 
+	public static AggregateFunction count(){
+		return null;
+	}
+
+	public static AggregateFunction count(String fieldName){
+		return null;
+	}
+
+	public static AggregateFunction count_distinct(){
+		return null;
+	}
+
+	public static AggregateFunction avg(){
+		return null;
+	}
+
+	public static AggregateFunction min(){
+		return null;
+	}
+
+	public static AggregateFunction max(){
+		return null;
+	}
+
+	public static AggregateFunction sum(){
+		return null;
+	}
+
+	public static SelectClause select_x(String fieldName){
+		return new SelectClause(fieldName);
+	}
+	public static SelectClause select_x(List<String> fieldNames){
+		return new SelectClause(fieldNames);
+	}
+
+	public static SelectClause select_x(AggregateFunction aggrFunc){
+		return null;
+	}
+
 	public String toSOQL(){
 		//TODO
 		return null;
 	}
 
-	public class Query {
-		//TODO
-	}
+
+
 
 
 	/**
 	* @description Criteria interface
 	*/
-	public interface INT_Criteria{
+	public interface ICriteria{
 		String toString();
 	}
 
 	/**
 	* @description NotCriteria : NOT applied to a criteria
 	*/
-	public class NotCriteria implements INT_Criteria {
+	public class NotCriteria implements ICriteria {
 
-		public INT_Criteria criteria;
+		public ICriteria criteria;
 
-		public NotCriteria(INT_Criteria criteria){
+		public NotCriteria(ICriteria criteria){
 			this.criteria=criteria;
 		}
 
@@ -104,12 +142,12 @@ public class QB {
 	* @description NaryCriteria : Abstract class for operations that can be
 	* 							  applied to multiple criterias
 	*/
-	public abstract class NaryCriteria implements INT_Criteria {
+	public abstract class NaryCriteria implements ICriteria {
 		public abstract String getOperator();
-		public abstract List<INT_Criteria> getListCriterias();
+		public abstract List<ICriteria> getListCriterias();
 		public abstract NaryCriteria getInstance();
 
-		public NaryCriteria add(INT_Criteria ctr){
+		public NaryCriteria add(ICriteria ctr){
 			getListCriterias().add(ctr);
 			return getInstance();
 		}
@@ -117,8 +155,8 @@ public class QB {
 		public override String toString(){
 			String result='';
 
-			for(INT_Criteria ctr:getListCriterias()){
-				result+='('+ctr.toString()+')'+' '+getOperator()+' ';
+			for(ICriteria ctr:getListCriterias()){
+				result+='('+ctr+')'+' '+getOperator()+' ';
 			}
 			return result.removeEnd(' '+getOperator()+' ');
 		}
@@ -129,18 +167,18 @@ public class QB {
 	* @description AndCriteria : AND applied to multiple criterias
 	*/
 	public class AndCriteria extends NaryCriteria {
-		private List<INT_Criteria> listCriterias;
+		private List<ICriteria> listCriterias;
 		private final String operator ='OR';
 
-		public AndCriteria(INT_Criteria ctr1, INT_Criteria ctr2){
-			this.listCriterias=new List<INT_Criteria>{ctr1,ctr2};
+		public AndCriteria(ICriteria ctr1, ICriteria ctr2){
+			this.listCriterias=new List<ICriteria>{ctr1,ctr2};
 		}
 
 		public override String getOperator(){
 			return operator;
 		}
 
-		public override List<INT_Criteria> getListCriterias(){
+		public override List<ICriteria> getListCriterias(){
 			return listCriterias;
 		}
 
@@ -154,18 +192,18 @@ public class QB {
 	* @description AndCriteria : OR applied to multiple criterias
 	*/
 	public class OrCriteria extends NaryCriteria {
-		private List<INT_Criteria> listCriterias;
+		private List<ICriteria> listCriterias;
 		private final String operator ='OR';
 
-		public OrCriteria(INT_Criteria ctr1, INT_Criteria ctr2){
-			this.listCriterias=new List<INT_Criteria>{ctr1,ctr2};
+		public OrCriteria(ICriteria ctr1, ICriteria ctr2){
+			this.listCriterias=new List<ICriteria>{ctr1,ctr2};
 		}
 
 		public override String getOperator(){
 			return operator;
 		}
 
-		public override List<INT_Criteria> getListCriterias(){
+		public override List<ICriteria> getListCriterias(){
 			return listCriterias;
 		}
 
@@ -176,9 +214,9 @@ public class QB {
 	}
 
 	/**
-	* @description INT_Field : Interface for the field wrapper
+	* @description IField : Interface for the field wrapper
 	*/
-	public interface INT_Field {
+	public interface IField {
 		// equal to
 		FieldCriteria eq(String fieldValue);
 		FieldCriteria eq(List<String> fieldValues);
@@ -216,7 +254,7 @@ public class QB {
 	/**
 	* @description Field : field wrapper
 	*/
-	public class Field implements INT_Field {
+	public class Field implements IField {
 
 		private final String fieldName;
 		private Op operator;
@@ -356,7 +394,7 @@ public class QB {
 	/**
 	* @description FieldCriteria : field criteria
 	*/
-	public class FieldCriteria implements INT_Criteria {
+	public class FieldCriteria implements ICriteria {
 		private String value;
 		public FieldCriteria(String value){
 			this.value = value;
@@ -366,9 +404,167 @@ public class QB {
 		}
 	}
 
-	public interface WhereOption{
-		//TODO
+	public interface IWhereOption{
+
 	}
+
+	public interface IQuery{
+
+	}
+
+	/**
+	* @description SelectClause : select clause
+	*/
+	public class SelectClause {
+		private List<String> selectedFields;
+
+		public SelectClause(String fieldName){
+			this(new List<String>{fieldName});
+		}
+
+		public SelectClause(List<String> fieldNames){
+			this.selectedFields=new List<String>(fieldNames);
+		}
+
+		public SelectQuery from_x(String sObjectName){
+			return new SelectQuery(sObjectName,this);
+		}
+
+		public override String toString(){
+			return 'SELECT '+String.join(selectedFields,',')+' ';
+		}
+	}
+
+	/**
+	* @description SelectQuery : select query without a where clause
+	*/
+	public class SelectQuery  implements IQuery{
+		private String sObjectName;
+		private SelectClause sClause;
+
+		public SelectQuery(String sObjectName, SelectClause sClause){
+			this.sObjectName=sObjectName;
+			this.sClause=sClause;
+		}
+
+		public SelectWhereQuery where_x(ICriteria ctr){
+			return new SelectWhereQuery(ctr,this);
+		}
+
+		public override String toString(){
+			return sClause+'FROM '+sObjectName+' ';
+		}
+	}
+
+	/**
+	* @description SelectWhereQuery : select query with a where clause
+	*/
+	public class SelectWhereQuery implements IQuery{
+		private ICriteria ctr;
+		private SelectQuery sQuery;
+
+		public SelectWhereQuery(ICriteria ctr, SelectQuery sQuery){
+			this.ctr=ctr;
+			this.sQuery=sQuery;
+		}
+
+		public OrderByWhereOption orderBy(String orderByField){
+			return new OrderByWhereOption(orderByField,toString());
+		}
+
+		public OrderByWhereOption orderBy(List<String> orderByFields){
+			return new OrderByWhereOption(orderByFields,toString());
+		}
+
+		public override String toString(){
+			return sQuery+'WHERE '+ctr+' ';
+		}
+	}
+
+	/**
+	* @description OrderByWhereOption : Order By option of the where clause
+	*/
+	public class OrderByWhereOption implements IWhereOption,IQuery{
+		private List<String> orderByFields;
+		private String swQuery;
+
+		public OrderByWhereOption(String orderByField,String swQuery){
+			this(new List<String>{orderByField},swQuery);
+		}
+
+		public OrderByWhereOption(List<String> orderByFields,String swQuery){
+			this.orderByFields=new List<String>(orderByFields);
+			this.swQuery=swQuery;
+		}
+
+		public LimitWhereOption limitTo(Integer lmt){
+			return new LimitWhereOption(lmt,toString());
+		}
+
+		public OffsetWhereOption offset(Integer ofst){
+			return new OffsetWhereOption(ofst,toString());
+		}
+
+		public override String toString(){
+			return swQuery+'ORDER BY '+String.join(orderByFields, ',')+' ';
+		}
+	}
+
+	/**
+	* @description LimitWhereOption : Limit option of the where clause
+	*/
+	public class LimitWhereOption implements IWhereOption,IQuery{
+		private Integer lmt;
+		private String swQuery;
+
+		public LimitWhereOption(Integer lmt,String swQuery){
+			this.lmt=lmt;
+			this.swQuery=swQuery;
+		}
+
+		public OffsetWhereOption offset(Integer ofst){
+			return new OffsetWhereOption(ofst,toString());
+		}
+
+		public override String toString(){
+			return swQuery+'LIMIT '+lmt+' ';
+		}
+	}
+
+	/**
+	* @description OffsetWhereOption : Offset option of the where clause
+	*/
+	public class OffsetWhereOption implements IWhereOption,IQuery{
+		private Integer ofst;
+		private String swQuery;
+
+		public OffsetWhereOption(Integer ofst, String swQuery){
+			this.ofst=ofst;
+			this.swQuery=swQuery;
+		}
+
+		public override String toString(){
+			return swQuery+'OFFSET '+ofst+' ';
+		}
+	}
+
+	/**
+	* @description AggregateFunction : aggregate function
+	*/
+	public class AggregateFunction {
+		private String functionType;
+		private String fieldName;
+
+		public AggregateFunction(String functionType){
+			this(functionType,null);
+		}
+
+		public AggregateFunction(String functionType, String fieldName){
+			this.functionType=functionType;
+			this.fieldName=fieldName;
+		}
+	}
+
 
 	// Exceptions
 	public class CriteriaException extends Exception {}
