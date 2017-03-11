@@ -41,7 +41,7 @@ public class QB {
 	* @return OrCriteria
 	*/
 	public static ICriteria or_x(ICriteria ctr1, ICriteria ctr2){
-		return null;
+		return new OrCriteria(ctr1,ctr2);
 	}
 
 	/**
@@ -68,31 +68,31 @@ public class QB {
 	}
 
 	public static AggregateFunction count(){
-		return null;
+		return new AggregateFunction('COUNT');
 	}
 
 	public static AggregateFunction count(String fieldName){
-		return null;
+		return new AggregateFunction('COUNT',fieldName);
 	}
 
 	public static AggregateFunction count_distinct(){
-		return null;
+		return new AggregateFunction('COUNT_DISTINCT');
 	}
 
 	public static AggregateFunction avg(){
-		return null;
+		return new AggregateFunction('AVG');
 	}
 
 	public static AggregateFunction min(){
-		return null;
+		return new AggregateFunction('MIN');
 	}
 
 	public static AggregateFunction max(){
-		return null;
+		return new AggregateFunction('MAX');
 	}
 
 	public static AggregateFunction sum(){
-		return null;
+		return new AggregateFunction('SUM');
 	}
 
 	public static SelectClause select_x(String fieldName){
@@ -103,14 +103,8 @@ public class QB {
 	}
 
 	public static SelectClause select_x(AggregateFunction aggrFunc){
-		return null;
+		return new SelectClause(aggrFunc);
 	}
-
-	public String toSOQL(){
-		//TODO
-		return null;
-	}
-
 
 
 
@@ -120,6 +114,58 @@ public class QB {
 	*/
 	public interface ICriteria{
 		String toString();
+	}
+
+		/**
+	* @description IField : Interface for the field wrapper
+	*/
+	public interface IField {
+		// equal to
+		FieldCriteria eq(String fieldValue);
+		FieldCriteria eq(List<String> fieldValues);
+		FieldCriteria equal(String fieldValue);
+		FieldCriteria equal(List<String> fieldValues);
+
+		// not equal to
+		FieldCriteria ne(String fieldValue);
+		FieldCriteria ne(List<String> fieldValues);
+		FieldCriteria notEqual(String fieldValue);
+		FieldCriteria notEqual(List<String> fieldValues);
+		
+		// greater than
+		FieldCriteria gt(String fieldValue);
+		FieldCriteria greaterThan(String fieldValue);
+
+		// less than
+		FieldCriteria lt(String fieldValue);
+		FieldCriteria lessThan(String fieldValue);
+
+		// greater than or equal to
+		FieldCriteria ge(String fieldValue);
+		FieldCriteria greaterOrEqual(String fieldValue);
+
+		// less than or equal to
+		FieldCriteria le(String fieldValue);
+		FieldCriteria lessOrEqual(String fieldValue);
+
+		// like 
+		FieldCriteria lk(String fieldValue);
+		FieldCriteria isLike(String fieldValue);
+
+	}
+
+	/**
+	* @description IWhereOption : a where option
+	*/
+	public interface IWhereOption{
+
+	}
+
+	/**
+	* @description IQuery : a valide query
+	*/
+	public interface IQuery{
+
 	}
 
 	/**
@@ -213,43 +259,6 @@ public class QB {
 
 	}
 
-	/**
-	* @description IField : Interface for the field wrapper
-	*/
-	public interface IField {
-		// equal to
-		FieldCriteria eq(String fieldValue);
-		FieldCriteria eq(List<String> fieldValues);
-		FieldCriteria equal(String fieldValue);
-		FieldCriteria equal(List<String> fieldValues);
-
-		// not equal to
-		FieldCriteria ne(String fieldValue);
-		FieldCriteria ne(List<String> fieldValues);
-		FieldCriteria notEqual(String fieldValue);
-		FieldCriteria notEqual(List<String> fieldValues);
-		
-		// greater than
-		FieldCriteria gt(String fieldValue);
-		FieldCriteria greaterThan(String fieldValue);
-
-		// less than
-		FieldCriteria lt(String fieldValue);
-		FieldCriteria lessThan(String fieldValue);
-
-		// greater than or equal to
-		FieldCriteria ge(String fieldValue);
-		FieldCriteria greaterOrEqual(String fieldValue);
-
-		// less than or equal to
-		FieldCriteria le(String fieldValue);
-		FieldCriteria lessOrEqual(String fieldValue);
-
-		// like 
-		FieldCriteria lk(String fieldValue);
-		FieldCriteria isLike(String fieldValue);
-
-	}
 
 	/**
 	* @description Field : field wrapper
@@ -404,19 +413,15 @@ public class QB {
 		}
 	}
 
-	public interface IWhereOption{
 
-	}
-
-	public interface IQuery{
-
-	}
 
 	/**
 	* @description SelectClause : select clause
 	*/
 	public class SelectClause {
 		private List<String> selectedFields;
+		private List<IQuery> subQueries;
+		private AggregateFunction aggrFunc;
 
 		public SelectClause(String fieldName){
 			this(new List<String>{fieldName});
@@ -424,6 +429,26 @@ public class QB {
 
 		public SelectClause(List<String> fieldNames){
 			this.selectedFields=new List<String>(fieldNames);
+			this.subQueries=new List<IQuery>();
+		}
+
+		public SelectClause(AggregateFunction aggrFunc){
+			this(aggrFunc,new List<String>());
+		}
+
+		public SelectClause(AggregateFunction aggrFunc, String fieldName){
+			this(aggrFunc,new List<String>{fieldName});
+		}
+
+		public SelectClause(AggregateFunction aggrFunc, List<String> fieldNames){
+			this.selectedFields=new List<String>(fieldNames);
+			this.subQueries=new List<IQuery>();
+			this.aggrFunc=aggrFunc;
+		}
+
+		public SelectClause addSubQuery(IQuery query){
+			this.subQueries.add(query);
+			return this;
 		}
 
 		public SelectQuery from_x(String sObjectName){
@@ -431,7 +456,22 @@ public class QB {
 		}
 
 		public override String toString(){
-			return 'SELECT '+String.join(selectedFields,',')+' ';
+			String result='SELECT ';
+			if(aggrFunc!=null) result+=aggrFunc;
+			if(!selectedFields.isEmpty()) 
+				result+=String.join(selectedFields,',');
+			if(!subQueries.isEmpty())
+				result+=','+subQueriesToString(subQueries);
+
+			return result+' ';
+		}
+
+		private String subQueriesToString(List<IQuery> subQueries){
+			String result='';
+			for(IQuery subQuery: subQueries){
+				result+='( '+subQuery+'),';
+			}
+			return result.removeEnd(',');
 		}
 	}
 
@@ -562,6 +602,12 @@ public class QB {
 		public AggregateFunction(String functionType, String fieldName){
 			this.functionType=functionType;
 			this.fieldName=fieldName;
+		}
+
+		public override String toString(){
+			if(fieldName==null)
+				return functionType+'()';
+			else return functionType+'('+fieldName+')';
 		}
 	}
 
