@@ -5,7 +5,6 @@
 */
 public class QB {
 
-	private String sObjectName;
 	public enum Op {EQ,	EQUAL,
 					NE, NOTEQUAL,
 					GT, GREATERTHAN,
@@ -17,7 +16,7 @@ public class QB {
 
 	/**
 	* @description apply the logical operator NOT to a criteria
-	* @param Criteria
+	* @param ctr : Criteria
 	* @return NotCriteria 
 	*/
 	public static NotCriteria not_x(ICriteria ctr){
@@ -75,8 +74,8 @@ public class QB {
 		return new AggregateFunction('COUNT',fieldName);
 	}
 
-	public static AggregateFunction count_distinct(){
-		return new AggregateFunction('COUNT_DISTINCT');
+	public static AggregateFunction count_distinct(String fieldName){
+		return new AggregateFunction('COUNT_DISTINCT',fieldName);
 	}
 
 	public static AggregateFunction avg(){
@@ -96,28 +95,34 @@ public class QB {
 	}
 
 	public static SelectClause select_x(String fieldName){
-		return new SelectClause(fieldName);
+		return new SelectFieldsClause(fieldName);
 	}
 	public static SelectClause select_x(List<String> fieldNames){
-		return new SelectClause(fieldNames);
+		return new SelectFieldsClause(fieldNames);
 	}
 
 	public static SelectClause select_x(AggregateFunction aggrFunc){
-		return new SelectClause(aggrFunc);
+		return new SelectAggregateClause(aggrFunc);
+	}
+
+	public static SelectClause select_x(AggregateFunction aggrFunc, String fieldName){
+		return new SelectAggregateClause(aggrFunc,fieldName);
+	}
+
+	public static SelectClause select_x(AggregateFunction aggrFunc, List<String> fieldNames){
+		return new SelectAggregateClause(aggrFunc,fieldNames);
 	}
 
 
-
-
 	/**
-	* @description Criteria interface
+	* @description ICriteria : interface for a criteria
 	*/
 	public interface ICriteria{
 		String toString();
 	}
 
-		/**
-	* @description IField : Interface for the field wrapper
+	/**
+	* @description IField : interface for the field wrapper
 	*/
 	public interface IField {
 		// equal to
@@ -157,15 +162,14 @@ public class QB {
 	/**
 	* @description IWhereOption : a where option
 	*/
-	public interface IWhereOption{
-
-	}
+	public interface IWhereOption{}
 
 	/**
 	* @description IQuery : a valide query
 	*/
 	public interface IQuery{
-
+		List<SObject> getList();
+		Map<Id, SObject> getMap();
 	}
 
 	/**
@@ -414,50 +418,42 @@ public class QB {
 	}
 
 
-
 	/**
 	* @description SelectClause : select clause
 	*/
-	public class SelectClause {
-		private List<String> selectedFields;
-		private List<IQuery> subQueries;
-		private AggregateFunction aggrFunc;
+	public abstract class SelectClause {
 
-		public SelectClause(String fieldName){
-			this(new List<String>{fieldName});
-		}
-
-		public SelectClause(List<String> fieldNames){
-			this.selectedFields=new List<String>(fieldNames);
-			this.subQueries=new List<IQuery>();
-		}
-
-		public SelectClause(AggregateFunction aggrFunc){
-			this(aggrFunc,new List<String>());
-		}
-
-		public SelectClause(AggregateFunction aggrFunc, String fieldName){
-			this(aggrFunc,new List<String>{fieldName});
-		}
-
-		public SelectClause(AggregateFunction aggrFunc, List<String> fieldNames){
-			this.selectedFields=new List<String>(fieldNames);
-			this.subQueries=new List<IQuery>();
-			this.aggrFunc=aggrFunc;
-		}
-
-		public SelectClause addSubQuery(IQuery query){
-			this.subQueries.add(query);
-			return this;
-		}
+		public abstract SelectClause addSubQuery(IQuery query);
 
 		public SelectQuery from_x(String sObjectName){
 			return new SelectQuery(sObjectName,this);
 		}
 
+	}
+
+	/**
+	* @description SelectFieldsClause : select fields clause
+	*/
+	public class SelectFieldsClause extends SelectClause {
+		private List<String> selectedFields;
+		private List<IQuery> subQueries;
+
+		public SelectFieldsClause(String fieldName){
+			this(new List<String>{fieldName});
+		}
+
+		public SelectFieldsClause(List<String> fieldNames){
+			this.selectedFields=new List<String>(fieldNames);
+			this.subQueries=new List<IQuery>();
+		}
+
+		public override SelectClause addSubQuery(IQuery query){
+			this.subQueries.add(query);
+			return this;
+		}
+
 		public override String toString(){
 			String result='SELECT ';
-			if(aggrFunc!=null) result+=aggrFunc;
 			if(!selectedFields.isEmpty()) 
 				result+=String.join(selectedFields,',');
 			if(!subQueries.isEmpty())
@@ -473,7 +469,44 @@ public class QB {
 			}
 			return result.removeEnd(',');
 		}
+
 	}
+
+	/**
+	* @description SelectAggregateClause : select aggregate clause
+	*/
+	public class SelectAggregateClause extends SelectClause {
+		private List<String> selectedFields;
+		private AggregateFunction aggrFunc;
+
+		public SelectAggregateClause(AggregateFunction aggrFunc){
+			this(aggrFunc,new List<String>());
+		}
+
+		public SelectAggregateClause(AggregateFunction aggrFunc, String fieldName){
+			this(aggrFunc,new List<String>{fieldName});
+		}
+
+		public SelectAggregateClause(AggregateFunction aggrFunc, List<String> fieldNames){
+			this.selectedFields=new List<String>(fieldNames);
+			this.aggrFunc=aggrFunc;
+		}
+
+		public override SelectClause addSubQuery(IQuery query){
+			throw new QueryException('You can\'t add a sub query to aggregate clause');
+		}
+
+		public override String toString(){
+			String result='SELECT ';
+			if(aggrFunc!=null) result+=aggrFunc;
+			if(!selectedFields.isEmpty()) 
+				result+=String.join(selectedFields,',');
+
+			return result+' ';
+		}
+
+	}
+
 
 	/**
 	* @description SelectQuery : select query without a where clause
@@ -493,6 +526,14 @@ public class QB {
 
 		public override String toString(){
 			return sClause+'FROM '+sObjectName+' ';
+		}
+
+		public List<SObject> getList(){
+			return null;
+		}
+
+		public map<Id,SObject> getMap(){
+			return null;
 		}
 	}
 
@@ -519,6 +560,15 @@ public class QB {
 		public override String toString(){
 			return sQuery+'WHERE '+ctr+' ';
 		}
+
+		public List<SObject> getList(){
+			return null;
+		}
+
+		public map<Id,SObject> getMap(){
+			return null;
+		}
+
 	}
 
 	/**
@@ -548,6 +598,15 @@ public class QB {
 		public override String toString(){
 			return swQuery+'ORDER BY '+String.join(orderByFields, ',')+' ';
 		}
+
+		public List<SObject> getList(){
+			return null;
+		}
+
+		public map<Id,SObject> getMap(){
+			return null;
+		}
+
 	}
 
 	/**
@@ -569,6 +628,15 @@ public class QB {
 		public override String toString(){
 			return swQuery+'LIMIT '+lmt+' ';
 		}
+
+		public List<SObject> getList(){
+			return null;
+		}
+
+		public map<Id,SObject> getMap(){
+			return null;
+		}
+
 	}
 
 	/**
@@ -585,6 +653,14 @@ public class QB {
 
 		public override String toString(){
 			return swQuery+'OFFSET '+ofst+' ';
+		}
+
+		public List<SObject> getList(){
+			return null;
+		}
+
+		public map<Id,SObject> getMap(){
+			return null;
 		}
 	}
 
@@ -611,8 +687,15 @@ public class QB {
 		}
 	}
 
+	/**
+	* @description Validator : all validating methods
+	*/
+	public class Validator {
+
+	}
 
 	// Exceptions
+	public class QueryException extends Exception {}
 	public class CriteriaException extends Exception {}
 
 }
