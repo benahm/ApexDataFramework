@@ -1,4 +1,15 @@
 /**
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ *  ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES 
+ *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL 
+ *  THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, 
+ *  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ *  OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+ *  OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+**/
+
+/**
 * @author benahm
 * @date 2017
 * @description QueryBuilder class
@@ -44,7 +55,7 @@ public class QB {
 	}
 
 	/**
-	* @description Wrap a field
+	* @description wrap a field
 	* @param name : field name
 	* @return Field
 	*/
@@ -66,56 +77,87 @@ public class QB {
 		return new Field(name).op(operator,fieldValues);
 	}
 
+	/**
+	* @description count aggregate function
+	* @return AggregateFunction
+	*/
 	public static AggregateFunction count(){
 		return new AggregateFunction('COUNT');
 	}
-
 	public static AggregateFunction count(String fieldName){
 		return new AggregateFunction('COUNT',fieldName);
 	}
 
+	/**
+	* @description count_distinct aggregate function
+	* @return AggregateFunction
+	*/
 	public static AggregateFunction count_distinct(String fieldName){
 		return new AggregateFunction('COUNT_DISTINCT',fieldName);
 	}
 
+	/**
+	* @description avg aggregate function
+	* @return AggregateFunction
+	*/
 	public static AggregateFunction avg(){
 		return new AggregateFunction('AVG');
 	}
 
+	/**
+	* @description min aggregate function
+	* @return AggregateFunction
+	*/
 	public static AggregateFunction min(){
 		return new AggregateFunction('MIN');
 	}
 
+	/**
+	* @description max aggregate function
+	* @return AggregateFunction
+	*/
 	public static AggregateFunction max(){
 		return new AggregateFunction('MAX');
 	}
 
+	/**
+	* @description sum aggregate function
+	* @return AggregateFunction
+	*/
 	public static AggregateFunction sum(){
 		return new AggregateFunction('SUM');
 	}
 
+	/**
+	* @description select clause
+	* @return AggregateFunction
+	*/	
 	public static SelectClause select_x(String fieldName){
 		return new SelectFieldsClause(fieldName);
 	}
 	public static SelectClause select_x(List<String> fieldNames){
 		return new SelectFieldsClause(fieldNames);
 	}
-
 	public static SelectClause select_x(AggregateFunction aggrFunc){
 		return new SelectAggregateClause(aggrFunc);
 	}
-
 	public static SelectClause select_x(AggregateFunction aggrFunc, String fieldName){
 		return new SelectAggregateClause(aggrFunc,fieldName);
 	}
-
 	public static SelectClause select_x(AggregateFunction aggrFunc, List<String> fieldNames){
 		return new SelectAggregateClause(aggrFunc,fieldNames);
 	}
 
+	/**
+	* @description IQuery : a valide query
+	*/
+	public interface IQuery{
+		List<SObject> getList();
+		Map<Id, SObject> getMap();
+	}
 
 	/**
-	* @description ICriteria : interface for a criteria
+	* @description ICriteria : interface for a valide criteria
 	*/
 	public interface ICriteria{
 		String toString();
@@ -164,13 +206,6 @@ public class QB {
 	*/
 	public interface IWhereOption{}
 
-	/**
-	* @description IQuery : a valide query
-	*/
-	public interface IQuery{
-		List<SObject> getList();
-		Map<Id, SObject> getMap();
-	}
 
 	/**
 	* @description NotCriteria : NOT applied to a criteria
@@ -262,7 +297,6 @@ public class QB {
 		}
 
 	}
-
 
 	/**
 	* @description Field : field wrapper
@@ -428,7 +462,6 @@ public class QB {
 		public SelectQuery from_x(String sObjectName){
 			return new SelectQuery(sObjectName,this);
 		}
-
 	}
 
 	/**
@@ -606,7 +639,6 @@ public class QB {
 		public map<Id,SObject> getMap(){
 			return null;
 		}
-
 	}
 
 	/**
@@ -636,7 +668,6 @@ public class QB {
 		public map<Id,SObject> getMap(){
 			return null;
 		}
-
 	}
 
 	/**
