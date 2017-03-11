@@ -72,7 +72,6 @@ public class QB {
 	public static FieldCriteria fieldExpr(String name, Op operator, String fieldValue){
 		return new Field(name).op(operator,fieldValue);
 	}
-
 	public static FieldCriteria fieldExpr(String name, Op operator, List<String> fieldValues){
 		return new Field(name).op(operator,fieldValues);
 	}
@@ -322,7 +321,6 @@ public class QB {
 		public FieldCriteria op(Op operator, String fieldValue){
 			return handleOperator(operator,new List<String>{fieldValue});
 		}
-
 		public FieldCriteria op(Op operator, List<String> fieldValues){
 			return handleOperator(operator,fieldValues);
 		}
@@ -330,15 +328,12 @@ public class QB {
 		public FieldCriteria eq(String fieldValue){
 			return eq(new List<String>{fieldValue}); 
 		}
-
 		public FieldCriteria eq(List<String> fieldValues){
 			return handleOperator(Op.EQ,fieldValues);
 		}
-
 		public FieldCriteria equal(String fieldValue){
 			return eq(fieldValue);
 		}
-
 		public FieldCriteria equal(List<String> fieldValues){
 			return eq(fieldValues);
 		}
@@ -350,11 +345,9 @@ public class QB {
 		public FieldCriteria ne(List<String> fieldValues){
 			return handleOperator(Op.NE,fieldValues);	
 		}
-		
 		public FieldCriteria notEqual(String fieldValue){
 			return ne(fieldValue);
 		}
-		
 		public FieldCriteria notEqual(List<String> fieldValues){
 			return ne(fieldValues);
 		}
@@ -371,7 +364,6 @@ public class QB {
 		public FieldCriteria lt(String fieldValue){
 			return handleOperator(Op.LT,new List<String>{fieldValue});
 		}
-
 		public FieldCriteria lessThan(String fieldValue){
 			return lt(fieldValue);
 		}
@@ -443,9 +435,11 @@ public class QB {
 	*/
 	public class FieldCriteria implements ICriteria {
 		private String value;
+		
 		public FieldCriteria(String value){
 			this.value = value;
 		}
+
 		public override String toString(){
 			return value;
 		}
@@ -474,7 +468,6 @@ public class QB {
 		public SelectFieldsClause(String fieldName){
 			this(new List<String>{fieldName});
 		}
-
 		public SelectFieldsClause(List<String> fieldNames){
 			this.selectedFields=new List<String>(fieldNames);
 			this.subQueries=new List<IQuery>();
@@ -515,11 +508,9 @@ public class QB {
 		public SelectAggregateClause(AggregateFunction aggrFunc){
 			this(aggrFunc,new List<String>());
 		}
-
 		public SelectAggregateClause(AggregateFunction aggrFunc, String fieldName){
 			this(aggrFunc,new List<String>{fieldName});
 		}
-
 		public SelectAggregateClause(AggregateFunction aggrFunc, List<String> fieldNames){
 			this.selectedFields=new List<String>(fieldNames);
 			this.aggrFunc=aggrFunc;
@@ -585,7 +576,6 @@ public class QB {
 		public OrderByWhereOption orderBy(String orderByField){
 			return new OrderByWhereOption(orderByField,toString());
 		}
-
 		public OrderByWhereOption orderBy(List<String> orderByFields){
 			return new OrderByWhereOption(orderByFields,toString());
 		}
@@ -614,7 +604,6 @@ public class QB {
 		public OrderByWhereOption(String orderByField,String swQuery){
 			this(new List<String>{orderByField},swQuery);
 		}
-
 		public OrderByWhereOption(List<String> orderByFields,String swQuery){
 			this.orderByFields=new List<String>(orderByFields);
 			this.swQuery=swQuery;
@@ -705,7 +694,6 @@ public class QB {
 		public AggregateFunction(String functionType){
 			this(functionType,null);
 		}
-
 		public AggregateFunction(String functionType, String fieldName){
 			this.functionType=functionType;
 			this.fieldName=fieldName;
