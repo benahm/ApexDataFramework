@@ -17,6 +17,9 @@
 @isTest
 private class QBTest {
 	
+	/**
+	* @description Test Class for the QueryBuilder
+	*/
 	@isTest 
 	static void fieldCriteriaEqualTest() {
 		Test.startTest();
@@ -127,7 +130,14 @@ private class QBTest {
 	static void andCriteriaTest() {
 		Test.startTest();
 
-		// TODO
+		System.assertEquals('(Name = \'Value\') AND (Name != \'Value\')',
+							QB.and_x(QB.field('Name').eq('Value'),QB.field('Name').ne('Value')).toString());
+		System.assertEquals('(Name = \'Value\') AND (Name != \'Value\') AND (Name LIKE \'%Value%\')',
+							QB.and_x(QB.field('Name').eq('Value'),QB.field('Name').ne('Value'))
+							.add(QB.field('Name').lk('%Value%')).toString());
+		System.assertEquals('(Name IN (\'Value1\',\'Value2\')) AND (Name NOT IN (\'Value1\',\'Value2\')) AND (Name LIKE \'%Value%\')',
+							QB.and_x(QB.field('Name').eq(new List<String>{'Value1','Value2'}),QB.field('Name').ne(new List<String>{'Value1','Value2'}))
+							.add(QB.field('Name').lk('%Value%')).toString());
 
 		Test.stopTest();
 	}
@@ -136,7 +146,14 @@ private class QBTest {
 	static void orCriteriaTest() {
 		Test.startTest();
 
-		// TODO
+		System.assertEquals('(Name = \'Value\') OR (Name != \'Value\')',
+							QB.or_x(QB.field('Name').eq('Value'),QB.field('Name').ne('Value')).toString());
+		System.assertEquals('(Name = \'Value\') OR (Name != \'Value\') OR (Name LIKE \'%Value%\')',
+							QB.or_x(QB.field('Name').eq('Value'),QB.field('Name').ne('Value'))
+							.add(QB.field('Name').lk('%Value%')).toString());
+		System.assertEquals('(Name IN (\'Value1\',\'Value2\')) OR (Name NOT IN (\'Value1\',\'Value2\')) OR (Name LIKE \'%Value%\')',
+							QB.or_x(QB.field('Name').eq(new List<String>{'Value1','Value2'}),QB.field('Name').ne(new List<String>{'Value1','Value2'}))
+							.add(QB.field('Name').lk('%Value%')).toString());
 
 		Test.stopTest();
 	}

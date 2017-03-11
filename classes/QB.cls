@@ -50,7 +50,7 @@ public class QB {
 	* @param ctr2 : the second criteria
 	* @return OrCriteria
 	*/
-	public static ICriteria or_x(ICriteria ctr1, ICriteria ctr2){
+	public static OrCriteria or_x(ICriteria ctr1, ICriteria ctr2){
 		return new OrCriteria(ctr1,ctr2);
 	}
 
@@ -252,7 +252,7 @@ public class QB {
 	*/
 	public class AndCriteria extends NaryCriteria {
 		private List<ICriteria> listCriterias;
-		private final String operator ='OR';
+		private final String operator ='AND';
 
 		public AndCriteria(ICriteria ctr1, ICriteria ctr2){
 			this.listCriterias=new List<ICriteria>{ctr1,ctr2};
@@ -435,7 +435,7 @@ public class QB {
 	*/
 	public class FieldCriteria implements ICriteria {
 		private String value;
-		
+
 		public FieldCriteria(String value){
 			this.value = value;
 		}
