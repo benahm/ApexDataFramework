@@ -17,12 +17,12 @@
 public class QB {
 
 	public enum Op {EQ,	EQUAL,
-					NE, NOTEQUAL,
-					GT, GREATERTHAN,
-					LT, LESSTHAN,
-					GE, GREATEROREQUAL,
-					LE, LESSOREQUAL,
-					LK, ISLIKE}
+			NE, NOTEQUAL,
+			GT, GREATERTHAN,
+			LT, LESSTHAN,
+			GE, GREATEROREQUAL,
+			LE, LESSOREQUAL,
+			LK, ISLIKE}
 
 
 	/**
