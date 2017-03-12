@@ -15,7 +15,8 @@
 * @description Query Builder class
 */
 public class QB {
-
+	private static final Util util=new Util();
+	private static final ErrorMessage errMsg=new ErrorMessage();
 	public enum Op {EQ,	EQUAL,
 			NE, NOTEQUAL,
 			GT, GREATERTHAN,
@@ -147,6 +148,9 @@ public class QB {
 		return new SelectAggregateClause(aggrFunc,fieldNames);
 	}
 
+	/****************************************************************************/
+	/*						 			Interfaces								*/
+	/****************************************************************************/
 	/**
 	* @description IQuery : a valide query
 	*/
@@ -206,19 +210,23 @@ public class QB {
 	public interface IWhereOption{}
 
 
+
+	/****************************************************************************/
+	/*						 			Classes									*/
+	/****************************************************************************/
 	/**
 	* @description NotCriteria : NOT applied to a criteria
 	*/
 	public class NotCriteria implements ICriteria {
 
-		public ICriteria criteria;
+		public ICriteria ctr;
 
-		public NotCriteria(ICriteria criteria){
-			this.criteria=criteria;
+		public NotCriteria(ICriteria ctr){
+			this.ctr=ctr;
 		}
 
 		public override String toString(){
-			return 'NOT ('+criteria.toString()+')';
+			return 'NOT ('+ctr+')';
 		}
 	}
 
@@ -303,8 +311,6 @@ public class QB {
 	public class Field implements IField {
 
 		private final String fieldName;
-		private Op operator;
-		private List<String> fieldValues;
 
 		public Field(String fieldName){
 			// escape
@@ -312,10 +318,7 @@ public class QB {
 		}
 
 		private FieldCriteria handleOperator(Op operator,List<String> fieldValues){
-			this.operator=operator;
-			this.fieldValues=new List<String>();
-			this.fieldValues.addAll(fieldValues);
-			return new FieldCriteria(this.toString());
+			return new FieldCriteria(this,operator,fieldValues);
 		}
 
 		public FieldCriteria op(Op operator, String fieldValue){
@@ -325,6 +328,7 @@ public class QB {
 			return handleOperator(operator,fieldValues);
 		}
 
+		// equal to
 		public FieldCriteria eq(String fieldValue){
 			return eq(new List<String>{fieldValue}); 
 		}
@@ -393,16 +397,36 @@ public class QB {
 		}
 
 		public override String toString(){
-			if(fieldValues.isEmpty()) {
-				return fieldName;
-			}
+			return fieldName;
+		}
+
+	}
+
+	/**
+	* @description FieldCriteria : field criteria
+	*/
+	public class FieldCriteria implements ICriteria {
+		private Field field;
+		private Op operator;
+		private List<String> fieldValues;
+
+		public FieldCriteria(Field field,Op operator,List<String> fieldValues){
+			this.field=field;
+			this.operator=operator;
+			this.fieldValues = new List<String>(fieldValues);
+		}
+
+		public override String toString(){
+			if(fieldValues.isEmpty())
+				return field+'';
 
 			// Multiple values
 			if(fieldValues.size() > 1){
+				String joinedFieldValues=String.join(fieldValues,'\',\'');
 				if(operator == Op.EQ){
-					return fieldName+' IN (\''+String.join(fieldValues,'\',\'')+'\')';
+					return field+' IN (\''+joinedFieldValues+'\')';
 				} else if(this.operator == Op.NE){
-					return fieldName+' NOT IN (\''+String.join(fieldValues,'\',\'')+'\')';
+					return field+' NOT IN (\''+joinedFieldValues+'\')';
 				} else {
 					throw new CriteriaException('Only the operators EQUAL & NOTEQUAL can handle a list of values');
 				}
@@ -410,47 +434,15 @@ public class QB {
 
 			// Single value
 			String fieldValue=fieldValues.get(0);
-			String strOperator=getOperator(operator);
-			if(strOperator == null){
-				throw new CriteriaException('Unkown Operator');
-			} else {
-				return fieldName+' '+strOperator+' '+'\''+ fieldValue+'\'';
-			}
+			String strOperator=util.operatorToString(operator);
+			if(strOperator == null)
+				throw new CriteriaException(errMsg.unkownOperator);
+			else 
+				return field+' '+strOperator+' '+'\''+ fieldValue+'\'';
+
 		}
 
-		private String getOperator(Op operator){
-			if(operator == Op.EQ){
-				return '=';
-			} else if (operator == Op.NE){
-				return '!=';
-			} else if (operator == Op.GT){
-				return '>';
-			} else if (operator == Op.LT){
-				return '<';
-			} else if (operator == Op.GE){
-				return '>=';
-			} else if (operator == Op.LE){
-				return '<=';
-			} else if (operator == Op.LK){
-				return 'LIKE';
-			}
-			return null;
-		}
-	}
 
-	/**
-	* @description FieldCriteria : field criteria
-	*/
-	public class FieldCriteria implements ICriteria {
-		private String value;
-
-		public FieldCriteria(String value){
-			this.value = value;
-		}
-
-		public override String toString(){
-			return value;
-		}
 	}
 
 
@@ -491,17 +483,9 @@ public class QB {
 			if(!selectedFields.isEmpty()) 
 				result+=String.join(selectedFields,',');
 			if(!subQueries.isEmpty())
-				result+=','+subQueriesToString(subQueries);
+				result+=','+util.subQueriesToString(subQueries);
 
-			return result+' ';
-		}
-
-		private String subQueriesToString(List<IQuery> subQueries){
-			String result='';
-			for(IQuery subQuery: subQueries){
-				result+='( '+subQuery+'),';
-			}
-			return result.removeEnd(',');
+			return result;
 		}
 
 	}
@@ -534,7 +518,7 @@ public class QB {
 			if(!selectedFields.isEmpty()) 
 				result+=String.join(selectedFields,',');
 
-			return result+' ';
+			return result;
 		}
 
 	}
@@ -557,7 +541,7 @@ public class QB {
 		}
 
 		public override String toString(){
-			return sClause+'FROM '+sObjectName+' ';
+			return sClause+' FROM '+sObjectName;
 		}
 
 		public List<SObject> getList(){
@@ -581,15 +565,39 @@ public class QB {
 			this.sQuery=sQuery;
 		}
 
+		public GroupByWhereOption groupBy(String groupByField){
+			return new GroupByWhereOption(groupByField,this);
+		}
+
+		public GroupByWhereOption groupBy(List<String> groupByFields){
+			return new GroupByWhereOption(groupByFields,this);
+		}
+
+		public GroupByWhereOption groupBy(String groupByField, HavingCriteria havingCtr){
+			return new GroupByWhereOption(groupByField,havingCtr,this);
+		}
+
+		public GroupByWhereOption groupBy(List<String> groupByFields, HavingCriteria havingCtr){
+			return new GroupByWhereOption(groupByFields,havingCtr,this);
+		}
+
 		public OrderByWhereOption orderBy(String orderByField){
-			return new OrderByWhereOption(orderByField,toString());
+			return new OrderByWhereOption(orderByField,this);
 		}
 		public OrderByWhereOption orderBy(List<String> orderByFields){
-			return new OrderByWhereOption(orderByFields,toString());
+			return new OrderByWhereOption(orderByFields,this);
+		}
+
+		public LimitWhereOption limitTo(Integer lmt){
+			return new LimitWhereOption(lmt,this);
+		}
+
+		public OffsetWhereOption offset(Integer ofst){
+			return new OffsetWhereOption(ofst,this);
 		}
 
 		public override String toString(){
-			return sQuery+'WHERE '+ctr+' ';
+			return ' '+sQuery+' WHERE '+ctr;
 		}
 
 		public List<SObject> getList(){
@@ -603,30 +611,84 @@ public class QB {
 	}
 
 	/**
+	* @description GroupByWhereOption : Group By option of the where clause
+	*/
+	public class GroupByWhereOption implements IWhereOption,IQuery {
+		private List<String> groupByFields;
+		private HavingCriteria havingCtr;
+		private IQuery swQuery;
+
+		public GroupByWhereOption(String groupByField,IQuery swQuery){
+			this(new List<String>{groupByField},null,swQuery);
+		}
+
+		public GroupByWhereOption(List<String> groupByFields,IQuery swQuery){
+			this(groupByFields,null,swQuery);
+		}
+
+		public GroupByWhereOption(String groupByField,HavingCriteria havingCtr,IQuery swQuery){
+			this(new List<String>{groupByField},havingCtr,swQuery);
+		}
+
+		public GroupByWhereOption(List<String> groupByFields,HavingCriteria havingCtr,IQuery swQuery){
+			this.groupByFields=new List<String>(groupByFields);
+			this.havingCtr=havingCtr;
+			this.swQuery=swQuery;
+		}
+
+		public OrderByWhereOption orderBy(String orderByField){
+			return new OrderByWhereOption(orderByField,this);
+		}
+		public OrderByWhereOption orderBy(List<String> orderByFields){
+			return new OrderByWhereOption(orderByFields,this);
+		}
+
+		public LimitWhereOption limitTo(Integer lmt){
+			return new LimitWhereOption(lmt,this);
+		}
+
+		public OffsetWhereOption offset(Integer ofst){
+			return new OffsetWhereOption(ofst,this);
+		}
+
+		public override String toString(){
+			return swQuery+' GROUP BY '+String.join(groupByFields, ',')+' HAVING '+havingCtr;
+		}
+
+		public List<SObject> getList(){
+			return null;
+		}
+
+		public map<Id,SObject> getMap(){
+			return null;
+		}
+	}
+
+	/**
 	* @description OrderByWhereOption : Order By option of the where clause
 	*/
 	public class OrderByWhereOption implements IWhereOption,IQuery{
 		private List<String> orderByFields;
-		private String swQuery;
+		private IQuery swQuery;
 
-		public OrderByWhereOption(String orderByField,String swQuery){
+		public OrderByWhereOption(String orderByField,IQuery swQuery){
 			this(new List<String>{orderByField},swQuery);
 		}
-		public OrderByWhereOption(List<String> orderByFields,String swQuery){
+		public OrderByWhereOption(List<String> orderByFields,IQuery swQuery){
 			this.orderByFields=new List<String>(orderByFields);
 			this.swQuery=swQuery;
 		}
 
 		public LimitWhereOption limitTo(Integer lmt){
-			return new LimitWhereOption(lmt,toString());
+			return new LimitWhereOption(lmt,this);
 		}
 
 		public OffsetWhereOption offset(Integer ofst){
-			return new OffsetWhereOption(ofst,toString());
+			return new OffsetWhereOption(ofst,this);
 		}
 
 		public override String toString(){
-			return swQuery+'ORDER BY '+String.join(orderByFields, ',')+' ';
+			return swQuery+' ORDER BY '+String.join(orderByFields, ',');
 		}
 
 		public List<SObject> getList(){
@@ -643,19 +705,19 @@ public class QB {
 	*/
 	public class LimitWhereOption implements IWhereOption,IQuery{
 		private Integer lmt;
-		private String swQuery;
+		private IQuery swQuery;
 
-		public LimitWhereOption(Integer lmt,String swQuery){
+		public LimitWhereOption(Integer lmt,IQuery swQuery){
 			this.lmt=lmt;
 			this.swQuery=swQuery;
 		}
 
 		public OffsetWhereOption offset(Integer ofst){
-			return new OffsetWhereOption(ofst,toString());
+			return new OffsetWhereOption(ofst,this);
 		}
 
 		public override String toString(){
-			return swQuery+'LIMIT '+lmt+' ';
+			return swQuery+' LIMIT '+lmt;
 		}
 
 		public List<SObject> getList(){
@@ -672,15 +734,15 @@ public class QB {
 	*/
 	public class OffsetWhereOption implements IWhereOption,IQuery{
 		private Integer ofst;
-		private String swQuery;
+		private IQuery swQuery;
 
-		public OffsetWhereOption(Integer ofst, String swQuery){
+		public OffsetWhereOption(Integer ofst, IQuery swQuery){
 			this.ofst=ofst;
 			this.swQuery=swQuery;
 		}
 
 		public override String toString(){
-			return swQuery+'OFFSET '+ofst+' ';
+			return swQuery+' OFFSET '+ofst;
 		}
 
 		public List<SObject> getList(){
@@ -707,6 +769,58 @@ public class QB {
 			this.fieldName=fieldName;
 		}
 
+		private HavingCriteria handleOperator(Op operator,String value){
+			return new HavingCriteria(this,operator,value);
+		}
+
+		// equal to
+		public HavingCriteria eq(String value){
+			return handleOperator(Op.EQ,value); 
+		}
+		public HavingCriteria equal(String value){
+			return eq(value);
+		}
+
+		// not equal to
+		public HavingCriteria ne(String value){
+			return handleOperator(Op.NE,value);
+		}
+		public HavingCriteria notEqual(String value){
+			return ne(value);
+		}
+		
+		// greater than
+		public HavingCriteria gt(String value){
+			return handleOperator(Op.GT,value);
+		}
+		public HavingCriteria greaterThan(String value){
+			return gt(value);
+		}
+
+		// less than
+		public HavingCriteria lt(String value){
+			return handleOperator(Op.LT,value);
+		}
+		public HavingCriteria lessThan(String value){
+			return lt(value);
+		}
+
+		// greater than or equal to
+		public HavingCriteria ge(String value){
+			return handleOperator(Op.GE,value);
+		}
+		public HavingCriteria greaterOrEqual(String value){
+			return ge(value);
+		}
+
+		// less than or equal to
+		public HavingCriteria le(String value){
+			return handleOperator(Op.LE,value);
+		}
+		public HavingCriteria lessOrEqual(String value){
+			return le(value);
+		}
+
 		public override String toString(){
 			if(fieldName==null)
 				return functionType+'()';
@@ -714,11 +828,70 @@ public class QB {
 		}
 	}
 
+	public class HavingCriteria{
+		private AggregateFunction aggrFunc;
+		private Op operator;
+		private String value;
+
+		public HavingCriteria(AggregateFunction aggrFunc,Op operator,String value){
+			this.aggrFunc=aggrFunc;
+			this.operator=operator;
+			this.value=value;
+		}
+
+		public override String toString(){
+			String strOperator=util.operatorToString(operator);
+			if(strOperator==null)
+				throw new CriteriaException(errMsg.unkownOperator);
+			else
+				return aggrFunc+' '+strOperator+' '+value;
+		}
+	}
+
 	/**
 	* @description Validator : all validating methods
 	*/
-	public class Validator {
+	private class Validator {
 
+	}
+
+	/**
+	* @description Util : Utility class
+	*/
+	private class Util {
+		public String operatorToString(Op operator){
+			if(operator == Op.EQ){
+				return '=';
+			} else if (operator == Op.NE){
+				return '!=';
+			} else if (operator == Op.GT){
+				return '>';
+			} else if (operator == Op.LT){
+				return '<';
+			} else if (operator == Op.GE){
+				return '>=';
+			} else if (operator == Op.LE){
+				return '<=';
+			} else if (operator == Op.LK){
+				return 'LIKE';
+			}
+			return null;
+		}
+
+		public String subQueriesToString(List<IQuery> subQueries){
+			String result='';
+			for(IQuery subQuery: subQueries){
+				result+='('+subQuery+'),';
+			}
+			return result.removeEnd(',');
+		}
+	}
+
+	/**
+	* @description ErrorMessage : Class holding all the error messages
+	*/
+	private class ErrorMessage {
+		public final String unkownOperator='Unkown Operator';
 	}
 
 	// Exceptions
