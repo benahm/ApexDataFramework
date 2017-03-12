@@ -34,7 +34,7 @@ QB is a query builder class that offers a simple and friendly API to generate SO
 
 ### Building a criteria:
 
-The query builder class offers a way to create a complex criterias 
+The query builder class offers a way to create complex criterias 
 
   Query builder syntax:
   ```apex
