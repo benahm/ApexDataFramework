@@ -17,7 +17,7 @@
 public class QB {
 	private static final Util util=new Util();
 	private static final ErrorMessage errMsg=new ErrorMessage();
-	public enum Op {EQ,	EQUAL,
+	public enum Op {EQ, EQUAL,
 			NE, NOTEQUAL,
 			GT, GREATERTHAN,
 			LT, LESSTHAN,
