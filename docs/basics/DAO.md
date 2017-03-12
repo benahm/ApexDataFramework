@@ -35,7 +35,7 @@
   List<Account> accs=[select Id from Account where Name in :listNames]
   ```
   
-  4. **Example 4**
+4. **Example 4**
   
   ```apex
   List<Account> accs=DAO.base('Account').find(QB.fieldExpr('Type','=','Prospect'),'Id')
