@@ -38,7 +38,7 @@ The query builder class offers a way to create complex conditions
 
   Query builder syntax:
   ```apex
-  QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Type').eq('Prospect'))
+  QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Type','=','Prospect'))
   ```
 
   Equivalent to:
