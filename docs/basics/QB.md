@@ -24,7 +24,7 @@ QB is a query builder class that offers a simple and friendly API to generate SO
   ```apex
   QB.select_x('Id,Name')
     .from_x('Account')
-    .where_x(QB.field('Name').eq('Acme Corporation'))
+    .where_x('Name',QB.Op.EQ,'Acme Corporation')
   ```
 
   SOQL equivalent:
