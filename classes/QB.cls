@@ -78,6 +78,12 @@ public class QB {
 	public static FieldCondition fieldExpr(String name, Op operator, List<String> fieldValues){
 		return new Field(name).op(operator,fieldValues);
 	}
+	public static FieldCondition fieldExpr(String name, String operator, String fieldValue){
+		return new Field(name).op(operator,fieldValue);
+	}
+	public static FieldCondition fieldExpr(String name, String operator, List<String> fieldValues){
+		return new Field(name).op(operator,fieldValues);
+	}
 
 	/**
 	* @description count aggregate function
@@ -311,11 +317,21 @@ public class QB {
 		private FieldCondition handleOperator(Op operator,List<String> fieldValues){
 			return new FieldCondition(this,operator,fieldValues);
 		}
+		private FieldCondition handleOperator(String operator,List<String> fieldValues){
+			return new FieldCondition(this,operator,fieldValues);
+		}
 
 		public FieldCondition op(Op operator, String fieldValue){
 			return handleOperator(operator,new List<String>{fieldValue});
 		}
 		public FieldCondition op(Op operator, List<String> fieldValues){
+			return handleOperator(operator,fieldValues);
+		}
+
+		public FieldCondition op(String operator, String fieldValue){
+			return handleOperator(operator,new List<String>{fieldValue});
+		}
+		public FieldCondition op(String operator, List<String> fieldValues){
 			return handleOperator(operator,fieldValues);
 		}
 
@@ -397,12 +413,15 @@ public class QB {
 	*/
 	public class FieldCondition implements ICondition {
 		private final Field field;
-		private final Op operator;
+		private final String operator;
 		private final List<String> fieldValues;
 
 		public FieldCondition(Field field,Op operator,List<String> fieldValues){
+			this(field,util.operatorToString(operator),fieldValues);
+		}
+		public FieldCondition(Field field,String operator,List<String> fieldValues){
 			this.field=field;
-			this.operator=operator;
+			this.operator=operator.trim();
 			this.fieldValues = new List<String>(Util.escapeSingleQuotes(fieldValues));
 		}
 
@@ -413,9 +432,9 @@ public class QB {
 			// Multiple values
 			if(fieldValues.size() > 1){
 				String joinedFieldValues=String.join(fieldValues,'\',\'');
-				if(operator == Op.EQ){
+				if(operator == '='){
 					return field+' IN (\''+joinedFieldValues+'\')';
-				} else if(this.operator == Op.NE){
+				} else if(this.operator == '!='){
 					return field+' NOT IN (\''+joinedFieldValues+'\')';
 				} else {
 					throw new QBConditionException(errMsg.operatorDoNotHandleMultiValues);
@@ -424,11 +443,10 @@ public class QB {
 
 			// Single value
 			String fieldValue=fieldValues.get(0);
-			String strOperator=util.operatorToString(operator);
-			if(strOperator == null)
+			if(operator == null)
 				throw new QBConditionException(errMsg.unkownOperator);
 			else 
-				return field+' '+strOperator+' '+'\''+ fieldValue+'\'';
+				return field+' '+operator+' '+'\''+ fieldValue+'\'';
 		}
 	}
 
@@ -543,6 +561,12 @@ public class QB {
 			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValue),this);
 		}
 		public SelectWhereQuery where_x(String fieldName, Op operator, List<String> fieldValues){
+			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValues),this);
+		}
+		public SelectWhereQuery where_x(String fieldName, String operator, String fieldValue){
+			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValue),this);
+		}
+		public SelectWhereQuery where_x(String fieldName, String operator, List<String> fieldValues){
 			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValues),this);
 		}
 
@@ -850,6 +874,10 @@ public class QB {
 	* @description Validator : all validating methods
 	*/
 	private class Validator {
+
+		// validate field name
+		// validate operator
+		// ...
 
 	}
 
