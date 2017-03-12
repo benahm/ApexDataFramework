@@ -1,3 +1,38 @@
 ## Query Builder
 
-Content
+QB is a query builder class that offers a simple and friendly API to generate SOQL queries
+
+### Basic examples
+
+* **Simple query without a where clause**
+
+Query builder syntax:
+```apex
+QB.select_x('Name')
+  .from_x('Account')
+```
+
+SOQL equivalent:
+```sql
+select Name from Account
+```
+
+
+* **Simple query with a where clause**
+
+Query builder syntax:
+```apex
+QB.select_x('Id,Name')
+  .from_x('Account')
+  .where_x(QB.field('Name').eq('Acme Corporation'))
+```
+
+SOQL equivalent:
+```sql
+select Id,Name from Account where Name='Acme Corporation'
+```
+
+
+
+
+*__NOTE__: 'select', 'from' and 'where' are all reserved words in apex and can not be used as names of methods, to get around the suffix '__\_x__' is appended to the reserved words*
