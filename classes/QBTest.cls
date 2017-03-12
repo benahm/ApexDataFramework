@@ -12,14 +12,12 @@
 /**
 * @author benahm
 * @date 2017
-* @description Test Class for the QueryBuilder
+* @description Test Class for the Query Builder
 */
 @isTest
 private class QBTest {
 	
-	/**
-	* @description Test Class for the QueryBuilder
-	*/
+	/* Tests for Criteria builder */
 	@isTest 
 	static void fieldCriteriaEqualTest() {
 		Test.startTest();
@@ -37,7 +35,6 @@ private class QBTest {
 		Test.stopTest();
 	}
 	
-
 	@isTest 
 	static void fieldCriteriaNotEqualTest() {
 		Test.startTest();
@@ -157,5 +154,33 @@ private class QBTest {
 
 		Test.stopTest();
 	}
-	
+
+	@isTest 
+	static void criteriaTest() {
+		Test.startTest();
+
+		System.assertEquals('(Name = \'Value1\') AND (NOT (Name != \'Value2\'))',
+							QB.and_x(QB.field('Name').eq('Value1'),QB.not_x(QB.field('Name').ne('Value2'))).toString());
+		System.assertEquals('(Name = \'Value1\') OR (NOT (Name != \'Value2\'))',
+							QB.or_x(QB.field('Name').eq('Value1'),QB.not_x(QB.field('Name').ne('Value2'))).toString());
+		System.assertEquals('(Name = \'Value1\') AND ((Name != \'Value2\') OR (Name != \'Value3\'))',
+							QB.and_x(QB.field('Name').eq('Value1'),QB.or_x(QB.field('Name').ne('Value2'),QB.field('Name').ne('Value3'))).toString());
+		System.assertEquals('(Name = \'Value1\') OR ((Name != \'Value2\') AND (Name != \'Value3\'))',
+							QB.or_x(QB.field('Name').eq('Value1'),QB.and_x(QB.field('Name').ne('Value2'),QB.field('Name').ne('Value3'))).toString());
+		System.assertEquals('NOT ((Name != \'Value1\') AND (Name != \'Value2\'))',
+							QB.not_x(QB.and_x(QB.field('Name').ne('Value1'),QB.field('Name').ne('Value2'))).toString());
+		System.assertEquals('NOT ((Name != \'Value1\') OR (Name != \'Value2\'))',
+							QB.not_x(QB.or_x(QB.field('Name').ne('Value1'),QB.field('Name').ne('Value2'))).toString());
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	static void criteriaSpecialCasesTest() {
+		Test.startTest();
+
+		// TODO
+
+		Test.stopTest();
+	}	
 }

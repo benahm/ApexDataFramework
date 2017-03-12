@@ -12,7 +12,7 @@
 /**
 * @author benahm
 * @date 2017
-* @description QueryBuilder class
+* @description Query Builder class
 */
 public class QB {
 
@@ -394,7 +394,7 @@ public class QB {
 
 		public override String toString(){
 			if(fieldValues.isEmpty()) {
-				throw new CriteriaException('No Operator applied to Field(Name)');
+				return fieldName;
 			}
 
 			// Multiple values
@@ -410,23 +410,31 @@ public class QB {
 
 			// Single value
 			String fieldValue=fieldValues.get(0);
-			if(operator == Op.EQ){
-				return fieldName+' = '+'\''+ fieldValue+'\'';
-			} else if (operator == Op.NE){
-				return fieldName+' != '+'\''+fieldValue+'\'';
-			} else if (operator == Op.GT){
-				return fieldName+' > '+'\''+fieldValue+'\'';
-			} else if (operator == Op.LT){
-				return fieldName+' < '+'\''+fieldValue+'\'';
-			} else if (operator == Op.GE){
-				return fieldName+' >= '+'\''+fieldValue+'\'';
-			} else if (operator == Op.LE){
-				return fieldName+' <= '+'\''+fieldValue+'\'';
-			} else if (operator == Op.LK){
-				return fieldName+' LIKE '+'\''+fieldValue+'\'';
+			String strOperator=getOperator(operator);
+			if(strOperator == null){
+				throw new CriteriaException('Unkown Operator');
+			} else {
+				return fieldName+' '+strOperator+' '+'\''+ fieldValue+'\'';
 			}
+		}
 
-			throw new CriteriaException('Unkown Operator');
+		private String getOperator(Op operator){
+			if(operator == Op.EQ){
+				return '=';
+			} else if (operator == Op.NE){
+				return '!=';
+			} else if (operator == Op.GT){
+				return '>';
+			} else if (operator == Op.LT){
+				return '<';
+			} else if (operator == Op.GE){
+				return '>=';
+			} else if (operator == Op.LE){
+				return '<=';
+			} else if (operator == Op.LK){
+				return 'LIKE';
+			}
+			return null;
 		}
 	}
 
