@@ -191,6 +191,7 @@ private class QBTest {
 		Test.stopTest();
 	}	
 
+	/* Tests for Query builder */
 	@isTest 
 	static void selectFieldsClauseTest() {
 		Test.startTest();
@@ -252,10 +253,10 @@ private class QBTest {
 														.groupBy(new List<String>{'Name1','Name2'}).toString());
 		System.assertEquals('SELECT Name FROM Account GROUP BY Name HAVING COUNT(Name) = 1',QB.select_x('Name')
 														.from_x('Account')
-														.groupBy('Name',QB.count('Name').eq('1')).toString());
+														.groupBy('Name',QB.count('Name').eq(1)).toString());
 		System.assertEquals('SELECT Name FROM Account GROUP BY Name1,Name2 HAVING COUNT(Name) = 1',QB.select_x('Name')
 														.from_x('Account')
-														.groupBy(new List<String>{'Name1','Name2'},QB.count('Name').eq('1')).toString());
+														.groupBy(new List<String>{'Name1','Name2'},QB.count('Name').eq(1)).toString());
 		System.assertEquals('SELECT Name FROM Account ORDER BY Name',QB.select_x('Name')
 														.from_x('Account')
 														.orderBy('Name').toString());
@@ -290,11 +291,11 @@ private class QBTest {
 		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' GROUP BY Name HAVING COUNT(Name) = 1',QB.select_x('Name')
 														.from_x('Account')
 														.where_x(QB.Field('Name').eq('Value'))
-														.groupBy('Name',QB.count('Name').eq('1')).toString());
+														.groupBy('Name',QB.count('Name').eq(1)).toString());
 		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' GROUP BY Name1,Name2 HAVING COUNT(Name) = 1',QB.select_x('Name')
 														.from_x('Account')
 														.where_x(QB.Field('Name').eq('Value'))
-														.groupBy(new List<String>{'Name1','Name2'},QB.count('Name').eq('1')).toString());
+														.groupBy(new List<String>{'Name1','Name2'},QB.count('Name').eq(1)).toString());
 		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' ORDER BY Name',QB.select_x('Name')
 														.from_x('Account')
 														.where_x(QB.Field('Name').eq('Value'))

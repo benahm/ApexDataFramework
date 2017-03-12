@@ -154,7 +154,7 @@ public class QB {
 	/*					Interfaces					*/
 	/****************************************************************************************/
 	/**
-	* @description IQuery : a valide query
+	* @description IQuery : a valid query
 	*/
 	public interface IQuery{
 		List<SObject> getList();
@@ -162,7 +162,7 @@ public class QB {
 	}
 
 	/**
-	* @description ICondition : interface for a valide condition
+	* @description ICondition : interface for a valid condition
 	*/
 	public interface ICondition{
 		String toString();
@@ -205,12 +205,6 @@ public class QB {
 		FieldCondition isLike(String fieldValue);
 
 	}
-
-	/**
-	* @description IWhereOption : a where option
-	*/
-	public interface IWhereOption{}
-
 
 
 	/****************************************************************************************/
@@ -409,7 +403,7 @@ public class QB {
 		public FieldCondition(Field field,Op operator,List<String> fieldValues){
 			this.field=field;
 			this.operator=operator;
-			this.fieldValues = new List<String>(fieldValues);
+			this.fieldValues = new List<String>(Util.escapeSingleQuotes(fieldValues));
 		}
 
 		public override String toString(){
@@ -438,6 +432,20 @@ public class QB {
 		}
 	}
 
+	/**
+	* @description Query : a valid query
+	*/
+	public abstract class Query implements IQuery {
+
+		public List<SObject> getList(){
+			String soqlQuery=toString();
+			return new List<SObject>(Database.query(soqlQuery));
+		}
+
+		public map<Id,SObject> getMap(){
+			return new Map<Id,SObject>(getList());
+		}
+	}
 
 	/**
 	* @description SelectClause : select clause
@@ -519,7 +527,7 @@ public class QB {
 	/**
 	* @description SelectQuery : select query without a where clause
 	*/
-	public class SelectQuery  implements IQuery{
+	public class SelectQuery extends Query {
 		private final String sObjectName;
 		private final SelectClause sClause;
 
@@ -569,20 +577,12 @@ public class QB {
 		public override String toString(){
 			return sClause+' FROM '+sObjectName;
 		}
-
-		public List<SObject> getList(){
-			return null;
-		}
-
-		public map<Id,SObject> getMap(){
-			return null;
-		}
 	}
 
 	/**
 	* @description SelectWhereQuery : select query with a where clause
 	*/
-	public class SelectWhereQuery implements IQuery{
+	public class SelectWhereQuery extends Query {
 		private final ICondition cnd;
 		private final SelectQuery sQuery;
 
@@ -622,20 +622,12 @@ public class QB {
 		public override String toString(){
 			return sQuery+' WHERE '+cnd;
 		}
-
-		public List<SObject> getList(){
-			return null;
-		}
-
-		public map<Id,SObject> getMap(){
-			return null;
-		}
 	}
 
 	/**
 	* @description SelectGroupByQuery : Group By option of the where clause
 	*/
-	public class SelectGroupByQuery implements IWhereOption,IQuery {
+	public class SelectGroupByQuery extends Query {
 		private final List<String> groupByFields;
 		private final HavingCondition havingCtr;
 		private final IQuery swQuery;
@@ -679,20 +671,12 @@ public class QB {
 				result+=' HAVING '+havingCtr;
 			return result;
 		}
-
-		public List<SObject> getList(){
-			return null;
-		}
-
-		public map<Id,SObject> getMap(){
-			return null;
-		}
 	}
 
 	/**
 	* @description SelectOrderByQuery : Order By option of the where clause
 	*/
-	public class SelectOrderByQuery implements IWhereOption,IQuery{
+	public class SelectOrderByQuery extends Query {
 		private final List<String> orderByFields;
 		private final IQuery swQuery;
 
@@ -725,20 +709,12 @@ public class QB {
 		public override String toString(){
 			return swQuery+' ORDER BY '+String.join(orderByFields, ',');
 		}
-
-		public List<SObject> getList(){
-			return null;
-		}
-
-		public map<Id,SObject> getMap(){
-			return null;
-		}
 	}
 
 	/**
 	* @description SelectLimitQuery : Limit option of the where clause
 	*/
-	public class SelectLimitQuery implements IWhereOption,IQuery{
+	public class SelectLimitQuery extends Query {
 		private final Integer lmt;
 		private final IQuery swQuery;
 
@@ -754,20 +730,12 @@ public class QB {
 		public override String toString(){
 			return swQuery+' LIMIT '+lmt;
 		}
-
-		public List<SObject> getList(){
-			return null;
-		}
-
-		public map<Id,SObject> getMap(){
-			return null;
-		}
 	}
 
 	/**
 	* @description SelectOffsetQuery : Offset option of the where clause
 	*/
-	public class SelectOffsetQuery implements IWhereOption,IQuery{
+	public class SelectOffsetQuery extends Query {
 		private final Integer ofst;
 		private final IQuery swQuery;
 
@@ -778,14 +746,6 @@ public class QB {
 
 		public override String toString(){
 			return swQuery+' OFFSET '+ofst;
-		}
-
-		public List<SObject> getList(){
-			return null;
-		}
-
-		public map<Id,SObject> getMap(){
-			return null;
 		}
 	}
 
@@ -804,55 +764,55 @@ public class QB {
 			this.fieldName=fieldName;
 		}
 
-		private HavingCondition handleOperator(Op operator,String value){
+		private HavingCondition handleOperator(Op operator,Integer value){
 			return new HavingCondition(this,operator,value);
 		}
 
 		// equal to
-		public HavingCondition eq(String value){
+		public HavingCondition eq(Integer value){
 			return handleOperator(Op.EQ,value); 
 		}
-		public HavingCondition equal(String value){
+		public HavingCondition equal(Integer value){
 			return eq(value);
 		}
 
 		// not equal to
-		public HavingCondition ne(String value){
+		public HavingCondition ne(Integer value){
 			return handleOperator(Op.NE,value);
 		}
-		public HavingCondition notEqual(String value){
+		public HavingCondition notEqual(Integer value){
 			return ne(value);
 		}
 		
 		// greater than
-		public HavingCondition gt(String value){
+		public HavingCondition gt(Integer value){
 			return handleOperator(Op.GT,value);
 		}
-		public HavingCondition greaterThan(String value){
+		public HavingCondition greaterThan(Integer value){
 			return gt(value);
 		}
 
 		// less than
-		public HavingCondition lt(String value){
+		public HavingCondition lt(Integer value){
 			return handleOperator(Op.LT,value);
 		}
-		public HavingCondition lessThan(String value){
+		public HavingCondition lessThan(Integer value){
 			return lt(value);
 		}
 
 		// greater than or equal to
-		public HavingCondition ge(String value){
+		public HavingCondition ge(Integer value){
 			return handleOperator(Op.GE,value);
 		}
-		public HavingCondition greaterOrEqual(String value){
+		public HavingCondition greaterOrEqual(Integer value){
 			return ge(value);
 		}
 
 		// less than or equal to
-		public HavingCondition le(String value){
+		public HavingCondition le(Integer value){
 			return handleOperator(Op.LE,value);
 		}
-		public HavingCondition lessOrEqual(String value){
+		public HavingCondition lessOrEqual(Integer value){
 			return le(value);
 		}
 
@@ -869,9 +829,9 @@ public class QB {
 	public class HavingCondition{
 		private final AggregateFunction aggrFunc;
 		private final Op operator;
-		private final String value;
+		private final Integer value;
 
-		public HavingCondition(AggregateFunction aggrFunc,Op operator,String value){
+		public HavingCondition(AggregateFunction aggrFunc,Op operator,Integer value){
 			this.aggrFunc=aggrFunc;
 			this.operator=operator;
 			this.value=value;
@@ -922,6 +882,14 @@ public class QB {
 				result+='('+subQuery+'),';
 			}
 			return result.removeEnd(',');
+		}
+
+		public List<String> escapeSingleQuotes(List<String> values){
+			List<String> escapedValues=new List<String>();
+			for(String value:values){
+				escapedValues.add(String.escapeSingleQuotes(value));
+			}
+			return escapedValues;
 		}
 	}
 
