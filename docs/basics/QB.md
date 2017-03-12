@@ -32,9 +32,9 @@ QB is a query builder class that offers a simple and friendly API to generate SO
   select Id,Name from Account where Name='Acme Corporation'
   ```
 
-### Building a criteria:
+### Building a condition:
 
-The query builder class offers a way to create complex criterias 
+The query builder class offers a way to create complex conditions 
 
   Query builder syntax:
   ```apex
