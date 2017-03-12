@@ -1,6 +1,6 @@
 ## Query Builder
 
-QB is a query builder class that offers a simple and friendly API to generate SOQL queries
+QB is a query builder that offers a simple and friendly API to generate SOQL queries
 
 ### Basic examples:
 
@@ -34,7 +34,7 @@ QB is a query builder class that offers a simple and friendly API to generate SO
 
 ### Building a condition:
 
-The query builder class offers a way to create complex conditions 
+The query builder offers a way to create complex conditions 
 
   Query builder syntax:
   ```apex
