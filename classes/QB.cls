@@ -148,9 +148,9 @@ public class QB {
 		return new SelectAggregateClause(aggrFunc,fieldNames);
 	}
 
-	/****************************************************************************/
-	/*						 			Interfaces								*/
-	/****************************************************************************/
+	/****************************************************************************************/
+	/*					Interfaces					*/
+	/****************************************************************************************/
 	/**
 	* @description IQuery : a valide query
 	*/
@@ -211,9 +211,9 @@ public class QB {
 
 
 
-	/****************************************************************************/
-	/*						 			Classes									*/
-	/****************************************************************************/
+	/****************************************************************************************/
+	/*					Classes						*/
+	/****************************************************************************************/
 	/**
 	* @description NotCriteria : NOT applied to a criteria
 	*/
@@ -232,7 +232,7 @@ public class QB {
 
 	/**
 	* @description NaryCriteria : Abstract class for operations that can be
-	* 							  applied to multiple criterias
+	* 			      applied to multiple criterias
 	*/
 	public abstract class NaryCriteria implements ICriteria {
 		public abstract String getOperator();
