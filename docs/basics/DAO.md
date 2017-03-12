@@ -23,3 +23,14 @@
   ```apex
   List<Account> accs=[select Id,Name from Account where Id in :listIds]
   ```
+  
+  1. **Example 3**
+  
+  ```apex
+  List<Account> accs=DAO.base('Account').find('Name',listNames,'Id')
+  ```
+
+
+  ```apex
+  List<Account> accs=[select Id from Account where Name in :listNames]
+  ```
