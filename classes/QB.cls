@@ -27,32 +27,32 @@ public class QB {
 
 
 	/**
-	* @description apply the logical operator NOT to a criteria
-	* @param ctr : Criteria
-	* @return NotCriteria 
+	* @description apply the logical operator NOT to a condition
+	* @param cnd : Condition
+	* @return NotCondition 
 	*/
-	public static NotCriteria not_x(ICriteria ctr){
-		return new NotCriteria(ctr) ;
+	public static NotCondition not_x(ICondition cnd){
+		return new NotCondition(cnd) ;
 	}
 
 	/**
-	* @description apply the logical operator AND to two criterias
-	* @param ctr1 : the first criteria
-	* @param ctr2 : the second criteria
-	* @return AndCriteria
+	* @description apply the logical operator AND to two conditions
+	* @param cnd1 : the first condition
+	* @param cnd2 : the second condition
+	* @return AndCondition
 	*/
-	public static AndCriteria and_x(ICriteria ctr1, ICriteria ctr2){
-		return new AndCriteria(ctr1,ctr2);
+	public static AndCondition and_x(ICondition cnd1, ICondition cnd2){
+		return new AndCondition(cnd1,cnd2);
 	}
 
 	/**
-	* @description apply the logical operator OR to two criterias
-	* @param ctr1 : the first criteria
-	* @param ctr2 : the second criteria
-	* @return OrCriteria
+	* @description apply the logical operator OR to two conditions
+	* @param cnd1 : the first condition
+	* @param cnd2 : the second condition
+	* @return OrCondition
 	*/
-	public static OrCriteria or_x(ICriteria ctr1, ICriteria ctr2){
-		return new OrCriteria(ctr1,ctr2);
+	public static OrCondition or_x(ICondition cnd1, ICondition cnd2){
+		return new OrCondition(cnd1,cnd2);
 	}
 
 	/**
@@ -70,10 +70,10 @@ public class QB {
 	* @param operator : the comparator operator
 	* @return Field
 	*/
-	public static FieldCriteria fieldExpr(String name, Op operator, String fieldValue){
+	public static FieldCondition fieldExpr(String name, Op operator, String fieldValue){
 		return new Field(name).op(operator,fieldValue);
 	}
-	public static FieldCriteria fieldExpr(String name, Op operator, List<String> fieldValues){
+	public static FieldCondition fieldExpr(String name, Op operator, List<String> fieldValues){
 		return new Field(name).op(operator,fieldValues);
 	}
 
@@ -160,9 +160,9 @@ public class QB {
 	}
 
 	/**
-	* @description ICriteria : interface for a valide criteria
+	* @description ICondition : interface for a valide condition
 	*/
-	public interface ICriteria{
+	public interface ICondition{
 		String toString();
 	}
 
@@ -171,36 +171,36 @@ public class QB {
 	*/
 	public interface IField {
 		// equal to
-		FieldCriteria eq(String fieldValue);
-		FieldCriteria eq(List<String> fieldValues);
-		FieldCriteria equal(String fieldValue);
-		FieldCriteria equal(List<String> fieldValues);
+		FieldCondition eq(String fieldValue);
+		FieldCondition eq(List<String> fieldValues);
+		FieldCondition equal(String fieldValue);
+		FieldCondition equal(List<String> fieldValues);
 
 		// not equal to
-		FieldCriteria ne(String fieldValue);
-		FieldCriteria ne(List<String> fieldValues);
-		FieldCriteria notEqual(String fieldValue);
-		FieldCriteria notEqual(List<String> fieldValues);
+		FieldCondition ne(String fieldValue);
+		FieldCondition ne(List<String> fieldValues);
+		FieldCondition notEqual(String fieldValue);
+		FieldCondition notEqual(List<String> fieldValues);
 		
 		// greater than
-		FieldCriteria gt(String fieldValue);
-		FieldCriteria greaterThan(String fieldValue);
+		FieldCondition gt(String fieldValue);
+		FieldCondition greaterThan(String fieldValue);
 
 		// less than
-		FieldCriteria lt(String fieldValue);
-		FieldCriteria lessThan(String fieldValue);
+		FieldCondition lt(String fieldValue);
+		FieldCondition lessThan(String fieldValue);
 
 		// greater than or equal to
-		FieldCriteria ge(String fieldValue);
-		FieldCriteria greaterOrEqual(String fieldValue);
+		FieldCondition ge(String fieldValue);
+		FieldCondition greaterOrEqual(String fieldValue);
 
 		// less than or equal to
-		FieldCriteria le(String fieldValue);
-		FieldCriteria lessOrEqual(String fieldValue);
+		FieldCondition le(String fieldValue);
+		FieldCondition lessOrEqual(String fieldValue);
 
 		// like 
-		FieldCriteria lk(String fieldValue);
-		FieldCriteria isLike(String fieldValue);
+		FieldCondition lk(String fieldValue);
+		FieldCondition isLike(String fieldValue);
 
 	}
 
@@ -215,101 +215,96 @@ public class QB {
 	/*					Classes						*/
 	/****************************************************************************************/
 	/**
-	* @description NotCriteria : NOT applied to a criteria
+	* @description NotCondition : NOT applied to a condition
 	*/
-	public class NotCriteria implements ICriteria {
+	public class NotCondition implements ICondition {
+		private ICondition cnd;
 
-		public ICriteria ctr;
-
-		public NotCriteria(ICriteria ctr){
-			this.ctr=ctr;
+		public NotCondition(ICondition cnd){
+			this.cnd=cnd;
 		}
 
 		public override String toString(){
-			return 'NOT ('+ctr+')';
+			return 'NOT ('+cnd+')';
 		}
 	}
 
 	/**
-	* @description NaryCriteria : Abstract class for operations that can be
-	* 			      applied to multiple criterias
+	* @description NaryCondition : Abstract class for operations that can be
+	* 			      applied to multiple conditions
 	*/
-	public abstract class NaryCriteria implements ICriteria {
+	public abstract class NaryCondition implements ICondition {
 		public abstract String getOperator();
-		public abstract List<ICriteria> getListCriterias();
-		public abstract NaryCriteria getInstance();
+		public abstract List<ICondition> getListConditions();
+		public abstract NaryCondition getInstance();
 
-		public NaryCriteria add(ICriteria ctr){
-			getListCriterias().add(ctr);
+		public NaryCondition add(ICondition cnd){
+			getListConditions().add(cnd);
 			return getInstance();
 		}
 
 		public override String toString(){
 			String result='';
 
-			for(ICriteria ctr:getListCriterias()){
-				result+='('+ctr+')'+' '+getOperator()+' ';
+			for(ICondition cnd:getListConditions()){
+				result+='('+cnd+')'+' '+getOperator()+' ';
 			}
 			return result.removeEnd(' '+getOperator()+' ');
 		}
-
 	}
 
 	/**
-	* @description AndCriteria : AND applied to multiple criterias
+	* @description AndCondition : AND applied to multiple conditions
 	*/
-	public class AndCriteria extends NaryCriteria {
-		private List<ICriteria> listCriterias;
-		private final String operator ='AND';
+	public class AndCondition extends NaryCondition {
+		private List<ICondition> listConditions;
+		private final String operator = 'AND';
 
-		public AndCriteria(ICriteria ctr1, ICriteria ctr2){
-			this.listCriterias=new List<ICriteria>{ctr1,ctr2};
+		public AndCondition(ICondition cnd1, ICondition cnd2){
+			this.listConditions=new List<ICondition>{cnd1,cnd2};
 		}
 
 		public override String getOperator(){
 			return operator;
 		}
 
-		public override List<ICriteria> getListCriterias(){
-			return listCriterias;
+		public override List<ICondition> getListConditions(){
+			return listConditions;
 		}
 
-		public override NaryCriteria getInstance(){
+		public override NaryCondition getInstance(){
 			return this;
 		}
-
 	}
 
 	/**
-	* @description AndCriteria : OR applied to multiple criterias
+	* @description AndCondition : OR applied to multiple conditions
 	*/
-	public class OrCriteria extends NaryCriteria {
-		private List<ICriteria> listCriterias;
-		private final String operator ='OR';
+	public class OrCondition extends NaryCondition {
+		private List<ICondition> listConditions;
+		private final String operator = 'OR';
 
-		public OrCriteria(ICriteria ctr1, ICriteria ctr2){
-			this.listCriterias=new List<ICriteria>{ctr1,ctr2};
+		public OrCondition(ICondition cnd1, ICondition cnd2){
+			this.listConditions=new List<ICondition>{cnd1,cnd2};
 		}
 
 		public override String getOperator(){
 			return operator;
 		}
 
-		public override List<ICriteria> getListCriterias(){
-			return listCriterias;
+		public override List<ICondition> getListConditions(){
+			return listConditions;
 		}
 
-		public override NaryCriteria getInstance(){
+		public override NaryCondition getInstance(){
 			return this;
 		}
-
 	}
 
 	/**
 	* @description Field : field wrapper
 	*/
 	public class Field implements IField {
-
 		private final String fieldName;
 
 		public Field(String fieldName){
@@ -317,100 +312,99 @@ public class QB {
 			this.fieldName=fieldName;
 		}
 
-		private FieldCriteria handleOperator(Op operator,List<String> fieldValues){
-			return new FieldCriteria(this,operator,fieldValues);
+		private FieldCondition handleOperator(Op operator,List<String> fieldValues){
+			return new FieldCondition(this,operator,fieldValues);
 		}
 
-		public FieldCriteria op(Op operator, String fieldValue){
+		public FieldCondition op(Op operator, String fieldValue){
 			return handleOperator(operator,new List<String>{fieldValue});
 		}
-		public FieldCriteria op(Op operator, List<String> fieldValues){
+		public FieldCondition op(Op operator, List<String> fieldValues){
 			return handleOperator(operator,fieldValues);
 		}
 
 		// equal to
-		public FieldCriteria eq(String fieldValue){
+		public FieldCondition eq(String fieldValue){
 			return eq(new List<String>{fieldValue}); 
 		}
-		public FieldCriteria eq(List<String> fieldValues){
+		public FieldCondition eq(List<String> fieldValues){
 			return handleOperator(Op.EQ,fieldValues);
 		}
-		public FieldCriteria equal(String fieldValue){
+		public FieldCondition equal(String fieldValue){
 			return eq(fieldValue);
 		}
-		public FieldCriteria equal(List<String> fieldValues){
+		public FieldCondition equal(List<String> fieldValues){
 			return eq(fieldValues);
 		}
 
 		// not equal to
-		public FieldCriteria ne(String fieldValue){
+		public FieldCondition ne(String fieldValue){
 			return ne(new List<String>{fieldValue});
 		}
-		public FieldCriteria ne(List<String> fieldValues){
+		public FieldCondition ne(List<String> fieldValues){
 			return handleOperator(Op.NE,fieldValues);	
 		}
-		public FieldCriteria notEqual(String fieldValue){
+		public FieldCondition notEqual(String fieldValue){
 			return ne(fieldValue);
 		}
-		public FieldCriteria notEqual(List<String> fieldValues){
+		public FieldCondition notEqual(List<String> fieldValues){
 			return ne(fieldValues);
 		}
 		
 		// greater than
-		public FieldCriteria gt(String fieldValue){
+		public FieldCondition gt(String fieldValue){
 			return handleOperator(Op.GT,new List<String>{fieldValue});
 		}
-		public FieldCriteria greaterThan(String fieldValue){
+		public FieldCondition greaterThan(String fieldValue){
 			return gt(fieldValue);
 		}
 
 		// less than
-		public FieldCriteria lt(String fieldValue){
+		public FieldCondition lt(String fieldValue){
 			return handleOperator(Op.LT,new List<String>{fieldValue});
 		}
-		public FieldCriteria lessThan(String fieldValue){
+		public FieldCondition lessThan(String fieldValue){
 			return lt(fieldValue);
 		}
 
 		// greater than or equal to
-		public FieldCriteria ge(String fieldValue){
+		public FieldCondition ge(String fieldValue){
 			return handleOperator(Op.GE,new List<String>{fieldValue});
 		}
-		public FieldCriteria greaterOrEqual(String fieldValue){
+		public FieldCondition greaterOrEqual(String fieldValue){
 			return ge(fieldValue);
 		}
 
 		// less than or equal to
-		public FieldCriteria le(String fieldValue){
+		public FieldCondition le(String fieldValue){
 			return handleOperator(Op.LE,new List<String>{fieldValue});
 		}
-		public FieldCriteria lessOrEqual(String fieldValue){
+		public FieldCondition lessOrEqual(String fieldValue){
 			return le(fieldValue);
 		}
 
 		// like 
-		public FieldCriteria lk(String fieldValue){
+		public FieldCondition lk(String fieldValue){
 			return handleOperator(Op.LK,new List<String>{fieldValue});
 		}
-		public FieldCriteria isLike(String fieldValue){
+		public FieldCondition isLike(String fieldValue){
 			return lk(fieldValue);
 		}
 
 		public override String toString(){
 			return fieldName;
 		}
-
 	}
 
 	/**
-	* @description FieldCriteria : field criteria
+	* @description FieldCondition : field condition
 	*/
-	public class FieldCriteria implements ICriteria {
-		private Field field;
-		private Op operator;
-		private List<String> fieldValues;
+	public class FieldCondition implements ICondition {
+		private final Field field;
+		private final Op operator;
+		private final List<String> fieldValues;
 
-		public FieldCriteria(Field field,Op operator,List<String> fieldValues){
+		public FieldCondition(Field field,Op operator,List<String> fieldValues){
 			this.field=field;
 			this.operator=operator;
 			this.fieldValues = new List<String>(fieldValues);
@@ -428,7 +422,7 @@ public class QB {
 				} else if(this.operator == Op.NE){
 					return field+' NOT IN (\''+joinedFieldValues+'\')';
 				} else {
-					throw new CriteriaException('Only the operators EQUAL & NOTEQUAL can handle a list of values');
+					throw new ConditionException('Only the operators EQUAL & NOTEQUAL can handle a list of values');
 				}
 			}
 
@@ -436,13 +430,10 @@ public class QB {
 			String fieldValue=fieldValues.get(0);
 			String strOperator=util.operatorToString(operator);
 			if(strOperator == null)
-				throw new CriteriaException(errMsg.unkownOperator);
+				throw new ConditionException(errMsg.unkownOperator);
 			else 
 				return field+' '+strOperator+' '+'\''+ fieldValue+'\'';
-
 		}
-
-
 	}
 
 
@@ -462,7 +453,7 @@ public class QB {
 	* @description SelectFieldsClause : select fields clause
 	*/
 	public class SelectFieldsClause extends SelectClause {
-		private List<String> selectedFields;
+		private final List<String> selectedFields;
 		private List<IQuery> subQueries;
 
 		public SelectFieldsClause(String fieldName){
@@ -494,8 +485,8 @@ public class QB {
 	* @description SelectAggregateClause : select aggregate clause
 	*/
 	public class SelectAggregateClause extends SelectClause {
-		private List<String> selectedFields;
-		private AggregateFunction aggrFunc;
+		private final List<String> selectedFields;
+		private final AggregateFunction aggrFunc;
 
 		public SelectAggregateClause(AggregateFunction aggrFunc){
 			this(aggrFunc,new List<String>());
@@ -520,7 +511,6 @@ public class QB {
 
 			return result;
 		}
-
 	}
 
 
@@ -528,16 +518,48 @@ public class QB {
 	* @description SelectQuery : select query without a where clause
 	*/
 	public class SelectQuery  implements IQuery{
-		private String sObjectName;
-		private SelectClause sClause;
+		private final String sObjectName;
+		private final SelectClause sClause;
 
 		public SelectQuery(String sObjectName, SelectClause sClause){
 			this.sObjectName=sObjectName;
 			this.sClause=sClause;
 		}
 
-		public SelectWhereQuery where_x(ICriteria ctr){
-			return new SelectWhereQuery(ctr,this);
+		public SelectWhereQuery where_x(ICondition cnd){
+			return new SelectWhereQuery(cnd,this);
+		}
+
+		public SelectWhereQuery where_x(String fieldName, Op operator, String fieldValue){
+			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValue),this);
+		}
+
+		public SelectGroupByQuery groupBy(String groupByField){
+			return new SelectGroupByQuery(groupByField,this);
+		}
+		public SelectGroupByQuery groupBy(List<String> groupByFields){
+			return new SelectGroupByQuery(groupByFields,this);
+		}
+		public SelectGroupByQuery groupBy(String groupByField, HavingCondition havingCtr){
+			return new SelectGroupByQuery(groupByField,havingCtr,this);
+		}
+		public SelectGroupByQuery groupBy(List<String> groupByFields, HavingCondition havingCtr){
+			return new SelectGroupByQuery(groupByFields,havingCtr,this);
+		}
+
+		public SelectOrderByQuery orderBy(String orderByField){
+			return new SelectOrderByQuery(orderByField,this);
+		}
+		public SelectOrderByQuery orderBy(List<String> orderByFields){
+			return new SelectOrderByQuery(orderByFields,this);
+		}
+
+		public SelectLimitQuery limitTo(Integer lmt){
+			return new SelectLimitQuery(lmt,this);
+		}
+
+		public SelectOffsetQuery offset(Integer ofst){
+			return new SelectOffsetQuery(ofst,this);
 		}
 
 		public override String toString(){
@@ -557,47 +579,44 @@ public class QB {
 	* @description SelectWhereQuery : select query with a where clause
 	*/
 	public class SelectWhereQuery implements IQuery{
-		private ICriteria ctr;
-		private SelectQuery sQuery;
+		private final ICondition cnd;
+		private final SelectQuery sQuery;
 
-		public SelectWhereQuery(ICriteria ctr, SelectQuery sQuery){
-			this.ctr=ctr;
+		public SelectWhereQuery(ICondition cnd, SelectQuery sQuery){
+			this.cnd=cnd;
 			this.sQuery=sQuery;
 		}
 
-		public GroupByWhereOption groupBy(String groupByField){
-			return new GroupByWhereOption(groupByField,this);
+		public SelectGroupByQuery groupBy(String groupByField){
+			return new SelectGroupByQuery(groupByField,this);
+		}
+		public SelectGroupByQuery groupBy(List<String> groupByFields){
+			return new SelectGroupByQuery(groupByFields,this);
+		}
+		public SelectGroupByQuery groupBy(String groupByField, HavingCondition havingCtr){
+			return new SelectGroupByQuery(groupByField,havingCtr,this);
+		}
+		public SelectGroupByQuery groupBy(List<String> groupByFields, HavingCondition havingCtr){
+			return new SelectGroupByQuery(groupByFields,havingCtr,this);
 		}
 
-		public GroupByWhereOption groupBy(List<String> groupByFields){
-			return new GroupByWhereOption(groupByFields,this);
+		public SelectOrderByQuery orderBy(String orderByField){
+			return new SelectOrderByQuery(orderByField,this);
+		}
+		public SelectOrderByQuery orderBy(List<String> orderByFields){
+			return new SelectOrderByQuery(orderByFields,this);
 		}
 
-		public GroupByWhereOption groupBy(String groupByField, HavingCriteria havingCtr){
-			return new GroupByWhereOption(groupByField,havingCtr,this);
+		public SelectLimitQuery limitTo(Integer lmt){
+			return new SelectLimitQuery(lmt,this);
 		}
 
-		public GroupByWhereOption groupBy(List<String> groupByFields, HavingCriteria havingCtr){
-			return new GroupByWhereOption(groupByFields,havingCtr,this);
-		}
-
-		public OrderByWhereOption orderBy(String orderByField){
-			return new OrderByWhereOption(orderByField,this);
-		}
-		public OrderByWhereOption orderBy(List<String> orderByFields){
-			return new OrderByWhereOption(orderByFields,this);
-		}
-
-		public LimitWhereOption limitTo(Integer lmt){
-			return new LimitWhereOption(lmt,this);
-		}
-
-		public OffsetWhereOption offset(Integer ofst){
-			return new OffsetWhereOption(ofst,this);
+		public SelectOffsetQuery offset(Integer ofst){
+			return new SelectOffsetQuery(ofst,this);
 		}
 
 		public override String toString(){
-			return ' '+sQuery+' WHERE '+ctr;
+			return ' '+sQuery+' WHERE '+cnd;
 		}
 
 		public List<SObject> getList(){
@@ -607,48 +626,47 @@ public class QB {
 		public map<Id,SObject> getMap(){
 			return null;
 		}
-
 	}
 
 	/**
-	* @description GroupByWhereOption : Group By option of the where clause
+	* @description SelectGroupByQuery : Group By option of the where clause
 	*/
-	public class GroupByWhereOption implements IWhereOption,IQuery {
-		private List<String> groupByFields;
-		private HavingCriteria havingCtr;
-		private IQuery swQuery;
+	public class SelectGroupByQuery implements IWhereOption,IQuery {
+		private final List<String> groupByFields;
+		private final HavingCondition havingCtr;
+		private final IQuery swQuery;
 
-		public GroupByWhereOption(String groupByField,IQuery swQuery){
+		public SelectGroupByQuery(String groupByField,IQuery swQuery){
 			this(new List<String>{groupByField},null,swQuery);
 		}
 
-		public GroupByWhereOption(List<String> groupByFields,IQuery swQuery){
+		public SelectGroupByQuery(List<String> groupByFields,IQuery swQuery){
 			this(groupByFields,null,swQuery);
 		}
 
-		public GroupByWhereOption(String groupByField,HavingCriteria havingCtr,IQuery swQuery){
+		public SelectGroupByQuery(String groupByField,HavingCondition havingCtr,IQuery swQuery){
 			this(new List<String>{groupByField},havingCtr,swQuery);
 		}
 
-		public GroupByWhereOption(List<String> groupByFields,HavingCriteria havingCtr,IQuery swQuery){
+		public SelectGroupByQuery(List<String> groupByFields,HavingCondition havingCtr,IQuery swQuery){
 			this.groupByFields=new List<String>(groupByFields);
 			this.havingCtr=havingCtr;
 			this.swQuery=swQuery;
 		}
 
-		public OrderByWhereOption orderBy(String orderByField){
-			return new OrderByWhereOption(orderByField,this);
+		public SelectOrderByQuery orderBy(String orderByField){
+			return new SelectOrderByQuery(orderByField,this);
 		}
-		public OrderByWhereOption orderBy(List<String> orderByFields){
-			return new OrderByWhereOption(orderByFields,this);
-		}
-
-		public LimitWhereOption limitTo(Integer lmt){
-			return new LimitWhereOption(lmt,this);
+		public SelectOrderByQuery orderBy(List<String> orderByFields){
+			return new SelectOrderByQuery(orderByFields,this);
 		}
 
-		public OffsetWhereOption offset(Integer ofst){
-			return new OffsetWhereOption(ofst,this);
+		public SelectLimitQuery limitTo(Integer lmt){
+			return new SelectLimitQuery(lmt,this);
+		}
+
+		public SelectOffsetQuery offset(Integer ofst){
+			return new SelectOffsetQuery(ofst,this);
 		}
 
 		public override String toString(){
@@ -665,26 +683,36 @@ public class QB {
 	}
 
 	/**
-	* @description OrderByWhereOption : Order By option of the where clause
+	* @description SelectOrderByQuery : Order By option of the where clause
 	*/
-	public class OrderByWhereOption implements IWhereOption,IQuery{
-		private List<String> orderByFields;
-		private IQuery swQuery;
+	public class SelectOrderByQuery implements IWhereOption,IQuery{
+		private final List<String> orderByFields;
+		private final IQuery swQuery;
 
-		public OrderByWhereOption(String orderByField,IQuery swQuery){
+		public SelectOrderByQuery(String orderByField,IQuery swQuery){
 			this(new List<String>{orderByField},swQuery);
 		}
-		public OrderByWhereOption(List<String> orderByFields,IQuery swQuery){
+		public SelectOrderByQuery(List<String> orderByFields,IQuery swQuery){
 			this.orderByFields=new List<String>(orderByFields);
 			this.swQuery=swQuery;
 		}
 
-		public LimitWhereOption limitTo(Integer lmt){
-			return new LimitWhereOption(lmt,this);
+		public SelectOrderByQuery(String orderByField,String orderType,IQuery swQuery){
+			// TODO
+			this(new List<String>{orderByField},swQuery);
+		}
+		public SelectOrderByQuery(List<String> orderByFields,String orderType,IQuery swQuery){
+			// TODO
+			this.orderByFields=new List<String>(orderByFields);
+			this.swQuery=swQuery;
 		}
 
-		public OffsetWhereOption offset(Integer ofst){
-			return new OffsetWhereOption(ofst,this);
+		public SelectLimitQuery limitTo(Integer lmt){
+			return new SelectLimitQuery(lmt,this);
+		}
+
+		public SelectOffsetQuery offset(Integer ofst){
+			return new SelectOffsetQuery(ofst,this);
 		}
 
 		public override String toString(){
@@ -701,19 +729,19 @@ public class QB {
 	}
 
 	/**
-	* @description LimitWhereOption : Limit option of the where clause
+	* @description SelectLimitQuery : Limit option of the where clause
 	*/
-	public class LimitWhereOption implements IWhereOption,IQuery{
-		private Integer lmt;
-		private IQuery swQuery;
+	public class SelectLimitQuery implements IWhereOption,IQuery{
+		private final Integer lmt;
+		private final IQuery swQuery;
 
-		public LimitWhereOption(Integer lmt,IQuery swQuery){
+		public SelectLimitQuery(Integer lmt,IQuery swQuery){
 			this.lmt=lmt;
 			this.swQuery=swQuery;
 		}
 
-		public OffsetWhereOption offset(Integer ofst){
-			return new OffsetWhereOption(ofst,this);
+		public SelectOffsetQuery offset(Integer ofst){
+			return new SelectOffsetQuery(ofst,this);
 		}
 
 		public override String toString(){
@@ -730,13 +758,13 @@ public class QB {
 	}
 
 	/**
-	* @description OffsetWhereOption : Offset option of the where clause
+	* @description SelectOffsetQuery : Offset option of the where clause
 	*/
-	public class OffsetWhereOption implements IWhereOption,IQuery{
-		private Integer ofst;
-		private IQuery swQuery;
+	public class SelectOffsetQuery implements IWhereOption,IQuery{
+		private final Integer ofst;
+		private final IQuery swQuery;
 
-		public OffsetWhereOption(Integer ofst, IQuery swQuery){
+		public SelectOffsetQuery(Integer ofst, IQuery swQuery){
 			this.ofst=ofst;
 			this.swQuery=swQuery;
 		}
@@ -758,8 +786,8 @@ public class QB {
 	* @description AggregateFunction : aggregate function
 	*/
 	public class AggregateFunction {
-		private String functionType;
-		private String fieldName;
+		private final String functionType;
+		private final String fieldName;
 
 		public AggregateFunction(String functionType){
 			this(functionType,null);
@@ -769,55 +797,55 @@ public class QB {
 			this.fieldName=fieldName;
 		}
 
-		private HavingCriteria handleOperator(Op operator,String value){
-			return new HavingCriteria(this,operator,value);
+		private HavingCondition handleOperator(Op operator,String value){
+			return new HavingCondition(this,operator,value);
 		}
 
 		// equal to
-		public HavingCriteria eq(String value){
+		public HavingCondition eq(String value){
 			return handleOperator(Op.EQ,value); 
 		}
-		public HavingCriteria equal(String value){
+		public HavingCondition equal(String value){
 			return eq(value);
 		}
 
 		// not equal to
-		public HavingCriteria ne(String value){
+		public HavingCondition ne(String value){
 			return handleOperator(Op.NE,value);
 		}
-		public HavingCriteria notEqual(String value){
+		public HavingCondition notEqual(String value){
 			return ne(value);
 		}
 		
 		// greater than
-		public HavingCriteria gt(String value){
+		public HavingCondition gt(String value){
 			return handleOperator(Op.GT,value);
 		}
-		public HavingCriteria greaterThan(String value){
+		public HavingCondition greaterThan(String value){
 			return gt(value);
 		}
 
 		// less than
-		public HavingCriteria lt(String value){
+		public HavingCondition lt(String value){
 			return handleOperator(Op.LT,value);
 		}
-		public HavingCriteria lessThan(String value){
+		public HavingCondition lessThan(String value){
 			return lt(value);
 		}
 
 		// greater than or equal to
-		public HavingCriteria ge(String value){
+		public HavingCondition ge(String value){
 			return handleOperator(Op.GE,value);
 		}
-		public HavingCriteria greaterOrEqual(String value){
+		public HavingCondition greaterOrEqual(String value){
 			return ge(value);
 		}
 
 		// less than or equal to
-		public HavingCriteria le(String value){
+		public HavingCondition le(String value){
 			return handleOperator(Op.LE,value);
 		}
-		public HavingCriteria lessOrEqual(String value){
+		public HavingCondition lessOrEqual(String value){
 			return le(value);
 		}
 
@@ -828,12 +856,15 @@ public class QB {
 		}
 	}
 
-	public class HavingCriteria{
-		private AggregateFunction aggrFunc;
-		private Op operator;
-		private String value;
+	/**
+	* @description HavingCondition : having condition
+	*/
+	public class HavingCondition{
+		private final AggregateFunction aggrFunc;
+		private final Op operator;
+		private final String value;
 
-		public HavingCriteria(AggregateFunction aggrFunc,Op operator,String value){
+		public HavingCondition(AggregateFunction aggrFunc,Op operator,String value){
 			this.aggrFunc=aggrFunc;
 			this.operator=operator;
 			this.value=value;
@@ -842,7 +873,7 @@ public class QB {
 		public override String toString(){
 			String strOperator=util.operatorToString(operator);
 			if(strOperator==null)
-				throw new CriteriaException(errMsg.unkownOperator);
+				throw new ConditionException(errMsg.unkownOperator);
 			else
 				return aggrFunc+' '+strOperator+' '+value;
 		}
@@ -896,6 +927,6 @@ public class QB {
 
 	// Exceptions
 	public class QueryException extends Exception {}
-	public class CriteriaException extends Exception {}
+	public class ConditionException extends Exception {}
 
 }
