@@ -179,8 +179,175 @@ private class QBTest {
 	static void criteriaSpecialCasesTest() {
 		Test.startTest();
 
+		System.assertEquals('Name', QB.field('Name').toString());
+		System.assertEquals('Name', QB.field('Name').op(QB.Op.EQ,new List<String>()).toString());
+		try{
+			String test=QB.field('Name').op(QB.Op.LK,new List<String>{'Value1','Value2'}).toString();
+		}catch(Exception e){
+			System.assertEquals('Only the operators EQUAL & NOTEQUAL can handle a list of values',e.getMessage());
+		}
 		// TODO
 
 		Test.stopTest();
 	}	
+
+	@isTest 
+	static void selectFieldsClauseTest() {
+		Test.startTest();
+
+		System.assertEquals('SELECT Name',QB.select_x('Name').toString());
+		System.assertEquals('SELECT Name1,Name2',QB.select_x('Name1,Name2').toString());
+		System.assertEquals('SELECT Name1,Name2',QB.select_x(new List<String>{'Name1','Name2'}).toString());
+		System.assertEquals('SELECT Name,(SELECT Name FROM Account)',
+								QB.select_x('Name')
+								.addSubQuery(QB.select_x('Name').from_x('Account')).toString());
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	static void selectAggregateClauseTest() {
+		Test.startTest();
+
+		System.assertEquals('SELECT COUNT()',QB.select_x(QB.count()).toString());
+		System.assertEquals('SELECT COUNT(Name)',QB.select_x(QB.count('Name')).toString());
+		System.assertEquals('SELECT COUNT(Name1),Name2',QB.select_x(QB.count('Name1'),'Name2').toString());
+		System.assertEquals('SELECT COUNT(Name1),Name2,Name3',QB.select_x(QB.count('Name1'),'Name2,Name3').toString());
+		System.assertEquals('SELECT COUNT(Name1),Name2,Name3',QB.select_x(QB.count('Name1'),new List<String>{'Name2','Name3'}).toString());
+		System.assertEquals('SELECT COUNT_DISTINCT(Name)',QB.select_x(QB.count_distinct('Name')).toString());
+		System.assertEquals('SELECT AVG()',QB.select_x(QB.avg()).toString());
+		System.assertEquals('SELECT MIN()',QB.select_x(QB.min()).toString());
+		System.assertEquals('SELECT MAX()',QB.select_x(QB.max()).toString());
+		System.assertEquals('SELECT SUM()',QB.select_x(QB.sum()).toString());
+		try{
+			String test=QB.select_x(QB.count())
+							.addSubQuery(QB.select_x('Name').from_x('Account')).toString();
+		}catch(Exception e){
+			System.assertEquals('You can\'t add a sub query to aggregate clause',e.getMessage());
+		}
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	static void selectQueryTest() {
+		Test.startTest();
+
+		System.assertEquals('SELECT Name FROM Account',QB.select_x('Name')
+														.from_x('Account').toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\'',QB.select_x('Name')
+														.from_x('Account')
+														.where_x('Name',QB.Op.EQ,'Value').toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name IN (\'Value1\',\'Value2\')',QB.select_x('Name')
+														.from_x('Account')
+														.where_x('Name',QB.Op.EQ,new List<String>{'Value1','Value2'}).toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\'',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value')).toString());
+		System.assertEquals('SELECT Name FROM Account GROUP BY Name',QB.select_x('Name')
+														.from_x('Account')
+														.groupBy('Name').toString());
+		System.assertEquals('SELECT Name FROM Account GROUP BY Name1,Name2',QB.select_x('Name')
+														.from_x('Account')
+														.groupBy(new List<String>{'Name1','Name2'}).toString());
+		System.assertEquals('SELECT Name FROM Account GROUP BY Name HAVING COUNT(Name) = 1',QB.select_x('Name')
+														.from_x('Account')
+														.groupBy('Name',QB.count('Name').eq('1')).toString());
+		System.assertEquals('SELECT Name FROM Account GROUP BY Name1,Name2 HAVING COUNT(Name) = 1',QB.select_x('Name')
+														.from_x('Account')
+														.groupBy(new List<String>{'Name1','Name2'},QB.count('Name').eq('1')).toString());
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name',QB.select_x('Name')
+														.from_x('Account')
+														.orderBy('Name').toString());
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name1,Name2',QB.select_x('Name')
+														.from_x('Account')
+														.orderBy(new List<String>{'Name1','Name2'}).toString());
+		System.assertEquals('SELECT Name FROM Account LIMIT 1',QB.select_x('Name')
+														.from_x('Account')
+														.limitTo(1).toString());
+		System.assertEquals('SELECT Name FROM Account OFFSET 1',QB.select_x('Name')
+														.from_x('Account')
+														.offset(1).toString());
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	static void selectWhereQueryTest() {
+		Test.startTest();
+
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\'',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value')).toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' GROUP BY Name',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value'))
+														.groupBy('Name').toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' GROUP BY Name1,Name2',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value'))
+														.groupBy(new List<String>{'Name1','Name2'}).toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' GROUP BY Name HAVING COUNT(Name) = 1',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value'))
+														.groupBy('Name',QB.count('Name').eq('1')).toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' GROUP BY Name1,Name2 HAVING COUNT(Name) = 1',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value'))
+														.groupBy(new List<String>{'Name1','Name2'},QB.count('Name').eq('1')).toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' ORDER BY Name',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value'))
+														.orderBy('Name').toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' ORDER BY Name1,Name2',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value'))
+														.orderBy(new List<String>{'Name1','Name2'}).toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' LIMIT 1',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value'))
+														.limitTo(1).toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\' OFFSET 1',QB.select_x('Name')
+														.from_x('Account')
+														.where_x(QB.Field('Name').eq('Value'))
+														.offset(1).toString());
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	static void selectGroupByQueryTest() {
+		Test.startTest();
+
+		// TODO
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	static void selectOrderByQueryTest() {
+		Test.startTest();
+
+		// TODO
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	static void selectLimitQueryTest() {
+		Test.startTest();
+
+		// TODO
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	static void selectOffsetQueryTest() {
+		Test.startTest();
+
+		// TODO
+
+		Test.stopTest();
+	}
 }

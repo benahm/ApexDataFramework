@@ -35,6 +35,7 @@ public class QB {
 		return new NotCondition(cnd) ;
 	}
 
+
 	/**
 	* @description apply the logical operator AND to two conditions
 	* @param cnd1 : the first condition
@@ -44,6 +45,7 @@ public class QB {
 	public static AndCondition and_x(ICondition cnd1, ICondition cnd2){
 		return new AndCondition(cnd1,cnd2);
 	}
+
 
 	/**
 	* @description apply the logical operator OR to two conditions
@@ -422,7 +424,7 @@ public class QB {
 				} else if(this.operator == Op.NE){
 					return field+' NOT IN (\''+joinedFieldValues+'\')';
 				} else {
-					throw new ConditionException('Only the operators EQUAL & NOTEQUAL can handle a list of values');
+					throw new QBConditionException(errMsg.operatorDoNotHandleMultiValues);
 				}
 			}
 
@@ -430,7 +432,7 @@ public class QB {
 			String fieldValue=fieldValues.get(0);
 			String strOperator=util.operatorToString(operator);
 			if(strOperator == null)
-				throw new ConditionException(errMsg.unkownOperator);
+				throw new QBConditionException(errMsg.unkownOperator);
 			else 
 				return field+' '+strOperator+' '+'\''+ fieldValue+'\'';
 		}
@@ -500,14 +502,14 @@ public class QB {
 		}
 
 		public override SelectClause addSubQuery(IQuery query){
-			throw new QueryException('You can\'t add a sub query to aggregate clause');
+			throw new QBQueryException(errMsg.cannotAddSubQuery);
 		}
 
 		public override String toString(){
 			String result='SELECT ';
 			if(aggrFunc!=null) result+=aggrFunc;
 			if(!selectedFields.isEmpty()) 
-				result+=String.join(selectedFields,',');
+				result+=','+String.join(selectedFields,',');
 
 			return result;
 		}
@@ -529,9 +531,11 @@ public class QB {
 		public SelectWhereQuery where_x(ICondition cnd){
 			return new SelectWhereQuery(cnd,this);
 		}
-
 		public SelectWhereQuery where_x(String fieldName, Op operator, String fieldValue){
 			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValue),this);
+		}
+		public SelectWhereQuery where_x(String fieldName, Op operator, List<String> fieldValues){
+			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValues),this);
 		}
 
 		public SelectGroupByQuery groupBy(String groupByField){
@@ -616,7 +620,7 @@ public class QB {
 		}
 
 		public override String toString(){
-			return ' '+sQuery+' WHERE '+cnd;
+			return sQuery+' WHERE '+cnd;
 		}
 
 		public List<SObject> getList(){
@@ -670,7 +674,10 @@ public class QB {
 		}
 
 		public override String toString(){
-			return swQuery+' GROUP BY '+String.join(groupByFields, ',')+' HAVING '+havingCtr;
+			String result=swQuery+' GROUP BY '+String.join(groupByFields, ',');
+			if(havingCtr!=null)
+				result+=' HAVING '+havingCtr;
+			return result;
 		}
 
 		public List<SObject> getList(){
@@ -873,7 +880,7 @@ public class QB {
 		public override String toString(){
 			String strOperator=util.operatorToString(operator);
 			if(strOperator==null)
-				throw new ConditionException(errMsg.unkownOperator);
+				throw new QBConditionException(errMsg.unkownOperator);
 			else
 				return aggrFunc+' '+strOperator+' '+value;
 		}
@@ -923,10 +930,12 @@ public class QB {
 	*/
 	private class ErrorMessage {
 		public final String unkownOperator='Unkown Operator';
+		public final String operatorDoNotHandleMultiValues='Only the operators EQUAL & NOTEQUAL can handle a list of values';
+		public final String cannotAddSubQuery='You can\'t add a sub query to aggregate clause';
 	}
 
 	// Exceptions
-	public class QueryException extends Exception {}
-	public class ConditionException extends Exception {}
+	public class QBQueryException extends Exception {}
+	public class QBConditionException extends Exception {}
 
 }
