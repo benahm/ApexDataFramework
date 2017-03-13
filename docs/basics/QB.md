@@ -45,5 +45,13 @@ The query builder offers a way to create complex conditions
   ```sql
   Name='Acme Corporation' AND Type='Prospect'
   ```
+#### Field Condition:
+
+  ```apex
+  QB.field('Name').eq('Acme Corporation')
+  ```
+  ```apex
+  QB.fieldExpr('Name','=','Acme Corporation')
+  ```
 
 *__NOTE__: 'select', 'from' and 'where' are all reserved words in apex and can not be used as names of methods, to get around the suffix '__\_x__' is appended to the reserved words*
