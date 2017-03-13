@@ -15,6 +15,7 @@
 * @description Query Builder class
 */
 public class QB {
+	private static final String singleQuote='\'';
 	private static final Util util=new Util();
 	private static final ErrorMessage errMsg=new ErrorMessage();
 	public enum Op {EQ, EQUAL,
@@ -24,6 +25,15 @@ public class QB {
 			GE, GREATEROREQUAL,
 			LE, LESSOREQUAL,
 			LK, ISLIKE}
+	
+
+	private static final Map <String, Schema.SObjectType> globalSchemaMap;
+
+	// class initialisation code
+	static {
+	    globalSchemaMap = Schema.getGlobalDescribe();
+	}
+
 
 
 	/**
@@ -72,17 +82,11 @@ public class QB {
 	* @param operator : the comparator operator
 	* @return Field
 	*/
-	public static FieldCondition fieldExpr(String name, Op operator, String fieldValue){
-		return new Field(name).op(operator,fieldValue);
+	public static FieldCondition fieldExpr(String name, Op operator, Object value){
+		return new Field(name).op(operator,value);
 	}
-	public static FieldCondition fieldExpr(String name, Op operator, List<String> fieldValues){
-		return new Field(name).op(operator,fieldValues);
-	}
-	public static FieldCondition fieldExpr(String name, String operator, String fieldValue){
-		return new Field(name).op(operator,fieldValue);
-	}
-	public static FieldCondition fieldExpr(String name, String operator, List<String> fieldValues){
-		return new Field(name).op(operator,fieldValues);
+	public static FieldCondition fieldExpr(String name, String operator, Object value){
+		return new Field(name).op(operator,value);
 	}
 
 	/**
@@ -156,6 +160,14 @@ public class QB {
 		return new SelectAggregateClause(aggrFunc,fieldNames);
 	}
 
+
+	public static OrderOption ascending(){
+		return new OrderOption('ASC',null);
+	}
+	public static OrderOption descending(){
+		return new OrderOption('DESC',null);
+	}
+
 	/****************************************************************************************/
 	/*					Interfaces					*/
 	/****************************************************************************************/
@@ -179,32 +191,28 @@ public class QB {
 	*/
 	public interface IField {
 		// equal to
-		FieldCondition eq(String fieldValue);
-		FieldCondition eq(List<String> fieldValues);
-		FieldCondition equal(String fieldValue);
-		FieldCondition equal(List<String> fieldValues);
+		FieldCondition eq(Object value);
+		FieldCondition equal(Object value);
 
 		// not equal to
-		FieldCondition ne(String fieldValue);
-		FieldCondition ne(List<String> fieldValues);
-		FieldCondition notEqual(String fieldValue);
-		FieldCondition notEqual(List<String> fieldValues);
+		FieldCondition ne(Object value);
+		FieldCondition notEqual(Object value);
 		
 		// greater than
-		FieldCondition gt(String fieldValue);
-		FieldCondition greaterThan(String fieldValue);
+		FieldCondition gt(Object value);
+		FieldCondition greaterThan(Object value);
 
 		// less than
-		FieldCondition lt(String fieldValue);
-		FieldCondition lessThan(String fieldValue);
+		FieldCondition lt(Object value);
+		FieldCondition lessThan(Object value);
 
 		// greater than or equal to
-		FieldCondition ge(String fieldValue);
-		FieldCondition greaterOrEqual(String fieldValue);
+		FieldCondition ge(Object value);
+		FieldCondition greaterOrEqual(Object value);
 
 		// less than or equal to
-		FieldCondition le(String fieldValue);
-		FieldCondition lessOrEqual(String fieldValue);
+		FieldCondition le(Object value);
+		FieldCondition lessOrEqual(Object value);
 
 		// like 
 		FieldCondition lk(String fieldValue);
@@ -236,9 +244,9 @@ public class QB {
 	* 			      applied to multiple conditions
 	*/
 	public abstract class NaryCondition implements ICondition {
-		public abstract String getOperator();
-		public abstract List<ICondition> getListConditions();
-		public abstract NaryCondition getInstance();
+		protected abstract String getOperator();
+		protected abstract List<ICondition> getListConditions();
+		protected abstract NaryCondition getInstance();
 
 		public NaryCondition add(ICondition cnd){
 			getListConditions().add(cnd);
@@ -310,97 +318,77 @@ public class QB {
 		private final String fieldName;
 
 		public Field(String fieldName){
-			// escape
 			this.fieldName=fieldName;
 		}
 
-		private FieldCondition handleOperator(Op operator,List<String> fieldValues){
-			return new FieldCondition(this,operator,fieldValues);
+		private FieldCondition handleOperator(Op operator,Object value){
+			return new FieldCondition(this,operator,value);
 		}
-		private FieldCondition handleOperator(String operator,List<String> fieldValues){
-			return new FieldCondition(this,operator,fieldValues);
-		}
-
-		public FieldCondition op(Op operator, String fieldValue){
-			return handleOperator(operator,new List<String>{fieldValue});
-		}
-		public FieldCondition op(Op operator, List<String> fieldValues){
-			return handleOperator(operator,fieldValues);
+		private FieldCondition handleOperator(String operator,Object value){
+			return new FieldCondition(this,operator,value);
 		}
 
-		public FieldCondition op(String operator, String fieldValue){
-			return handleOperator(operator,new List<String>{fieldValue});
+		public FieldCondition op(Op operator, Object value){
+			return handleOperator(operator,value);
 		}
-		public FieldCondition op(String operator, List<String> fieldValues){
-			return handleOperator(operator,fieldValues);
+		public FieldCondition op(String operator, Object value){
+			return handleOperator(operator,value);
 		}
 
 		// equal to
-		public FieldCondition eq(String fieldValue){
-			return eq(new List<String>{fieldValue}); 
+		public FieldCondition eq(Object value){
+			return handleOperator(Op.EQ,value);
 		}
-		public FieldCondition eq(List<String> fieldValues){
-			return handleOperator(Op.EQ,fieldValues);
-		}
-		public FieldCondition equal(String fieldValue){
-			return eq(fieldValue);
-		}
-		public FieldCondition equal(List<String> fieldValues){
-			return eq(fieldValues);
+		public FieldCondition equal(Object value){
+			return eq(value);
 		}
 
 		// not equal to
-		public FieldCondition ne(String fieldValue){
-			return ne(new List<String>{fieldValue});
+		public FieldCondition ne(Object value){
+			return handleOperator(Op.NE,value);	
 		}
-		public FieldCondition ne(List<String> fieldValues){
-			return handleOperator(Op.NE,fieldValues);	
-		}
-		public FieldCondition notEqual(String fieldValue){
-			return ne(fieldValue);
-		}
-		public FieldCondition notEqual(List<String> fieldValues){
-			return ne(fieldValues);
+		public FieldCondition notEqual(Object value){
+			return ne(value);
 		}
 		
 		// greater than
-		public FieldCondition gt(String fieldValue){
-			return handleOperator(Op.GT,new List<String>{fieldValue});
+		public FieldCondition gt(Object value){
+			return handleOperator(Op.GT,value);
 		}
-		public FieldCondition greaterThan(String fieldValue){
-			return gt(fieldValue);
+		public FieldCondition greaterThan(Object value){
+			return gt(value);
 		}
 
 		// less than
-		public FieldCondition lt(String fieldValue){
-			return handleOperator(Op.LT,new List<String>{fieldValue});
+		public FieldCondition lt(Object value){
+			return handleOperator(Op.LT,value);
 		}
-		public FieldCondition lessThan(String fieldValue){
-			return lt(fieldValue);
+		public FieldCondition lessThan(Object value){
+			return lt(value);
 		}
 
 		// greater than or equal to
-		public FieldCondition ge(String fieldValue){
-			return handleOperator(Op.GE,new List<String>{fieldValue});
+		public FieldCondition ge(Object value){
+			return handleOperator(Op.GE,value);
 		}
-		public FieldCondition greaterOrEqual(String fieldValue){
-			return ge(fieldValue);
+		public FieldCondition greaterOrEqual(Object value){
+			return ge(value);
 		}
 
 		// less than or equal to
-		public FieldCondition le(String fieldValue){
-			return handleOperator(Op.LE,new List<String>{fieldValue});
+		public FieldCondition le(Object value){
+			return handleOperator(Op.LE,value);
 		}
-		public FieldCondition lessOrEqual(String fieldValue){
-			return le(fieldValue);
+		public FieldCondition lessOrEqual(Object value){
+			return le(value);
 		}
 
 		// like 
-		public FieldCondition lk(String fieldValue){
-			return handleOperator(Op.LK,new List<String>{fieldValue});
+		public FieldCondition lk(Object value){
+			return handleOperator(Op.LK,value);
 		}
-		public FieldCondition isLike(String fieldValue){
-			return lk(fieldValue);
+		public FieldCondition isLike(Object value){
+			return lk(value);
 		}
 
 		public override String toString(){
@@ -414,39 +402,53 @@ public class QB {
 	public class FieldCondition implements ICondition {
 		private final Field field;
 		private final String operator;
-		private final List<String> fieldValues;
+		private final String values;
 
-		public FieldCondition(Field field,Op operator,List<String> fieldValues){
-			this(field,util.operatorToString(operator),fieldValues);
+		public FieldCondition(Field field,Op operator,Object value){
+			this(field,util.operatorToString(operator),value);
 		}
-		public FieldCondition(Field field,String operator,List<String> fieldValues){
+		public FieldCondition(Field field,String operator,Object value){
 			this.field=field;
 			this.operator=operator.trim();
-			this.fieldValues = new List<String>(Util.escapeSingleQuotes(fieldValues));
+			this.values=parseValue(value);
+		}
+
+		private String parseValue(Object value){
+			if(value == null) return 'NULL';
+			if(Util.isNumberOrBoolean(value)){
+				return value+'';
+			} else if(value instanceof String){
+				return singleQuote+String.escapeSingleQuotes(value+'')+singleQuote;
+			} else if(value instanceof List<String>){
+				List<String> values=(List<String>)value;
+				if(values.isEmpty()) throw new QBConditionException('Error Value is Empty List');
+				return '('+singleQuote+String.join(Util.escapeSingleQuotes(values),singleQuote+','+singleQuote)+singleQuote+')';
+			}else 
+				throw new QBConditionException('Error Bad Value Type');
+		}
+
+		private Boolean isMultipeValues(String value){
+			return value.startsWith('(') && value.endsWith(')');
 		}
 
 		public override String toString(){
-			if(fieldValues.isEmpty())
-				return field+'';
 
 			// Multiple values
-			if(fieldValues.size() > 1){
-				String joinedFieldValues=String.join(fieldValues,'\',\'');
-				if(operator == '='){
-					return field+' IN (\''+joinedFieldValues+'\')';
-				} else if(this.operator == '!='){
-					return field+' NOT IN (\''+joinedFieldValues+'\')';
+			if(isMultipeValues(values)){
+				if(operator == '='){ // EQUAL
+					return field+' IN '+values;
+				} else if(this.operator == '!='){ // NOT EQUAL
+					return field+' NOT IN '+values;
 				} else {
 					throw new QBConditionException(errMsg.operatorDoNotHandleMultiValues);
 				}
 			}
 
 			// Single value
-			String fieldValue=fieldValues.get(0);
 			if(operator == null)
 				throw new QBConditionException(errMsg.unkownOperator);
 			else 
-				return field+' '+operator+' '+'\''+ fieldValue+'\'';
+				return field+' '+operator+' '+values;
 		}
 	}
 
@@ -454,6 +456,21 @@ public class QB {
 	* @description Query : a valid query
 	*/
 	public abstract class Query implements IQuery {
+
+		/* handle asterix & simple pattern to filter on fieldNames*/
+		private String getListFieldNames(String fieldName){
+			Schema.SObjectType sObjectType = globalSchemaMap.get(/*sObjectName*/'Account');
+			Map <String, Schema.SObjectField> fieldMap = sObjectType.getDescribe().fields.getMap();
+			
+			List<String> fieldsList = new List<String>();
+			
+			for (Schema.SObjectField sfield : fieldMap.Values()) {
+				String sObjectFieldName = sfield.getDescribe().getname();
+				if(Pattern.matches(fieldName,sObjectFieldName))
+			    	fieldsList.add(sfield.getDescribe().getname());
+			}
+			return null;
+		}
 
 		public List<SObject> getList(){
 			String soqlQuery=toString();
@@ -463,6 +480,7 @@ public class QB {
 		public map<Id,SObject> getMap(){
 			return new Map<Id,SObject>(getList());
 		}
+
 	}
 
 	/**
@@ -589,6 +607,12 @@ public class QB {
 		public SelectOrderByQuery orderBy(List<String> orderByFields){
 			return new SelectOrderByQuery(orderByFields,this);
 		}
+		public SelectOrderByQuery orderBy(String orderByField, OrderOption ordr){
+			return new SelectOrderByQuery(orderByField,this);
+		}
+		public SelectOrderByQuery orderBy(List<String> orderByFields, OrderOption ordr){
+			return new SelectOrderByQuery(orderByFields,this);
+		}
 
 		public SelectLimitQuery limitTo(Integer lmt){
 			return new SelectLimitQuery(lmt,this);
@@ -659,15 +683,12 @@ public class QB {
 		public SelectGroupByQuery(String groupByField,IQuery swQuery){
 			this(new List<String>{groupByField},null,swQuery);
 		}
-
 		public SelectGroupByQuery(List<String> groupByFields,IQuery swQuery){
 			this(groupByFields,null,swQuery);
 		}
-
 		public SelectGroupByQuery(String groupByField,HavingCondition havingCtr,IQuery swQuery){
 			this(new List<String>{groupByField},havingCtr,swQuery);
 		}
-
 		public SelectGroupByQuery(List<String> groupByFields,HavingCondition havingCtr,IQuery swQuery){
 			this.groupByFields=new List<String>(groupByFields);
 			this.havingCtr=havingCtr;
@@ -700,7 +721,7 @@ public class QB {
 	/**
 	* @description SelectOrderByQuery : Order By option of the where clause
 	*/
-	public class SelectOrderByQuery extends Query {
+	public class SelectOrderByQuery extends Query implements ICondition {
 		private final List<String> orderByFields;
 		private final IQuery swQuery;
 
@@ -772,6 +793,34 @@ public class QB {
 			return swQuery+' OFFSET '+ofst;
 		}
 	}
+
+
+
+	public class OrderOption {
+		public String orderType;
+		public String orderNulls;
+
+		public OrderOption(String orderType, String orderNulls){
+			this.orderType=orderType;
+			this.orderNulls=orderNulls;
+		}
+
+		public FinalOrderType nullsFirst(){
+			this.orderNulls='FIRST';
+			return new FinalOrderType();
+		}
+
+		public FinalOrderType nullsLast(){
+			this.orderNulls='LAST';
+			return new FinalOrderType();
+		}
+
+		public override String toString(){
+			return null;
+		}
+	}
+
+	public class FinalOrderType {}
 
 	/**
 	* @description AggregateFunction : aggregate function
@@ -852,21 +901,23 @@ public class QB {
 	*/
 	public class HavingCondition{
 		private final AggregateFunction aggrFunc;
-		private final Op operator;
+		private final String operator;
 		private final Integer value;
 
 		public HavingCondition(AggregateFunction aggrFunc,Op operator,Integer value){
+			this(aggrFunc,util.operatorToString(operator),value);
+		}
+		public HavingCondition(AggregateFunction aggrFunc,String operator,Integer value){
 			this.aggrFunc=aggrFunc;
 			this.operator=operator;
 			this.value=value;
 		}
 
 		public override String toString(){
-			String strOperator=util.operatorToString(operator);
-			if(strOperator==null)
+			if(operator==null)
 				throw new QBConditionException(errMsg.unkownOperator);
 			else
-				return aggrFunc+' '+strOperator+' '+value;
+				return aggrFunc+' '+operator+' '+value;
 		}
 	}
 
@@ -876,6 +927,9 @@ public class QB {
 	private class Validator {
 
 		// validate field name
+		public Boolean validateFieldName(String fieldName){
+			return null;
+		}
 		// validate operator
 		// ...
 
@@ -918,6 +972,14 @@ public class QB {
 				escapedValues.add(String.escapeSingleQuotes(value));
 			}
 			return escapedValues;
+		}
+
+		public Boolean isNumberOrBoolean(Object obj){
+			return obj instanceof Integer 
+					|| obj instanceof Double
+					|| obj instanceof Long
+					|| obj instanceof Decimal
+					|| obj instanceof Boolean;
 		}
 	}
 
