@@ -22,11 +22,32 @@
   ```apex
   QB.select_x('Name')
     .from_x('Account')
-    .where_x(QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Type','=','Prospect')))
+    .where_x(QB.and_x(QB.field('Name').eq('Acme Corporation'), 
+                      QB.fieldExpr('Type','=','Prospect')
+                      )
+             )
   ```
   
 *Equivalent SOQL Query*
 
   ```sql
   SELECT Name FROM Account WHERE Name='Acme Corporation' AND Type='Prospect'
+  ```
+
+**Example 2**
+
+  ```apex
+  QB.select_x('Name')
+    .from_x('Account')
+    .where_x(QB.and_x(QB.field('Name').eq('Acme Corporation'),
+                      QB.or_x(QB.fieldExpr('Type','=','Prospect'),
+                              QB.fieldExpr('Type','=','Customer')
+                      )
+             )
+  ```
+  
+*Equivalent SOQL Query*
+
+  ```sql
+  SELECT Name FROM Account WHERE Name='Acme Corporation' AND (Type='Prospect' OR Type='Customer')
   ```
