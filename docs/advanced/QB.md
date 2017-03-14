@@ -7,7 +7,7 @@
 | *select*     | select_x      | QB         |
 | *from*       | from_x        | chained    |
 | *where*      | where_x       | chained    |
-| *group By*   | groupBy       | chained    |
+| *group by*   | groupBy       | chained    |
 | *order by*   | orderBy       | chained    |
 | *limit*      | limitTo       | chained    |
 | *offset*     | offset        | chained    |
