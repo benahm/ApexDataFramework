@@ -68,4 +68,28 @@ The query builder offers a way to create complex conditions
   ```apex
   Name='Acme Coproration' AND Name='Acme Corporation'
   ```
+
+#### Building a Query:
+
+  ```apex
+  QB.select_x('*').from_x('Account')
+  ```
+  ```sql
+  select ALL_FIELDS from Account
+  ```
+  
+  ```apex
+  QB.select_x('*__c').from_x('Account')
+  ```
+  ```sql
+  select ALL_CUSTOM_FIELDS from Account
+  ```
+  
+    ```apex
+  QB.select_x('Owner.Id').from_x('Account')
+  ```
+  ```sql
+  select Owner.Id from Account
+  ```
+  
 *__NOTE__: 'select', 'from' and 'where' are all reserved words in apex and can not be used as names of methods, to get around the suffix '__\_x__' is appended to the reserved words*
