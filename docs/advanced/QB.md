@@ -32,8 +32,8 @@
   <td>eq, equal</td>
   <td>Field/AggregateFunction</td>
   <td><pre lang="apex">
-  QB.field('Name').eq('Value') // Field
-  QB.count().eq(1) // AggregateFunction
+  QB.field('Name').eq('Value') // Field - SOQL : Name = 'Value'
+  QB.count().eq(1) // AggregateFunction - SOQL : COUNT() = 1
   </pre></td>
 </tr>
 <tr></tr>
@@ -42,7 +42,7 @@
   <td>eq, equal</td>
   <td>Field</td>
   <td><pre lang="apex">
-  QB.field('Name').eq(new List{'Value1','Value2'})
+  QB.field('Name').eq(new List&lt;String&gt;{'Value1','Value2'}) // - SOQL : Name IN ('Value1','Value2')
   </pre></td>
 </tr>
 <tr></tr>
@@ -61,7 +61,7 @@
   <td>ne, notequal</td>
   <td>Field</td>
   <td><pre lang="apex">
-  QB.field('Name').ne(new List{'Value1','Value2'})
+  QB.field('Name').ne(new List&lt;String&gt;{'Value1','Value2'})
   </pre></td>
 </tr>
 <tr></tr>
