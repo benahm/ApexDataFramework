@@ -71,7 +71,40 @@ As a list
   QB.select_x(new List<String>{'Name','Type'})
     .from_x('Account')
   ```
+*Equivalent SOQL Query*
 
-### 6. Select a sub query
+  ```sql
+  SELECT Name,Type FROM Account
+  ```
+
+### 6. Select with a sub query
+
+Add sub query with the method addSubQuery
+
+  ```apex
+  QB.select_x('Name')
+    .addSubQuery(QB.select_x('LastName')
+                   .from_x('Contacts'))
+    .from_x('Account')
+  ```
+
+*Equivalent SOQL Query*
+
+  ```sql
+  SELECT Name,(SELECT LastName FROM Contacts) FROM Account
+  ```
 
 ### 7. Select aggregate function
+
+Aggregate function
+
+  ```apex
+  QB.select_x(QB.count())
+    .from_x('Account')
+  ```
+
+*Equivalent SOQL Query*
+
+  ```sql
+  SELECT COUNT() FROM Account
+  ```
