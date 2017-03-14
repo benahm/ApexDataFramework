@@ -79,7 +79,7 @@ As a list
 
 ### 6. Select with a sub query
 
-Add sub query with the method addSubQuery
+Add a sub query with the method addSubQuery
 
   ```apex
   QB.select_x('Name')
