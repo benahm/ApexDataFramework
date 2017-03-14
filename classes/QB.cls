@@ -41,7 +41,10 @@ public class QB {
 	* @param cnd : Condition
 	* @return NotCondition 
 	*/
-	public static NotCondition not_x(ICondition cnd){
+	public static IFieldCondition not_x(IFieldCondition cnd){
+		return new NotCondition(cnd) ;
+	}
+	public static IHavingCondition not_x(IHavingCondition cnd){
 		return new NotCondition(cnd) ;
 	}
 
@@ -52,7 +55,10 @@ public class QB {
 	* @param cnd2 : the second condition
 	* @return AndCondition
 	*/
-	public static AndCondition and_x(ICondition cnd1, ICondition cnd2){
+	public static IFieldMultiCondition and_x(IFieldCondition cnd1, IFieldCondition cnd2){
+		return new AndCondition(cnd1,cnd2);
+	}
+	public static IHavingMultiCondition and_x(IHavingCondition cnd1, IHavingCondition cnd2){
 		return new AndCondition(cnd1,cnd2);
 	}
 
@@ -63,7 +69,10 @@ public class QB {
 	* @param cnd2 : the second condition
 	* @return OrCondition
 	*/
-	public static OrCondition or_x(ICondition cnd1, ICondition cnd2){
+	public static IFieldMultiCondition or_x(IFieldCondition cnd1, IFieldCondition cnd2){
+		return new OrCondition(cnd1,cnd2);
+	}
+	public static IHavingMultiCondition or_x(IHavingCondition cnd1, IHavingCondition cnd2){
 		return new OrCondition(cnd1,cnd2);
 	}
 
@@ -82,10 +91,10 @@ public class QB {
 	* @param operator : the comparator operator
 	* @return Field
 	*/
-	public static FieldCondition fieldExpr(String name, Op operator, Object value){
+	public static IFieldCondition fieldExpr(String name, Op operator, Object value){
 		return new Field(name).op(operator,value);
 	}
-	public static FieldCondition fieldExpr(String name, String operator, Object value){
+	public static IFieldCondition fieldExpr(String name, String operator, Object value){
 		return new Field(name).op(operator,value);
 	}
 
@@ -112,60 +121,65 @@ public class QB {
 	* @description avg aggregate function
 	* @return AggregateFunction
 	*/
-	public static AggregateFunction avg(){
-		return new AggregateFunction('AVG');
+	public static AggregateFunction avg(String fieldName){
+		return new AggregateFunction('AVG',fieldName);
 	}
 
 	/**
 	* @description min aggregate function
 	* @return AggregateFunction
 	*/
-	public static AggregateFunction min(){
-		return new AggregateFunction('MIN');
+	public static AggregateFunction min(String fieldName){
+		return new AggregateFunction('MIN',fieldName);
 	}
 
 	/**
 	* @description max aggregate function
 	* @return AggregateFunction
 	*/
-	public static AggregateFunction max(){
-		return new AggregateFunction('MAX');
+	public static AggregateFunction max(String fieldName){
+		return new AggregateFunction('MAX',fieldName);
 	}
 
 	/**
 	* @description sum aggregate function
 	* @return AggregateFunction
 	*/
-	public static AggregateFunction sum(){
-		return new AggregateFunction('SUM');
+	public static AggregateFunction sum(String fieldName){
+		return new AggregateFunction('SUM',fieldName);
 	}
 
 	/**
 	* @description select clause
 	* @return AggregateFunction
 	*/	
-	public static SelectClause select_x(String fieldName){
+	public static SelectFieldsClause select_x(String fieldName){
 		return new SelectFieldsClause(fieldName);
 	}
-	public static SelectClause select_x(List<String> fieldNames){
+	public static SelectFieldsClause select_x(List<String> fieldNames){
 		return new SelectFieldsClause(fieldNames);
 	}
-	public static SelectClause select_x(AggregateFunction aggrFunc){
+	public static SelectAggregateClause select_x(AggregateFunction aggrFunc){
 		return new SelectAggregateClause(aggrFunc);
 	}
-	public static SelectClause select_x(AggregateFunction aggrFunc, String fieldName){
+	public static SelectAggregateClause select_x(AggregateFunction aggrFunc, String fieldName){
 		return new SelectAggregateClause(aggrFunc,fieldName);
 	}
-	public static SelectClause select_x(AggregateFunction aggrFunc, List<String> fieldNames){
+	public static SelectAggregateClause select_x(AggregateFunction aggrFunc, List<String> fieldNames){
 		return new SelectAggregateClause(aggrFunc,fieldNames);
 	}
 
-
-	public static OrderOption ascending(){
-		return new OrderOption('ASC',null);
+	public static OrderType ascNullsFirst(){
+		return new OrderType('ASC','FIRST');
 	}
-	public static OrderOption descending(){
-		return new OrderOption('DESC',null);
+	public static OrderType ascNullsLast(){
+		return new OrderType('ASC','LAST');
+	}
+	public static OrderType descNullsFirst(){
+		return new OrderType('DESC','FIRST');
+	}
+	public static OrderType descNullsLast(){
+		return new OrderType('DESC','LAST');
 	}
 
 	/****************************************************************************************/
@@ -182,9 +196,12 @@ public class QB {
 	/**
 	* @description ICondition : interface for a valid condition
 	*/
-	public interface ICondition{
-		String toString();
-	}
+	public interface ICondition{}
+	public interface IFieldCondition extends ICondition{ String toString(); }
+	public interface IFieldMultiCondition extends IFieldCondition{ IFieldMultiCondition add(IFieldCondition cnd); }
+	public interface IHavingCondition extends ICondition{ String toString(); }
+	public interface IHavingMultiCondition extends IHavingCondition{ IHavingMultiCondition add(IHavingCondition cnd); }
+
 
 	/**
 	* @description IField : interface for the field wrapper
@@ -217,7 +234,6 @@ public class QB {
 		// like 
 		FieldCondition lk(String fieldValue);
 		FieldCondition isLike(String fieldValue);
-
 	}
 
 
@@ -227,7 +243,7 @@ public class QB {
 	/**
 	* @description NotCondition : NOT applied to a condition
 	*/
-	public class NotCondition implements ICondition {
+	public class NotCondition implements IFieldCondition,IHavingCondition {
 		private ICondition cnd;
 
 		public NotCondition(ICondition cnd){
@@ -240,17 +256,16 @@ public class QB {
 	}
 
 	/**
-	* @description NaryCondition : Abstract class for operations that can be
+	* @description MultiCondition : Abstract class for operations that can be
 	* 			      applied to multiple conditions
 	*/
-	public abstract class NaryCondition implements ICondition {
+	public abstract class MultiCondition implements IFieldMultiCondition,IHavingMultiCondition {
 		protected abstract String getOperator();
 		protected abstract List<ICondition> getListConditions();
-		protected abstract NaryCondition getInstance();
 
-		public NaryCondition add(ICondition cnd){
+		public MultiCondition add(ICondition cnd){
 			getListConditions().add(cnd);
-			return getInstance();
+			return this;
 		}
 
 		public override String toString(){
@@ -266,7 +281,7 @@ public class QB {
 	/**
 	* @description AndCondition : AND applied to multiple conditions
 	*/
-	public class AndCondition extends NaryCondition {
+	public class AndCondition extends MultiCondition {
 		private List<ICondition> listConditions;
 		private final String operator = 'AND';
 
@@ -281,16 +296,12 @@ public class QB {
 		public override List<ICondition> getListConditions(){
 			return listConditions;
 		}
-
-		public override NaryCondition getInstance(){
-			return this;
-		}
 	}
 
 	/**
 	* @description AndCondition : OR applied to multiple conditions
 	*/
-	public class OrCondition extends NaryCondition {
+	public class OrCondition extends MultiCondition {
 		private List<ICondition> listConditions;
 		private final String operator = 'OR';
 
@@ -304,10 +315,6 @@ public class QB {
 
 		public override List<ICondition> getListConditions(){
 			return listConditions;
-		}
-
-		public override NaryCondition getInstance(){
-			return this;
 		}
 	}
 
@@ -399,7 +406,7 @@ public class QB {
 	/**
 	* @description FieldCondition : field condition
 	*/
-	public class FieldCondition implements ICondition {
+	public class FieldCondition implements IFieldCondition {
 		private final Field field;
 		private final String operator;
 		private final String values;
@@ -415,14 +422,14 @@ public class QB {
 
 		private String parseValue(Object value){
 			if(value == null) return 'NULL';
-			if(Util.isNumberOrBoolean(value)){
+			if(util.isNumberOrBoolean(value)){
 				return value+'';
 			} else if(value instanceof String){
 				return singleQuote+String.escapeSingleQuotes(value+'')+singleQuote;
 			} else if(value instanceof List<String>){
 				List<String> values=(List<String>)value;
 				if(values.isEmpty()) throw new QBConditionException('Error Value is Empty List');
-				return '('+singleQuote+String.join(Util.escapeSingleQuotes(values),singleQuote+','+singleQuote)+singleQuote+')';
+				return '('+singleQuote+String.join(util.escapeSingleQuotes(values),singleQuote+','+singleQuote)+singleQuote+')';
 			}else 
 				throw new QBConditionException('Error Bad Value Type');
 		}
@@ -445,10 +452,10 @@ public class QB {
 			}
 
 			// Single value
-			if(operator == null)
-				throw new QBConditionException(errMsg.unkownOperator);
-			else 
+			if(util.isValidFieldConditionOperator(operator))
 				return field+' '+operator+' '+values;
+			else 
+				throw new QBConditionException(errMsg.unkownOperator);
 		}
 	}
 
@@ -488,8 +495,6 @@ public class QB {
 	*/
 	public abstract class SelectClause {
 
-		public abstract SelectClause addSubQuery(IQuery query);
-
 		public SelectQuery from_x(String sObjectName){
 			return new SelectQuery(sObjectName,this);
 		}
@@ -510,7 +515,7 @@ public class QB {
 			this.subQueries=new List<IQuery>();
 		}
 
-		public override SelectClause addSubQuery(IQuery query){
+		public SelectClause addSubQuery(IQuery query){
 			this.subQueries.add(query);
 			return this;
 		}
@@ -520,7 +525,7 @@ public class QB {
 			if(!selectedFields.isEmpty()) 
 				result+=String.join(selectedFields,',');
 			if(!subQueries.isEmpty())
-				result+=','+util.subQueriesToString(subQueries);
+				result+=','+'('+util.joinListObjects(subQueries,'),(')+')';
 
 			return result;
 		}
@@ -543,10 +548,6 @@ public class QB {
 		public SelectAggregateClause(AggregateFunction aggrFunc, List<String> fieldNames){
 			this.selectedFields=new List<String>(fieldNames);
 			this.aggrFunc=aggrFunc;
-		}
-
-		public override SelectClause addSubQuery(IQuery query){
-			throw new QBQueryException(errMsg.cannotAddSubQuery);
 		}
 
 		public override String toString(){
@@ -572,20 +573,14 @@ public class QB {
 			this.sClause=sClause;
 		}
 
-		public SelectWhereQuery where_x(ICondition cnd){
+		public SelectWhereQuery where_x(IFieldCondition cnd){
 			return new SelectWhereQuery(cnd,this);
 		}
-		public SelectWhereQuery where_x(String fieldName, Op operator, String fieldValue){
-			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValue),this);
+		public SelectWhereQuery where_x(String fieldName, Op operator, Object value){
+			return new SelectWhereQuery(new Field(fieldName).op(operator,value),this);
 		}
-		public SelectWhereQuery where_x(String fieldName, Op operator, List<String> fieldValues){
-			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValues),this);
-		}
-		public SelectWhereQuery where_x(String fieldName, String operator, String fieldValue){
-			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValue),this);
-		}
-		public SelectWhereQuery where_x(String fieldName, String operator, List<String> fieldValues){
-			return new SelectWhereQuery(new Field(fieldName).op(operator,fieldValues),this);
+		public SelectWhereQuery where_x(String fieldName, String operator, Object value){
+			return new SelectWhereQuery(new Field(fieldName).op(operator,value),this);
 		}
 
 		public SelectGroupByQuery groupBy(String groupByField){
@@ -594,10 +589,10 @@ public class QB {
 		public SelectGroupByQuery groupBy(List<String> groupByFields){
 			return new SelectGroupByQuery(groupByFields,this);
 		}
-		public SelectGroupByQuery groupBy(String groupByField, HavingCondition havingCtr){
+		public SelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr){
 			return new SelectGroupByQuery(groupByField,havingCtr,this);
 		}
-		public SelectGroupByQuery groupBy(List<String> groupByFields, HavingCondition havingCtr){
+		public SelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr){
 			return new SelectGroupByQuery(groupByFields,havingCtr,this);
 		}
 
@@ -607,11 +602,11 @@ public class QB {
 		public SelectOrderByQuery orderBy(List<String> orderByFields){
 			return new SelectOrderByQuery(orderByFields,this);
 		}
-		public SelectOrderByQuery orderBy(String orderByField, OrderOption ordr){
-			return new SelectOrderByQuery(orderByField,this);
+		public SelectOrderByQuery orderBy(String orderByField, OrderType orderType){
+			return new SelectOrderByQuery(orderByField,orderType,this);
 		}
-		public SelectOrderByQuery orderBy(List<String> orderByFields, OrderOption ordr){
-			return new SelectOrderByQuery(orderByFields,this);
+		public SelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType){
+			return new SelectOrderByQuery(orderByFields,orderType,this);
 		}
 
 		public SelectLimitQuery limitTo(Integer lmt){
@@ -634,7 +629,7 @@ public class QB {
 		private final ICondition cnd;
 		private final SelectQuery sQuery;
 
-		public SelectWhereQuery(ICondition cnd, SelectQuery sQuery){
+		public SelectWhereQuery(IFieldCondition cnd, SelectQuery sQuery){
 			this.cnd=cnd;
 			this.sQuery=sQuery;
 		}
@@ -645,10 +640,10 @@ public class QB {
 		public SelectGroupByQuery groupBy(List<String> groupByFields){
 			return new SelectGroupByQuery(groupByFields,this);
 		}
-		public SelectGroupByQuery groupBy(String groupByField, HavingCondition havingCtr){
+		public SelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr){
 			return new SelectGroupByQuery(groupByField,havingCtr,this);
 		}
-		public SelectGroupByQuery groupBy(List<String> groupByFields, HavingCondition havingCtr){
+		public SelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr){
 			return new SelectGroupByQuery(groupByFields,havingCtr,this);
 		}
 
@@ -657,6 +652,12 @@ public class QB {
 		}
 		public SelectOrderByQuery orderBy(List<String> orderByFields){
 			return new SelectOrderByQuery(orderByFields,this);
+		}
+		public SelectOrderByQuery orderBy(String orderByField, OrderType orderType){
+			return new SelectOrderByQuery(orderByField,orderType,this);
+		}
+		public SelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType){
+			return new SelectOrderByQuery(orderByFields,orderType,this);
 		}
 
 		public SelectLimitQuery limitTo(Integer lmt){
@@ -677,7 +678,7 @@ public class QB {
 	*/
 	public class SelectGroupByQuery extends Query {
 		private final List<String> groupByFields;
-		private final HavingCondition havingCtr;
+		private final IHavingCondition havingCtr;
 		private final IQuery swQuery;
 
 		public SelectGroupByQuery(String groupByField,IQuery swQuery){
@@ -686,10 +687,10 @@ public class QB {
 		public SelectGroupByQuery(List<String> groupByFields,IQuery swQuery){
 			this(groupByFields,null,swQuery);
 		}
-		public SelectGroupByQuery(String groupByField,HavingCondition havingCtr,IQuery swQuery){
+		public SelectGroupByQuery(String groupByField,IHavingCondition havingCtr,IQuery swQuery){
 			this(new List<String>{groupByField},havingCtr,swQuery);
 		}
-		public SelectGroupByQuery(List<String> groupByFields,HavingCondition havingCtr,IQuery swQuery){
+		public SelectGroupByQuery(List<String> groupByFields,IHavingCondition havingCtr,IQuery swQuery){
 			this.groupByFields=new List<String>(groupByFields);
 			this.havingCtr=havingCtr;
 			this.swQuery=swQuery;
@@ -700,6 +701,12 @@ public class QB {
 		}
 		public SelectOrderByQuery orderBy(List<String> orderByFields){
 			return new SelectOrderByQuery(orderByFields,this);
+		}
+		public SelectOrderByQuery orderBy(String orderByField, OrderType orderType){
+			return new SelectOrderByQuery(orderByField,orderType,this);
+		}
+		public SelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType){
+			return new SelectOrderByQuery(orderByFields,orderType,this);
 		}
 
 		public SelectLimitQuery limitTo(Integer lmt){
@@ -721,26 +728,39 @@ public class QB {
 	/**
 	* @description SelectOrderByQuery : Order By option of the where clause
 	*/
-	public class SelectOrderByQuery extends Query implements ICondition {
-		private final List<String> orderByFields;
+	public class SelectOrderByQuery extends Query{
+		private final List<OrderOption> orderOptions;
 		private final IQuery swQuery;
 
 		public SelectOrderByQuery(String orderByField,IQuery swQuery){
-			this(new List<String>{orderByField},swQuery);
+			this(new List<String>{orderByField},new OrderType(),swQuery);
 		}
 		public SelectOrderByQuery(List<String> orderByFields,IQuery swQuery){
-			this.orderByFields=new List<String>(orderByFields);
+			this(orderByFields,new OrderType(),swQuery);
+		}
+		public SelectOrderByQuery(String orderByField,OrderType orderType,IQuery swQuery){
+			this(new List<String>{orderByField},orderType,swQuery);
+		}
+		public SelectOrderByQuery(List<String> orderByFields,OrderType orderType,IQuery swQuery){
+			this.orderOptions=new List<OrderOption>{new OrderOption(orderByFields,orderType)};
 			this.swQuery=swQuery;
 		}
 
-		public SelectOrderByQuery(String orderByField,String orderType,IQuery swQuery){
-			// TODO
-			this(new List<String>{orderByField},swQuery);
+		public SelectOrderByQuery addOrder(String orderByField){
+			addOrder(new List<String>{orderByField},new OrderType());
+			return this;
 		}
-		public SelectOrderByQuery(List<String> orderByFields,String orderType,IQuery swQuery){
-			// TODO
-			this.orderByFields=new List<String>(orderByFields);
-			this.swQuery=swQuery;
+		public SelectOrderByQuery addOrder(List<String> orderByFields){
+			this.orderOptions.add(new OrderOption(orderByFields,new OrderType()));
+			return this;
+		}
+		public SelectOrderByQuery addOrder(String orderByField, OrderType orderType){
+			addOrder(new List<String>{orderByField},orderType);
+			return this;
+		}
+		public SelectOrderByQuery addOrder(List<String> orderByFields, OrderType orderType){
+			this.orderOptions.add(new OrderOption(orderByFields,orderType));
+			return this;
 		}
 
 		public SelectLimitQuery limitTo(Integer lmt){
@@ -752,7 +772,7 @@ public class QB {
 		}
 
 		public override String toString(){
-			return swQuery+' ORDER BY '+String.join(orderByFields, ',');
+			return swQuery+' ORDER BY '+util.joinListObjects(orderOptions, ',');
 		}
 	}
 
@@ -794,33 +814,44 @@ public class QB {
 		}
 	}
 
+	/**
+	* @description OrderType : defines the type of the order
+	*/
+	public class OrderType {
+		private final String orderingType;
+		private final String nullsHandlingType;
+		private Boolean pickDefault;
 
-
-	public class OrderOption {
-		public String orderType;
-		public String orderNulls;
-
-		public OrderOption(String orderType, String orderNulls){
-			this.orderType=orderType;
-			this.orderNulls=orderNulls;
+		public OrderType(){
+			this.pickDefault=true;
 		}
-
-		public FinalOrderType nullsFirst(){
-			this.orderNulls='FIRST';
-			return new FinalOrderType();
-		}
-
-		public FinalOrderType nullsLast(){
-			this.orderNulls='LAST';
-			return new FinalOrderType();
+		public OrderType(String orderingType, String nullsHandlingType){
+			this.orderingType=orderingType;
+			this.nullsHandlingType=nullsHandlingType;
 		}
 
 		public override String toString(){
-			return null;
+			if(pickDefault == true) return '';
+			return ' '+orderingType+' NULLS '+nullsHandlingType;
 		}
 	}
 
-	public class FinalOrderType {}
+	/**
+	* @description OrderOption : defines the order fields with there orderType
+	*/
+	public class OrderOption {
+		private OrderType orderType;
+		private List<String> fieldNames;
+
+		public OrderOption(List<String> fieldNames,OrderType orderType){
+			this.fieldNames=fieldNames;	
+			this.orderType=orderType;
+		}
+
+		public override String toString(){
+			return String.join(fieldNames,',')	+orderType;
+		}
+	}
 
 	/**
 	* @description AggregateFunction : aggregate function
@@ -899,7 +930,7 @@ public class QB {
 	/**
 	* @description HavingCondition : having condition
 	*/
-	public class HavingCondition{
+	public class HavingCondition implements IHavingCondition{
 		private final AggregateFunction aggrFunc;
 		private final String operator;
 		private final Integer value;
@@ -914,10 +945,10 @@ public class QB {
 		}
 
 		public override String toString(){
-			if(operator==null)
-				throw new QBConditionException(errMsg.unkownOperator);
-			else
+			if(util.isValidHavingConditionOperator(operator))
 				return aggrFunc+' '+operator+' '+value;
+			else
+				throw new QBConditionException(errMsg.unkownOperator);
 		}
 	}
 
@@ -958,12 +989,12 @@ public class QB {
 			return null;
 		}
 
-		public String subQueriesToString(List<IQuery> subQueries){
+		public String joinListObjects(List<Object> listObj, String separator){
 			String result='';
-			for(IQuery subQuery: subQueries){
-				result+='('+subQuery+'),';
+			for(Object obj:listObj){
+				result+=obj+separator;
 			}
-			return result.removeEnd(',');
+			return result.removeEnd(separator);
 		}
 
 		public List<String> escapeSingleQuotes(List<String> values){
@@ -981,6 +1012,20 @@ public class QB {
 					|| obj instanceof Decimal
 					|| obj instanceof Boolean;
 		}
+
+		public Boolean isValidHavingConditionOperator(String operator){
+			return operator == '=' 
+					|| operator == '!='
+					|| operator == '>'
+					|| operator == '<'
+					|| operator == '>='
+					|| operator == '<=';
+		}
+
+		public Boolean isValidFieldConditionOperator(String operator){
+			return isValidHavingConditionOperator(operator)
+					|| operator == 'LIKE';
+		}
 	}
 
 	/**
@@ -989,7 +1034,6 @@ public class QB {
 	private class ErrorMessage {
 		public final String unkownOperator='Unkown Operator';
 		public final String operatorDoNotHandleMultiValues='Only the operators EQUAL & NOTEQUAL can handle a list of values';
-		public final String cannotAddSubQuery='You can\'t add a sub query to aggregate clause';
 	}
 
 	// Exceptions
