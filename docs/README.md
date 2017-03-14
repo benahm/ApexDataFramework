@@ -6,7 +6,7 @@
   * [Query Builder](/docs/basics/QB.md)
   * [Data Access Object](/docs/basics/DAO.md)
 * [Advanced](/docs/advanced/README.md)
-  * [Query Builder](/docs/advanced/QB.md)
+  * [Query Builder](/docs/advanced/QB/README.md)
     * [Select clause](/docs/advanced/QB/SELECT.md)
     * [From clause](/docs/advanced/QB/FROM.md)
     * [Where clause](/docs/advanced/QB/WHERE.md)
