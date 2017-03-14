@@ -29,7 +29,7 @@
 </thead>
 <tbody><tr>
   <td><em>=</em></td>
-  <td>eq</td>
+  <td>eq, equal</td>
   <td>Field/AggregateFunction</td>
   <td><pre lang="apex">
   QB.field('Name').eq('Value') // Field
@@ -38,7 +38,7 @@
 </tr>
 <tr>
   <td><em>IN</em></td>
-  <td>eq</td>
+  <td>eq, equal</td>
   <td>Field</td>
   <td><pre lang="apex">
   QB.field('Name').eq(new List{'Value1','Value2'})
@@ -46,7 +46,7 @@
 </tr>
 <tr>
   <td><em>!=</em></td>
-  <td>ne</td>
+  <td>ne, notequal</td>
   <td>Field/AggregateFunction</td>
   <td><pre lang="apex">
   QB.field('Name').ne('Value') // Field
@@ -55,7 +55,7 @@
 </tr>
 <tr>
   <td><em>NOT IN</em></td>
-  <td>ne</td>
+  <td>ne, notequal</td>
   <td>Field</td>
   <td><pre lang="apex">
   QB.field('Name').ne(new List{'Value1','Value2'})
@@ -63,7 +63,7 @@
 </tr>
 <tr>
   <td><em>&gt;</em></td>
-  <td>gt</td>
+  <td>gt, greaterThan</td>
   <td>Field/AggregateFunction</td>
   <td><pre lang="apex">
   QB.field('Name').gt('Value') // Field
@@ -72,7 +72,7 @@
 </tr>
 <tr>
   <td><em>&lt;</em></td>
-  <td>lt</td>
+  <td>lt, lessThan</td>
   <td>Field/AggregateFunction</td>
   <td><pre lang="apex">
   QB.field('Name').lt('Value') // Field
@@ -81,7 +81,7 @@
 </tr>
 <tr>
   <td><em>&gt;=</em></td>
-  <td>ge</td>
+  <td>ge, greaterOrEqual</td>
   <td>Field/AggregateFunction</td>
   <td><pre lang="apex">
   QB.field('Name').ge('Value') // Field
@@ -90,7 +90,7 @@
 </tr>
 <tr>
   <td><em>&lt;=</em></td>
-  <td>le</td>
+  <td>le, lessOrEqual</td>
   <td>Field/AggregateFunction</td>
   <td><pre lang="apex">
   QB.field('Name').le('Value') // Field
@@ -99,7 +99,7 @@
 </tr>
 <tr>
   <td><em>LIKE</em></td>
-  <td>lk</td>
+  <td>lk, isLike</td>
   <td>Field</td>
   <td><pre lang="apex">
   QB.field('Name').lk('Value') 
