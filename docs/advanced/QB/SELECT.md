@@ -25,6 +25,8 @@ You can use the asterix operator to filter on the list of field you need to have
 
 ### 3. Select the Id field
 
+Without any param to the select_x the Id will be selected
+
   ```apex
   QB.select_x()
     .from_x('Account')
@@ -37,13 +39,13 @@ You can use the asterix operator to filter on the list of field you need to have
 
 ### 4. Select one field
 
-using the field name
+Using the field name
 
   ```apex
   QB.select_x('Name')
     .from_x('Account')
   ```
-using the field object
+Using the field object
 
   ```apex
   QB.select_x(Account.Name)
@@ -56,6 +58,19 @@ using the field object
   ```
   
 ### 5. Select multiple fields
+
+As a string
+
+  ```apex
+  QB.select_x('Name,Type')
+    .from_x('Account')
+  ```
+As a list
+
+  ```apex
+  QB.select_x(new List<String>{'Name','Type'})
+    .from_x('Account')
+  ```
 
 ### 6. Select a sub query
 
