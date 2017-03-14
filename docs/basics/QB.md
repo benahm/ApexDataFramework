@@ -85,7 +85,7 @@ The query builder offers a way to create complex conditions
   select ALL_CUSTOM_FIELDS from Account
   ```
   
-    ```apex
+  ```apex
   QB.select_x('Owner.Id').from_x('Account')
   ```
   ```sql
