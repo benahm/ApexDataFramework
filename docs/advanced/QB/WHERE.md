@@ -2,7 +2,6 @@
 
 ### 1. Where with a single condition
 
-
   ```apex
   QB.select_x('Name')
     .from_x('Account')
