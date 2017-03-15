@@ -10,11 +10,11 @@
   SELECT Name FROM Account
   ```
 
-**As an SObject** 
+**As an sObject type** 
 
   ```apex
   QB.select_x('Name')
-    .from_x(Account)
+    .from_x(Account.sObjectType)
   ```
   ```sql
   SELECT Name FROM Account
