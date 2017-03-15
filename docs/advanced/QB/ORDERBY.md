@@ -1,39 +1,30 @@
 ## Order by keyword
 
+### 1. Order by a field
   ```apex
   QB.select_x('Name')
     .from_x('Account')
     .orderBy('Name')
   ```
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account ORDER BY Name
   ```
-
-
-  
+### 2. Order by a field with options
   ```apex
   QB.select_x('Name')
     .from_x('Account')
     .orderBy('Name',QB.ascNullsLast())
   ```
-  
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account ORDER BY Name ASC NULLS LAST
   ```
-  
+### 3. Order by a multiple fields with options  
   ```apex
   QB.select_x('Name,Type')
     .from_x('Account')
     .orderBy('Name',QB.ascNullsLast())
     .addOrder('Type'.QB.descNullsFirst())
   ```
-  
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account ORDER BY Name ASC NULLS LAST, Type DESC NULLS LAST
   ```
