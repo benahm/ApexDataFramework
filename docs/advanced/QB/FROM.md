@@ -6,9 +6,6 @@
   QB.select_x('Name')
     .from_x('Account')
   ```
-
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account
   ```
@@ -19,9 +16,6 @@
   QB.select_x('Name')
     .from_x(Account)
   ```
-
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account
   ```
