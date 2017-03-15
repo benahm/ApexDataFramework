@@ -32,7 +32,7 @@ If no param is provided to the select_x method the Id will be selected
     .from_x('Account')
   ```
   ```sql
-  SELECT Id FROM Account -- Equivalent SOQL Query
+  SELECT Id FROM Account 
   ```
 
 ### 4. Select one field
@@ -49,8 +49,6 @@ Using the field object
   QB.select_x(Account.Name)
     .from_x('Account')
   ```
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account
   ```
@@ -69,8 +67,6 @@ As a list
   QB.select_x(new List<String>{'Name','Type'})
     .from_x('Account')
   ```
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name,Type FROM Account
   ```
@@ -85,9 +81,6 @@ Add a sub query with the method addSubQuery
                    .from_x('Contacts'))
     .from_x('Account')
   ```
-
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name,(SELECT LastName FROM Contacts) FROM Account
   ```
@@ -100,9 +93,6 @@ Aggregate function count with no param
   QB.select_x(QB.count())
     .from_x('Account')
   ```
-
-*Equivalent SOQL Query*
-
   ```sql
   SELECT COUNT() FROM Account
   ```
@@ -113,9 +103,6 @@ Aggregate function count with pram
   QB.select_x(QB.count('Name'))
     .from_x('Account')
   ```
-
-*Equivalent SOQL Query*
-
   ```sql
   SELECT COUNT(Name) FROM Account
   ```
