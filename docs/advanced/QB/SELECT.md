@@ -31,10 +31,8 @@ If no param is provided to the select_x method the Id will be selected
   QB.select_x()
     .from_x('Account')
   ```
-*Equivalent SOQL Query*
-
   ```sql
-  SELECT Id FROM Account
+  SELECT Id FROM Account -- Equivalent SOQL Query
   ```
 
 ### 4. Select one field
