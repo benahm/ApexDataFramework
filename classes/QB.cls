@@ -153,20 +153,20 @@ public class QB {
 	* @description select clause
 	* @return AggregateFunction
 	*/	
-	public static SelectFieldsClause select_x(String fieldName){
-		return new SelectFieldsClause(fieldName);
+	public static ISelectFieldsClause select_x(String fieldName){
+		return new SelectClause(fieldName);
 	}
-	public static SelectFieldsClause select_x(List<String> fieldNames){
-		return new SelectFieldsClause(fieldNames);
+	public static ISelectFieldsClause select_x(List<String> fieldNames){
+		return new SelectClause(fieldNames);
 	}
-	public static SelectAggregateClause select_x(AggregateFunction aggrFunc){
-		return new SelectAggregateClause(aggrFunc);
+	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc){
+		return new SelectClause(aggrFunc);
 	}
-	public static SelectAggregateClause select_x(AggregateFunction aggrFunc, String fieldName){
-		return new SelectAggregateClause(aggrFunc,fieldName);
+	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc, String fieldName){
+		return new SelectClause(aggrFunc,fieldName);
 	}
-	public static SelectAggregateClause select_x(AggregateFunction aggrFunc, List<String> fieldNames){
-		return new SelectAggregateClause(aggrFunc,fieldNames);
+	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc, List<String> fieldNames){
+		return new SelectClause(aggrFunc,fieldNames);
 	}
 
 	public static OrderType ascNullsFirst(){
@@ -185,26 +185,24 @@ public class QB {
 	/****************************************************************************************/
 	/*					Interfaces					*/
 	/****************************************************************************************/
+
 	/**
-	* @description IQuery : a valid query
+	* @description Condition interfaces
 	*/
-	public interface IQuery{
-		List<SObject> getList();
-		Map<Id, SObject> getMap();
+	public interface ICondition{
+		String toString();
+	}
+	public interface IFieldCondition extends ICondition{}
+	public interface IFieldMultiCondition extends IFieldCondition{ 
+		IFieldMultiCondition add(IFieldCondition cnd); 
+	}
+	public interface IHavingCondition extends ICondition{}
+	public interface IHavingMultiCondition extends IHavingCondition{ 
+		IHavingMultiCondition add(IHavingCondition cnd); 
 	}
 
 	/**
-	* @description ICondition : interface for a valid condition
-	*/
-	public interface ICondition{}
-	public interface IFieldCondition extends ICondition{ String toString(); }
-	public interface IFieldMultiCondition extends IFieldCondition{ IFieldMultiCondition add(IFieldCondition cnd); }
-	public interface IHavingCondition extends ICondition{ String toString(); }
-	public interface IHavingMultiCondition extends IHavingCondition{ IHavingMultiCondition add(IHavingCondition cnd); }
-
-
-	/**
-	* @description IField : interface for the field wrapper
+	* @description Field interface
 	*/
 	public interface IField {
 		// equal to
@@ -235,6 +233,32 @@ public class QB {
 		FieldCondition lk(String fieldValue);
 		FieldCondition isLike(String fieldValue);
 	}
+
+	/**
+	* @description Select clause interfaces
+	*/
+	public interface ISelectFieldsClause{ 
+		ISelectFieldsClause addSubQuery(IQuery query);
+		SelectQuery from_x(String sObjectName); 
+	}
+	public interface ISelectAggregateClause{
+		SelectQuery from_x(String sObjectName);
+	}
+
+	/**
+	* @description Select query interfaces
+	*/
+	public interface IQuery{
+		List<SObject> getList();
+		Map<Id, SObject> getMap();
+		String toString();
+	}
+	public interface ISelectFromQuery extends IQuery{}
+	public interface ISelectWhereQuery extends IQuery{}
+	public interface ISelectGroupByQuery extends IQuery{}
+	public interface ISelectOrderByQuery extends IQuery{}
+	public interface ISelectLimitQuery extends IQuery{}
+	public interface ISelectOffsetQuery extends IQuery{}
 
 
 	/****************************************************************************************/
@@ -460,6 +484,31 @@ public class QB {
 	}
 
 	/**
+	* @description HavingCondition : having condition
+	*/
+	public class HavingCondition implements IHavingCondition{
+		private final AggregateFunction aggrFunc;
+		private final String operator;
+		private final Integer value;
+
+		public HavingCondition(AggregateFunction aggrFunc,Op operator,Integer value){
+			this(aggrFunc,util.operatorToString(operator),value);
+		}
+		public HavingCondition(AggregateFunction aggrFunc,String operator,Integer value){
+			this.aggrFunc=aggrFunc;
+			this.operator=operator;
+			this.value=value;
+		}
+
+		public override String toString(){
+			if(util.isValidHavingConditionOperator(operator))
+				return aggrFunc+' '+operator+' '+value;
+			else
+				throw new QBConditionException(errMsg.unkownOperator);
+		}
+	}
+
+	/**
 	* @description Query : a valid query
 	*/
 	public abstract class Query implements IQuery {
@@ -490,76 +539,51 @@ public class QB {
 
 	}
 
+	public abstract class ASelectClause implements ISelectFieldsClause,ISelectAggregateClause {}
+
 	/**
 	* @description SelectClause : select clause
 	*/
-	public abstract class SelectClause {
+	public class SelectClause extends ASelectClause{
+		private final List<String> selectedFields;
+		private List<IQuery> subQueries;
+		private String soqlQuery;
+
+		public SelectClause(String fieldName){
+			this.soqlQuery='SELECT '+fieldName;
+		}
+		public SelectClause(List<String> fieldNames){
+			this.soqlQuery='SELECT ';
+			if(!fieldNames.isEmpty()) 
+				this.soqlQuery+=String.join(selectedFields,',');
+		}
+		public SelectClause(AggregateFunction aggrFunc){
+			this.soqlQuery='SELECT '+aggrFunc;
+		}
+		public SelectClause(AggregateFunction aggrFunc, String fieldName){
+			this.soqlQuery='SELECT '+aggrFunc+','+fieldName;
+		}
+		public SelectClause(AggregateFunction aggrFunc, List<String> fieldNames){
+			this.soqlQuery='SELECT '+aggrFunc;
+			if(!fieldNames.isEmpty()) 
+				this.soqlQuery+=','+String.join(fieldNames,',');
+		}
+
+		public ISelectFieldsClause addSubQuery(IQuery query){
+			soqlQuery+=','+'('+query+')';
+			return this;
+		}
 
 		public SelectQuery from_x(String sObjectName){
 			return new SelectQuery(sObjectName,this);
 		}
-	}
-
-	/**
-	* @description SelectFieldsClause : select fields clause
-	*/
-	public class SelectFieldsClause extends SelectClause {
-		private final List<String> selectedFields;
-		private List<IQuery> subQueries;
-
-		public SelectFieldsClause(String fieldName){
-			this(new List<String>{fieldName});
-		}
-		public SelectFieldsClause(List<String> fieldNames){
-			this.selectedFields=new List<String>(fieldNames);
-			this.subQueries=new List<IQuery>();
-		}
-
-		public SelectClause addSubQuery(IQuery query){
-			this.subQueries.add(query);
-			return this;
-		}
 
 		public override String toString(){
-			String result='SELECT ';
-			if(!selectedFields.isEmpty()) 
-				result+=String.join(selectedFields,',');
-			if(!subQueries.isEmpty())
-				result+=','+'('+util.joinListObjects(subQueries,'),(')+')';
-
-			return result;
-		}
-
-	}
-
-	/**
-	* @description SelectAggregateClause : select aggregate clause
-	*/
-	public class SelectAggregateClause extends SelectClause {
-		private final List<String> selectedFields;
-		private final AggregateFunction aggrFunc;
-
-		public SelectAggregateClause(AggregateFunction aggrFunc){
-			this(aggrFunc,new List<String>());
-		}
-		public SelectAggregateClause(AggregateFunction aggrFunc, String fieldName){
-			this(aggrFunc,new List<String>{fieldName});
-		}
-		public SelectAggregateClause(AggregateFunction aggrFunc, List<String> fieldNames){
-			this.selectedFields=new List<String>(fieldNames);
-			this.aggrFunc=aggrFunc;
-		}
-
-		public override String toString(){
-			String result='SELECT ';
-			if(aggrFunc!=null) result+=aggrFunc;
-			if(!selectedFields.isEmpty()) 
-				result+=','+String.join(selectedFields,',');
-
-			return result;
+			return soqlQuery;
 		}
 	}
 
+	public abstract class ASelectQuery implements ISelectFromQuery,ISelectWhereQuery,ISelectGroupByQuery,ISelectOrderByQuery,ISelectLimitQuery,ISelectOffsetQuery {}
 
 	/**
 	* @description SelectQuery : select query without a where clause
@@ -924,31 +948,6 @@ public class QB {
 			if(fieldName==null)
 				return functionType+'()';
 			else return functionType+'('+fieldName+')';
-		}
-	}
-
-	/**
-	* @description HavingCondition : having condition
-	*/
-	public class HavingCondition implements IHavingCondition{
-		private final AggregateFunction aggrFunc;
-		private final String operator;
-		private final Integer value;
-
-		public HavingCondition(AggregateFunction aggrFunc,Op operator,Integer value){
-			this(aggrFunc,util.operatorToString(operator),value);
-		}
-		public HavingCondition(AggregateFunction aggrFunc,String operator,Integer value){
-			this.aggrFunc=aggrFunc;
-			this.operator=operator;
-			this.value=value;
-		}
-
-		public override String toString(){
-			if(util.isValidHavingConditionOperator(operator))
-				return aggrFunc+' '+operator+' '+value;
-			else
-				throw new QBConditionException(errMsg.unkownOperator);
 		}
 	}
 
