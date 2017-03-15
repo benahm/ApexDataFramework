@@ -7,9 +7,6 @@
     .from_x('Account')
     .where_x('Name','=','Acme Corporation')
   ```
-
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account WHERE Name='Acme Corporation'
   ```
@@ -26,9 +23,6 @@
                       )
              )
   ```
-  
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account WHERE Name='Acme Corporation' AND Type='Prospect'
   ```
@@ -44,9 +38,6 @@
                       )
              )
   ```
-  
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account WHERE Name='Acme Corporation' AND (Type='Prospect' OR Type='Customer')
   ```
@@ -62,9 +53,6 @@
                       ).add(QB.not_x(QB.fieldExpr('Type','!=','Partner')))
              )
   ```
-  
-*Equivalent SOQL Query*
-
   ```sql
   SELECT Name FROM Account WHERE Name='Acme Corporation' AND (Type='Prospect' OR Type='Customer' OR (NOT Type!='Partner'))
   ```
