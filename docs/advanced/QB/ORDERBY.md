@@ -18,7 +18,7 @@
   ```sql
   SELECT Name FROM Account ORDER BY Name ASC NULLS LAST
   ```
-### 3. Order by a multiple fields with options  
+### 3. Order by multiple fields with options  
   ```apex
   QB.select_x('Name,Type')
     .from_x('Account')
