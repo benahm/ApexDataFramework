@@ -96,7 +96,7 @@ Add a sub query with the method addSubQuery
 
 ### 7. Select aggregate function
 
-Aggregate function
+Aggregate function count with no param
 
   ```apex
   QB.select_x(QB.count())
@@ -108,3 +108,17 @@ Aggregate function
   ```sql
   SELECT COUNT() FROM Account
   ```
+
+Aggregate function count with pram
+
+  ```apex
+  QB.select_x(QB.count('Name'))
+    .from_x('Account')
+  ```
+
+*Equivalent SOQL Query*
+
+  ```sql
+  SELECT COUNT(Name) FROM Account
+  ```
+
