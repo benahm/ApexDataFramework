@@ -99,3 +99,12 @@ Aggregate function count with pram
   SELECT COUNT(Name) FROM Account
   ```
 
+Aggregate function count with a field
+
+  ```apex
+  QB.select_x(QB.count('Name'),'Type')
+    .from_x('Account')
+  ```
+  ```sql
+  SELECT COUNT(Name),Type FROM Account
+  ```
