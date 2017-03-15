@@ -156,6 +156,9 @@ public class QB {
 	public static ISelectFieldsClause select_x(String fieldName){
 		return new SelectClause(fieldName);
 	}
+	public static ISelectFieldsClause select_x(Schema.SObjectField field){
+		return new SelectClause(field.getDescribe().getName());
+	}
 	public static ISelectFieldsClause select_x(List<String> fieldNames){
 		return new SelectClause(fieldNames);
 	}
@@ -164,6 +167,9 @@ public class QB {
 	}
 	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc, String fieldName){
 		return new SelectClause(aggrFunc,fieldName);
+	}
+	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc, Schema.SObjectField field){
+		return new SelectClause(aggrFunc,field.getDescribe().getName());
 	}
 	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc, List<String> fieldNames){
 		return new SelectClause(aggrFunc,fieldNames);
@@ -237,12 +243,17 @@ public class QB {
 	/**
 	* @description Select clause interfaces
 	*/
-	public interface ISelectFieldsClause{ 
-		ISelectFieldsClause addSubQuery(IQuery query);
-		SelectQuery from_x(String sObjectName); 
+	public interface ISelectClause{
+		String toString();
 	}
-	public interface ISelectAggregateClause{
-		SelectQuery from_x(String sObjectName);
+	public interface ISelectFieldsClause extends ISelectClause{ 
+		ISelectFieldsClause addSubQuery(IQuery query);
+		ISelectFromQuery from_x(String sObjectName);
+		ISelectFromQuery from_x(Schema.sObjectType sObjectType); 
+	}
+	public interface ISelectAggregateClause extends ISelectClause{
+		ISelectFromQuery from_x(String sObjectName);
+		ISelectFromQuery from_x(Schema.sObjectType sObjectType);
 	}
 
 	/**
@@ -253,11 +264,63 @@ public class QB {
 		Map<Id, SObject> getMap();
 		String toString();
 	}
-	public interface ISelectFromQuery extends IQuery{}
-	public interface ISelectWhereQuery extends IQuery{}
-	public interface ISelectGroupByQuery extends IQuery{}
-	public interface ISelectOrderByQuery extends IQuery{}
-	public interface ISelectLimitQuery extends IQuery{}
+	public interface ISelectFromQuery extends IQuery{
+		ISelectWhereQuery where_x(IFieldCondition cnd);
+		ISelectWhereQuery where_x(String fieldName, Op operator, Object value);
+		ISelectWhereQuery where_x(String fieldName, String operator, Object value);
+
+		ISelectGroupByQuery groupBy(String groupByField);
+		ISelectGroupByQuery groupBy(List<String> groupByFields);
+		ISelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr);
+		ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr);
+
+		ISelectOrderByQuery orderBy(String orderByField);
+		ISelectOrderByQuery orderBy(List<String> orderByFields);
+		ISelectOrderByQuery orderBy(String orderByField, OrderType orderType);
+		ISelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType);
+
+		ISelectLimitQuery limitTo(Integer lmt);
+
+		ISelectOffsetQuery offset(Integer ofst);
+	}
+	public interface ISelectWhereQuery extends IQuery{
+		ISelectGroupByQuery groupBy(String groupByField);
+		ISelectGroupByQuery groupBy(List<String> groupByFields);
+		ISelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr);
+		ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr);
+
+		ISelectOrderByQuery orderBy(String orderByField);
+		ISelectOrderByQuery orderBy(List<String> orderByFields);
+		ISelectOrderByQuery orderBy(String orderByField, OrderType orderType);
+		ISelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType);
+
+		ISelectLimitQuery limitTo(Integer lmt);
+
+		ISelectOffsetQuery offset(Integer ofst);
+	}
+	public interface ISelectGroupByQuery extends IQuery{
+		ISelectOrderByQuery orderBy(String orderByField);
+		ISelectOrderByQuery orderBy(List<String> orderByFields);
+		ISelectOrderByQuery orderBy(String orderByField, OrderType orderType);
+		ISelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType);
+
+		ISelectLimitQuery limitTo(Integer lmt);
+		
+		ISelectOffsetQuery offset(Integer ofst);
+	}
+	public interface ISelectOrderByQuery extends IQuery{
+		ISelectOrderByQuery addOrder(String orderByField);
+		ISelectOrderByQuery addOrder(List<String> orderByFields);
+		ISelectOrderByQuery addOrder(String orderByField, OrderType orderType);
+		ISelectOrderByQuery addOrder(List<String> orderByFields, OrderType orderType);
+
+		ISelectLimitQuery limitTo(Integer lmt);
+		
+		ISelectOffsetQuery offset(Integer ofst);
+	}
+	public interface ISelectLimitQuery extends IQuery{
+		ISelectOffsetQuery offset(Integer ofst);
+	}
 	public interface ISelectOffsetQuery extends IQuery{}
 
 
@@ -536,7 +599,6 @@ public class QB {
 		public map<Id,SObject> getMap(){
 			return new Map<Id,SObject>(getList());
 		}
-
 	}
 
 	public abstract class ASelectClause implements ISelectFieldsClause,ISelectAggregateClause {}
@@ -545,23 +607,21 @@ public class QB {
 	* @description SelectClause : select clause
 	*/
 	public class SelectClause extends ASelectClause{
-		private final List<String> selectedFields;
-		private List<IQuery> subQueries;
 		private String soqlQuery;
 
 		public SelectClause(String fieldName){
-			this.soqlQuery='SELECT '+fieldName;
+			this(new List<String>{fieldName});
 		}
 		public SelectClause(List<String> fieldNames){
 			this.soqlQuery='SELECT ';
 			if(!fieldNames.isEmpty()) 
-				this.soqlQuery+=String.join(selectedFields,',');
+				this.soqlQuery+=String.join(fieldNames,',');
 		}
 		public SelectClause(AggregateFunction aggrFunc){
 			this.soqlQuery='SELECT '+aggrFunc;
 		}
 		public SelectClause(AggregateFunction aggrFunc, String fieldName){
-			this.soqlQuery='SELECT '+aggrFunc+','+fieldName;
+			this(aggrFunc,new List<String>{fieldName});
 		}
 		public SelectClause(AggregateFunction aggrFunc, List<String> fieldNames){
 			this.soqlQuery='SELECT '+aggrFunc;
@@ -574,8 +634,11 @@ public class QB {
 			return this;
 		}
 
-		public SelectQuery from_x(String sObjectName){
-			return new SelectQuery(sObjectName,this);
+		public ISelectFromQuery from_x(String sObjectName){
+			return new SelectQuery(sObjectName,this.soqlQuery);
+		}
+		public ISelectFromQuery from_x(Schema.sObjectType sObjectType){
+			return new SelectQuery(sObjectType.getDescribe().getName(),this.soqlQuery);
 		}
 
 		public override String toString(){
@@ -588,255 +651,95 @@ public class QB {
 	/**
 	* @description SelectQuery : select query without a where clause
 	*/
-	public class SelectQuery extends Query {
-		private final String sObjectName;
-		private final SelectClause sClause;
+	public class SelectQuery extends ASelectQuery {
+		private String soqlQuery;
 
-		public SelectQuery(String sObjectName, SelectClause sClause){
-			this.sObjectName=sObjectName;
-			this.sClause=sClause;
+		public SelectQuery(String sObjectName, String soqlSelectClause){
+			this.soqlQuery=soqlSelectClause+' FROM '+sObjectName;
 		}
 
-		public SelectWhereQuery where_x(IFieldCondition cnd){
-			return new SelectWhereQuery(cnd,this);
+		public ISelectWhereQuery where_x(IFieldCondition cnd){
+			this.soqlQuery+=' WHERE '+cnd;
+			return this;
 		}
-		public SelectWhereQuery where_x(String fieldName, Op operator, Object value){
-			return new SelectWhereQuery(new Field(fieldName).op(operator,value),this);
+		public ISelectWhereQuery where_x(String fieldName, Op operator, Object value){
+			return where_x(new Field(fieldName).op(operator,value));
 		}
-		public SelectWhereQuery where_x(String fieldName, String operator, Object value){
-			return new SelectWhereQuery(new Field(fieldName).op(operator,value),this);
-		}
-
-		public SelectGroupByQuery groupBy(String groupByField){
-			return new SelectGroupByQuery(groupByField,this);
-		}
-		public SelectGroupByQuery groupBy(List<String> groupByFields){
-			return new SelectGroupByQuery(groupByFields,this);
-		}
-		public SelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr){
-			return new SelectGroupByQuery(groupByField,havingCtr,this);
-		}
-		public SelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr){
-			return new SelectGroupByQuery(groupByFields,havingCtr,this);
+		public ISelectWhereQuery where_x(String fieldName, String operator, Object value){
+			return where_x(new Field(fieldName).op(operator,value));
 		}
 
-		public SelectOrderByQuery orderBy(String orderByField){
-			return new SelectOrderByQuery(orderByField,this);
+		public ISelectGroupByQuery groupBy(String groupByField){
+			return groupBy(new List<String>{groupByField},null);
 		}
-		public SelectOrderByQuery orderBy(List<String> orderByFields){
-			return new SelectOrderByQuery(orderByFields,this);
+		public ISelectGroupByQuery groupBy(List<String> groupByFields){
+			return groupBy(groupByFields,null);
 		}
-		public SelectOrderByQuery orderBy(String orderByField, OrderType orderType){
-			return new SelectOrderByQuery(orderByField,orderType,this);
+		public ISelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr){
+			return groupBy(new List<String>{groupByField},havingCtr);
 		}
-		public SelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType){
-			return new SelectOrderByQuery(orderByFields,orderType,this);
-		}
-
-		public SelectLimitQuery limitTo(Integer lmt){
-			return new SelectLimitQuery(lmt,this);
-		}
-
-		public SelectOffsetQuery offset(Integer ofst){
-			return new SelectOffsetQuery(ofst,this);
-		}
-
-		public override String toString(){
-			return sClause+' FROM '+sObjectName;
-		}
-	}
-
-	/**
-	* @description SelectWhereQuery : select query with a where clause
-	*/
-	public class SelectWhereQuery extends Query {
-		private final ICondition cnd;
-		private final SelectQuery sQuery;
-
-		public SelectWhereQuery(IFieldCondition cnd, SelectQuery sQuery){
-			this.cnd=cnd;
-			this.sQuery=sQuery;
-		}
-
-		public SelectGroupByQuery groupBy(String groupByField){
-			return new SelectGroupByQuery(groupByField,this);
-		}
-		public SelectGroupByQuery groupBy(List<String> groupByFields){
-			return new SelectGroupByQuery(groupByFields,this);
-		}
-		public SelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr){
-			return new SelectGroupByQuery(groupByField,havingCtr,this);
-		}
-		public SelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr){
-			return new SelectGroupByQuery(groupByFields,havingCtr,this);
-		}
-
-		public SelectOrderByQuery orderBy(String orderByField){
-			return new SelectOrderByQuery(orderByField,this);
-		}
-		public SelectOrderByQuery orderBy(List<String> orderByFields){
-			return new SelectOrderByQuery(orderByFields,this);
-		}
-		public SelectOrderByQuery orderBy(String orderByField, OrderType orderType){
-			return new SelectOrderByQuery(orderByField,orderType,this);
-		}
-		public SelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType){
-			return new SelectOrderByQuery(orderByFields,orderType,this);
-		}
-
-		public SelectLimitQuery limitTo(Integer lmt){
-			return new SelectLimitQuery(lmt,this);
-		}
-
-		public SelectOffsetQuery offset(Integer ofst){
-			return new SelectOffsetQuery(ofst,this);
-		}
-
-		public override String toString(){
-			return sQuery+' WHERE '+cnd;
-		}
-	}
-
-	/**
-	* @description SelectGroupByQuery : Group By option of the where clause
-	*/
-	public class SelectGroupByQuery extends Query {
-		private final List<String> groupByFields;
-		private final IHavingCondition havingCtr;
-		private final IQuery swQuery;
-
-		public SelectGroupByQuery(String groupByField,IQuery swQuery){
-			this(new List<String>{groupByField},null,swQuery);
-		}
-		public SelectGroupByQuery(List<String> groupByFields,IQuery swQuery){
-			this(groupByFields,null,swQuery);
-		}
-		public SelectGroupByQuery(String groupByField,IHavingCondition havingCtr,IQuery swQuery){
-			this(new List<String>{groupByField},havingCtr,swQuery);
-		}
-		public SelectGroupByQuery(List<String> groupByFields,IHavingCondition havingCtr,IQuery swQuery){
-			this.groupByFields=new List<String>(groupByFields);
-			this.havingCtr=havingCtr;
-			this.swQuery=swQuery;
-		}
-
-		public SelectOrderByQuery orderBy(String orderByField){
-			return new SelectOrderByQuery(orderByField,this);
-		}
-		public SelectOrderByQuery orderBy(List<String> orderByFields){
-			return new SelectOrderByQuery(orderByFields,this);
-		}
-		public SelectOrderByQuery orderBy(String orderByField, OrderType orderType){
-			return new SelectOrderByQuery(orderByField,orderType,this);
-		}
-		public SelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType){
-			return new SelectOrderByQuery(orderByFields,orderType,this);
-		}
-
-		public SelectLimitQuery limitTo(Integer lmt){
-			return new SelectLimitQuery(lmt,this);
-		}
-
-		public SelectOffsetQuery offset(Integer ofst){
-			return new SelectOffsetQuery(ofst,this);
-		}
-
-		public override String toString(){
-			String result=swQuery+' GROUP BY '+String.join(groupByFields, ',');
+		public ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr){
+			this.soqlQuery+=' GROUP BY '+String.join(groupByFields, ',');
 			if(havingCtr!=null)
-				result+=' HAVING '+havingCtr;
-			return result;
-		}
-	}
-
-	/**
-	* @description SelectOrderByQuery : Order By option of the where clause
-	*/
-	public class SelectOrderByQuery extends Query{
-		private final List<OrderOption> orderOptions;
-		private final IQuery swQuery;
-
-		public SelectOrderByQuery(String orderByField,IQuery swQuery){
-			this(new List<String>{orderByField},new OrderType(),swQuery);
-		}
-		public SelectOrderByQuery(List<String> orderByFields,IQuery swQuery){
-			this(orderByFields,new OrderType(),swQuery);
-		}
-		public SelectOrderByQuery(String orderByField,OrderType orderType,IQuery swQuery){
-			this(new List<String>{orderByField},orderType,swQuery);
-		}
-		public SelectOrderByQuery(List<String> orderByFields,OrderType orderType,IQuery swQuery){
-			this.orderOptions=new List<OrderOption>{new OrderOption(orderByFields,orderType)};
-			this.swQuery=swQuery;
-		}
-
-		public SelectOrderByQuery addOrder(String orderByField){
-			addOrder(new List<String>{orderByField},new OrderType());
-			return this;
-		}
-		public SelectOrderByQuery addOrder(List<String> orderByFields){
-			this.orderOptions.add(new OrderOption(orderByFields,new OrderType()));
-			return this;
-		}
-		public SelectOrderByQuery addOrder(String orderByField, OrderType orderType){
-			addOrder(new List<String>{orderByField},orderType);
-			return this;
-		}
-		public SelectOrderByQuery addOrder(List<String> orderByFields, OrderType orderType){
-			this.orderOptions.add(new OrderOption(orderByFields,orderType));
+				this.soqlQuery+=' HAVING '+havingCtr;
 			return this;
 		}
 
-		public SelectLimitQuery limitTo(Integer lmt){
-			return new SelectLimitQuery(lmt,this);
+		public ISelectOrderByQuery orderBy(String orderByField){
+			return orderBy(new List<String>{orderByField},null);
+		}
+		public ISelectOrderByQuery orderBy(List<String> orderByFields){
+			return orderBy(orderByFields,null);
+		}
+		public ISelectOrderByQuery orderBy(String orderByField, OrderType orderType){
+			return orderBy(new List<String>{orderByField},orderType);
+		}
+		public ISelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType){
+			this.soqlQuery+=' ORDER BY '+String.join(orderByFields,',');
+			if(orderType != null)
+				this.soqlQuery+=orderType;
+			return this;
+		}
+		public ISelectOrderByQuery addOrder(String orderByField){
+			return addOrder(new List<String>{orderByField},null);
+		}
+		public ISelectOrderByQuery addOrder(List<String> orderByFields){
+			return addOrder(orderByFields,null);
+		}
+		public ISelectOrderByQuery addOrder(String orderByField, OrderType orderType){
+			return addOrder(new List<String>{orderByField},orderType);
+		}
+		public ISelectOrderByQuery addOrder(List<String> orderByFields, OrderType orderType){
+			this.soqlQuery+=' '+String.join(orderByFields,',');
+			if(orderType != null)
+				this.soqlQuery+=orderType;
+			return this;
 		}
 
-		public SelectOffsetQuery offset(Integer ofst){
-			return new SelectOffsetQuery(ofst,this);
+		public ISelectLimitQuery limitTo(Integer lmt){
+			this.soqlQuery+=' LIMIT '+lmt;
+			return this;
+		}
+
+		public ISelectOffsetQuery offset(Integer ofst){
+			this.soqlQuery+=' OFFSET '+ofst;
+			return this;
 		}
 
 		public override String toString(){
-			return swQuery+' ORDER BY '+util.joinListObjects(orderOptions, ',');
+			return soqlQuery;
+		}
+
+		public List<SObject> getList(){
+			String soqlQuery=toString();
+			return new List<SObject>(Database.query(soqlQuery));
+		}
+
+		public map<Id,SObject> getMap(){
+			return new Map<Id,SObject>(getList());
 		}
 	}
-
-	/**
-	* @description SelectLimitQuery : Limit option of the where clause
-	*/
-	public class SelectLimitQuery extends Query {
-		private final Integer lmt;
-		private final IQuery swQuery;
-
-		public SelectLimitQuery(Integer lmt,IQuery swQuery){
-			this.lmt=lmt;
-			this.swQuery=swQuery;
-		}
-
-		public SelectOffsetQuery offset(Integer ofst){
-			return new SelectOffsetQuery(ofst,this);
-		}
-
-		public override String toString(){
-			return swQuery+' LIMIT '+lmt;
-		}
-	}
-
-	/**
-	* @description SelectOffsetQuery : Offset option of the where clause
-	*/
-	public class SelectOffsetQuery extends Query {
-		private final Integer ofst;
-		private final IQuery swQuery;
-
-		public SelectOffsetQuery(Integer ofst, IQuery swQuery){
-			this.ofst=ofst;
-			this.swQuery=swQuery;
-		}
-
-		public override String toString(){
-			return swQuery+' OFFSET '+ofst;
-		}
-	}
+	
 
 	/**
 	* @description OrderType : defines the type of the order
