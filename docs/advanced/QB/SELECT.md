@@ -25,7 +25,7 @@ You can use the asterix operator to filter on the list of field you need to have
 
 ### 3. Select the Id field
 
-Without any param to the select_x the Id will be selected
+If no param is provided to the select_x method the Id will be selected
 
   ```apex
   QB.select_x()
