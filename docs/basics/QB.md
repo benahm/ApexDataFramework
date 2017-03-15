@@ -4,7 +4,7 @@ QB is a query builder that offers a simple and friendly API to generate SOQL que
 
 ### Basic examples:
 
-1. **Simple query without a where clause**
+#### 1. **Simple query without a where clause**
 
 Query builder syntax:
   ```apex
@@ -18,7 +18,7 @@ SOQL equivalent:
   ```
 
 
-2. **Simple query with a where clause**
+#### 2. **Simple query with a where clause**
 
 Query builder syntax:
   ```apex
