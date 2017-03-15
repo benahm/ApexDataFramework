@@ -1,6 +1,6 @@
 ## Offset keyword
   ```apex
-  QB.select_x()
+  QB.select_x('Id')
     .from_x('Account')
     .offset(100)
   ```
