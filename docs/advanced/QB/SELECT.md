@@ -37,16 +37,12 @@ If no param is provided to the select_x method the Id will be selected
 
 ### 4. Select one field
 
-Using the field name
-
   ```apex
-  QB.select_x('Name')
+  QB.select_x('Name') // Using the field name
     .from_x('Account')
   ```
-Using the field object
-
   ```apex
-  QB.select_x(Account.Name)
+  QB.select_x(Account.Name) // Using the field object
     .from_x('Account')
   ```
   ```sql
