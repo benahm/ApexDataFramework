@@ -51,16 +51,12 @@ If no param is provided to the select_x method the Id will be selected
   
 ### 5. Select multiple fields
 
-As a string
-
   ```apex
-  QB.select_x('Name,Type')
+  QB.select_x('Name,Type') // As a string
     .from_x('Account')
   ```
-As a list
-
   ```apex
-  QB.select_x(new List<String>{'Name','Type'})
+  QB.select_x(new List<String>{'Name','Type'}) // As a list
     .from_x('Account')
   ```
   ```sql
