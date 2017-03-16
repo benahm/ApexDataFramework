@@ -56,4 +56,16 @@
   ```sql
   SELECT Name FROM Account WHERE Name='Acme Corporation' AND (Type='Prospect' OR Type='Customer' OR (NOT Type!='Partner'))
   ```
+  
+### 3. Where with a bind variable
+
+  ```apex
+  QB.select_x('Name')
+    .from_x('Account')
+    .where_x('Name','=',QB.bind(myListOfNames))
+  ```
+  ```sql
+  SELECT Name FROM Account WHERE Name=:myListOfNames
+  ```
+QB support only one bind variable
 
