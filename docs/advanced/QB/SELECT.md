@@ -12,7 +12,7 @@ You can use the asterix operator to select all fields of an sObject
     .from_x('Account')
   ```
 
-### 2. Select a filtered list of an SObject
+### 2. Select a filtered list of an sObject
 
 You can use the asterix operator to filter on the list of field you need to have in the select clause
 
@@ -22,6 +22,11 @@ You can use the asterix operator to filter on the list of field you need to have
   QB.select_x('*__c')
     .from_x('Account')
   ```
+
+QB support the following regex characters 
+* **Asterix "*"** : matches any character zero or more times
+* **Question mark "?"** : matches any character zero or one time
+* **Plus sign "+"** : matches any character one or more time
 
 ### 3. Select the Id field
 
