@@ -16,6 +16,7 @@
 */
 public class QB {
 	private static final String singleQuote='\'';
+	private static final List<String> standardIncludedFields=new List<String>{'Id'};
 	private static final Util util=new Util();
 	private static final ErrorMessage errMsg=new ErrorMessage();
 	private static Object bindVariable;
@@ -70,10 +71,6 @@ public class QB {
 	}
 	public static IHavingMultiCondition or_x(IHavingCondition cnd1, IHavingCondition cnd2){
 		return new OrCondition(cnd1,cnd2);
-	}
-
-	public static Regex regex(String ptrn){
-		return new Regex(ptrn);
 	}
 
 	/**
@@ -146,9 +143,6 @@ public class QB {
 	* @description select clause
 	* @return ISelectClause
 	*/	
-	public static ISelectFieldsClause select_x(Regex rgx){
-		return new SelectClause(rgx);
-	}
 	public static ISelectFieldsClause select_x(String fieldName){
 		return new SelectClause(fieldName);
 	}
@@ -179,27 +173,6 @@ public class QB {
 		return new OrderType('DESC','LAST');
 	}
 
-	/* Date Literals */
-	private static final String YESTERDAY='YESTERDAY';
-	private static final String TODAY='TODAY';
-	private static final String TOMORROW='TOMORROW';
-	private static final String LAST_WEEK='LAST_WEEK';
-	private static final String THIS_WEEK='THIS_WEEK';
-	private static final String NEXT_WEEK='NEXT_WEEK';
-	private static final String LAST_MONTH='LAST_MONTH';
-	private static final String THIS_MONTH='THIS_MONTH';
-	private static final String NEXT_MONTH='NEXT_MONTH';
-	private static final String LAST_90_DAYS='LAST_90_DAYS';
-	private static final String NEXT_90_DAYS='NEXT_90_DAYS';
-	private static String LAST_N_DAYS(Integer n){ return 'LAST_N_DAYS'+':'+n; }
-	private static String NEXT_N_DAYS(Integer n){ return 'NEXT_N_DAYS'+':'+n; }
-	private static String NEXT_N_WEEKS(Integer n){ return 'NEXT_N_WEEKS'+':'+n; }
-	private static String LAST_N_WEEKS(Integer n){ return 'LAST_N_WEEKS'+':'+n; }
-	private static String NEXT_N_MONTHS(Integer n){ return 'NEXT_N_MONTHS'+':'+n; }
-	private static String LAST_N_MONTHS(Integer n){ return 'LAST_N_MONTHS'+':'+n; }
-	private static final String THIS_QUARTER='THIS_QUARTER';
-	private static final String NEXT_QUARTER='NEXT_QUARTER';
-	/* ... */
 
 	/****************************************************************************************/
 	/*					Interfaces					*/
@@ -235,6 +208,8 @@ public class QB {
 		ISelectFromQuery from_x(Schema.sObjectType sObjectType); 
 	}
 	public interface ISelectAggregateClause extends ISelectClause{
+		ISelectFieldsClause addField(String fieldName);
+		ISelectFieldsClause addFields(List<String> fieldNames);
 		ISelectFromQuery from_x(String sObjectName);
 		ISelectFromQuery from_x(Schema.sObjectType sObjectType);
 	}
@@ -306,6 +281,51 @@ public class QB {
 	}
 	public interface ISelectOffsetQuery extends IQuery{}
 
+
+	public interface IWrapper{
+		String toString();
+	}
+
+	public interface IFieldWrap extends IWrapper{
+		IFieldCondition eq(Object value);
+		IFieldCondition equal(Object value);
+		IFieldCondition ne(Object value);
+		IFieldCondition notEqual(Object value);
+		IFieldCondition gt(Object value);
+		IFieldCondition greaterThan(Object value);
+		IFieldCondition lt(Object value);
+		IFieldCondition lessThan(Object value);
+		IFieldCondition ge(Object value);
+		IFieldCondition greaterOrEqual(Object value);
+		IFieldCondition le(Object value);
+		IFieldCondition lessOrEqual(Object value);
+		IFieldCondition lk(Object value);
+		IFieldCondition isLike(Object value);
+	}
+
+	public interface IAggregateFunctionWrap extends IWrapper{
+		IHavingCondition eq(Integer value);
+		IHavingCondition equal(Integer value);
+		IHavingCondition ne(Integer value);
+		IHavingCondition notEqual(Integer value);
+		IHavingCondition gt(Integer value);
+		IHavingCondition greaterThan(Integer value);
+		IHavingCondition lt(Integer value);
+		IHavingCondition lessThan(Integer value);
+		IHavingCondition ge(Integer value);
+		IHavingCondition greaterOrEqual(Integer value);
+		IHavingCondition le(Integer value);
+		IHavingCondition lessOrEqual(Integer value);
+	}
+
+	public interface ITranslateFunctionWrap extends IWrapper{
+		IFieldCondition eq(String value);
+		IFieldCondition equal(String value);
+		IFieldCondition ne(String value);
+		IFieldCondition notEqual(String value);
+		IFieldCondition lk(String value);
+		IFieldCondition isLike(String value);
+	}
 
 	/****************************************************************************************/
 	/*					Classes						*/
@@ -394,58 +414,10 @@ public class QB {
 		}
 	}
 
-	public interface IWrapper{}
+	
 
-	public interface IFieldWrap extends IWrapper{
-		IFieldCondition eq(Object value);
-		IFieldCondition equal(Object value);
-		IFieldCondition ne(Object value);
-		IFieldCondition notEqual(Object value);
-		IFieldCondition gt(Object value);
-		IFieldCondition greaterThan(Object value);
-		IFieldCondition lt(Object value);
-		IFieldCondition lessThan(Object value);
-		IFieldCondition ge(Object value);
-		IFieldCondition greaterOrEqual(Object value);
-		IFieldCondition le(Object value);
-		IFieldCondition lessOrEqual(Object value);
-		IFieldCondition lk(Object value);
-		IFieldCondition isLike(Object value);
-	}
 
-	public interface IAggregateFunctionWrap extends IWrapper{
-		IHavingCondition eq(Integer value);
-		IHavingCondition equal(Integer value);
-		IHavingCondition ne(Integer value);
-		IHavingCondition notEqual(Integer value);
-		IHavingCondition gt(Integer value);
-		IHavingCondition greaterThan(Integer value);
-		IHavingCondition lt(Integer value);
-		IHavingCondition lessThan(Integer value);
-		IHavingCondition ge(Integer value);
-		IHavingCondition greaterOrEqual(Integer value);
-		IHavingCondition le(Integer value);
-		IHavingCondition lessOrEqual(Integer value);
-	}
-
-	public interface ITranslateFunctionWrap extends IWrapper{
-		IFieldCondition eq(String value);
-		IFieldCondition equal(String value);
-		IFieldCondition ne(String value);
-		IFieldCondition notEqual(String value);
-		IFieldCondition gt(String value);
-		IFieldCondition greaterThan(String value);
-		IFieldCondition lt(String value);
-		IFieldCondition lessThan(String value);
-		IFieldCondition ge(String value);
-		IFieldCondition greaterOrEqual(String value);
-		IFieldCondition le(String value);
-		IFieldCondition lessOrEqual(String value);
-		IFieldCondition lk(String value);
-		IFieldCondition isLike(String value);
-	}
-
-	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,ITranslateFunctionWrap {} 
+	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,ITranslateFunctionWrap{} 
 
 	/**
 	* @description Wrapper : field wrapper
@@ -463,65 +435,58 @@ public class QB {
 			this.functionName=functionName;
 		}
 
-		private ACondition handleOperator(Op operator,Object value){
+		private ACondition op(Op operator, Object value){
 			return new Condition(this,operator,value);
 		}
-		private ACondition handleOperator(String operator,Object value){
+		private ACondition op(String operator, Object value){
 			return new Condition(this,operator,value);
-		}
-
-		public ACondition op(Op operator, Object value){
-			return handleOperator(operator,value);
-		}
-		public ACondition op(String operator, Object value){
-			return handleOperator(operator,value);
 		}
 
 		// equal to
 		public ACondition eq(Object value){
-			return handleOperator(Op.EQ,value);
+			return op(Op.EQ,value);
 		}
 		public ACondition equal(Object value){
 			return eq(value);
 		}
 		// not equal to
 		public ACondition ne(Object value){
-			return handleOperator(Op.NE,value);	
+			return op(Op.NE,value);	
 		}
 		public ACondition notEqual(Object value){
 			return ne(value);
 		}
 		// greater than
 		public ACondition gt(Object value){
-			return handleOperator(Op.GT,value);
+			return op(Op.GT,value);
 		}
 		public ACondition greaterThan(Object value){
 			return gt(value);
 		}
 		// less than
 		public ACondition lt(Object value){
-			return handleOperator(Op.LT,value);
+			return op(Op.LT,value);
 		}
 		public ACondition lessThan(Object value){
 			return lt(value);
 		}
 		// greater than or equal to
 		public ACondition ge(Object value){
-			return handleOperator(Op.GE,value);
+			return op(Op.GE,value);
 		}
 		public ACondition greaterOrEqual(Object value){
 			return ge(value);
 		}
 		// less than or equal to
 		public ACondition le(Object value){
-			return handleOperator(Op.LE,value);
+			return op(Op.LE,value);
 		}
 		public ACondition lessOrEqual(Object value){
 			return le(value);
 		}
 		// like 
 		public ACondition lk(Object value){
-			return handleOperator(Op.LK,value);
+			return op(Op.LK,value);
 		}
 		public ACondition isLike(Object value){
 			return lk(value);
@@ -535,9 +500,7 @@ public class QB {
 			} else if(functionName==null){
 				return fieldName;
 			} 
-
-			System.debug('Throw Error');
-			return null;
+			throw new QBConditionException('Error all inputs of the Wrapper are null');
 		}
 	}
 
@@ -629,7 +592,11 @@ public class QB {
 			this.soqlQuery='SELECT ';
 		}
 		public SelectClause(String fieldName){
-			this(new List<String>{fieldName});
+			if(util.isPattern(fieldName)){
+				this(new Regex(fieldName));
+			}else{
+				this(new List<String>{fieldName});
+			}
 		}
 		public SelectClause(List<String> fieldNames){
 			this.soqlQuery='SELECT ';
@@ -685,10 +652,6 @@ public class QB {
 			this.soqlQuery=soqlSelectClause+' FROM '+sObjectName;
 		}
 
-		public SelectQuery(String sObjectName, String soqlSelectClause, String selectType){
-			this.soqlQuery=soqlSelectClause+' FROM '+sObjectName;
-		}
-
 		public ISelectWhereQuery where_x(IFieldCondition cnd){
 			this.soqlQuery+=' WHERE '+cnd;
 			return this;
@@ -741,7 +704,7 @@ public class QB {
 			return addOrder(new List<String>{orderByField},orderType);
 		}
 		public ISelectOrderByQuery addOrder(List<String> orderByFields, OrderType orderType){
-			this.soqlQuery+=' '+String.join(orderByFields,',');
+			this.soqlQuery+=' '+String.join(orderByFields,' ');
 			if(orderType != null)
 				this.soqlQuery+=orderType;
 			return this;
@@ -775,7 +738,13 @@ public class QB {
 		private final String ptrn;
 
 		public Regex(String ptrn){
-			this.ptrn=ptrn;
+			this.ptrn=transform(ptrn);
+		}
+
+		private String transform(String ptrn){
+			return ptrn.replaceAll('\\*', '.*')
+					   .replaceAll('\\+', '.+')
+					   .replaceAll('\\?', '.?');
 		}
 
 		public List<String> getMatches(List<String> inList){
@@ -810,18 +779,13 @@ public class QB {
 	public class OrderType {
 		private final String orderingType;
 		private final String nullsHandlingType;
-		private Boolean pickDefault;
 
-		public OrderType(){
-			this.pickDefault=true;
-		}
 		public OrderType(String orderingType, String nullsHandlingType){
 			this.orderingType=orderingType;
 			this.nullsHandlingType=nullsHandlingType;
 		}
 
 		public override String toString(){
-			if(pickDefault == true) return '';
 			return ' '+orderingType+' NULLS '+nullsHandlingType;
 		}
 	}

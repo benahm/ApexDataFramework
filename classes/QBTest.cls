@@ -23,15 +23,11 @@ private class QBTest {
 		Test.startTest();
 
 		System.assertEquals('Name = \'Value\'',QB.field('Name').eq('Value').toString());
-		System.assertEquals('Name = \'Value\'',QB.field('Name').op(QB.Op.EQ,'Value').toString());
-		System.assertEquals('Name = \'Value\'',QB.field('Name').op('=','Value').toString());
 		System.assertEquals('Name = \'Value\'',QB.fieldExpr('Name',QB.Op.EQ,'Value').toString());
 		System.assertEquals('Name = \'Value\'',QB.fieldExpr('Name','=','Value').toString());
 		System.assertEquals('Name = \'Value\'',QB.field('Name').equal('Value').toString());
 
 		System.assertEquals('Name IN (\'Value1\',\'Value2\')',QB.field('Name').eq(new List<String>{'Value1','Value2'}).toString());
-		System.assertEquals('Name IN (\'Value1\',\'Value2\')',QB.field('Name').op(QB.Op.EQ,new List<String>{'Value1','Value2'}).toString());
-		System.assertEquals('Name IN (\'Value1\',\'Value2\')',QB.field('Name').op('=',new List<String>{'Value1','Value2'}).toString());
 		System.assertEquals('Name IN (\'Value1\',\'Value2\')',QB.fieldExpr('Name',QB.Op.EQ,new List<String>{'Value1','Value2'}).toString());
 		System.assertEquals('Name IN (\'Value1\',\'Value2\')',QB.fieldExpr('Name','=',new List<String>{'Value1','Value2'}).toString());
 		System.assertEquals('Name IN (\'Value1\',\'Value2\')',QB.field('Name').equal(new List<String>{'Value1','Value2'}).toString());
@@ -44,15 +40,11 @@ private class QBTest {
 		Test.startTest();
 
 		System.assertEquals('Name != \'Value\'',QB.field('Name').ne('Value').toString());
-		System.assertEquals('Name != \'Value\'',QB.field('Name').op(QB.Op.NE,'Value').toString());
-		System.assertEquals('Name != \'Value\'',QB.field('Name').op('!=','Value').toString());
 		System.assertEquals('Name != \'Value\'',QB.fieldExpr('Name',QB.Op.NE,'Value').toString());
 		System.assertEquals('Name != \'Value\'',QB.fieldExpr('Name','!=','Value').toString());
 		System.assertEquals('Name != \'Value\'',QB.field('Name').notEqual('Value').toString());
 
 		System.assertEquals('Name NOT IN (\'Value1\',\'Value2\')',QB.field('Name').ne(new List<String>{'Value1','Value2'}).toString());
-		System.assertEquals('Name NOT IN (\'Value1\',\'Value2\')',QB.field('Name').op(QB.Op.NE,new List<String>{'Value1','Value2'}).toString());
-		System.assertEquals('Name NOT IN (\'Value1\',\'Value2\')',QB.field('Name').op('!=',new List<String>{'Value1','Value2'}).toString());
 		System.assertEquals('Name NOT IN (\'Value1\',\'Value2\')',QB.fieldExpr('Name',QB.Op.NE,new List<String>{'Value1','Value2'}).toString());
 		System.assertEquals('Name NOT IN (\'Value1\',\'Value2\')',QB.fieldExpr('Name','!=',new List<String>{'Value1','Value2'}).toString());
 		System.assertEquals('Name NOT IN (\'Value1\',\'Value2\')',QB.field('Name').notEqual(new List<String>{'Value1','Value2'}).toString());
@@ -65,8 +57,6 @@ private class QBTest {
 		Test.startTest();
 
 		System.assertEquals('Name > \'Value\'',QB.field('Name').gt('Value').toString());
-		System.assertEquals('Name > \'Value\'',QB.field('Name').op(QB.Op.GT,'Value').toString());
-		System.assertEquals('Name > \'Value\'',QB.field('Name').op('>','Value').toString());
 		System.assertEquals('Name > \'Value\'',QB.fieldExpr('Name',QB.Op.GT,'Value').toString());
 		System.assertEquals('Name > \'Value\'',QB.fieldExpr('Name','>','Value').toString());
 		System.assertEquals('Name > \'Value\'',QB.field('Name').greaterThan('Value').toString());
@@ -79,8 +69,6 @@ private class QBTest {
 		Test.startTest();
 
 		System.assertEquals('Name < \'Value\'',QB.field('Name').lt('Value').toString());
-		System.assertEquals('Name < \'Value\'',QB.field('Name').op(QB.Op.LT,'Value').toString());
-		System.assertEquals('Name < \'Value\'',QB.field('Name').op('<','Value').toString());
 		System.assertEquals('Name < \'Value\'',QB.fieldExpr('Name',QB.Op.LT,'Value').toString());
 		System.assertEquals('Name < \'Value\'',QB.fieldExpr('Name','<','Value').toString());
 		System.assertEquals('Name < \'Value\'',QB.field('Name').lessThan('Value').toString());
@@ -93,8 +81,6 @@ private class QBTest {
 		Test.startTest();
 
 		System.assertEquals('Name >= \'Value\'',QB.field('Name').ge('Value').toString());
-		System.assertEquals('Name >= \'Value\'',QB.field('Name').op(QB.Op.GE,'Value').toString());
-		System.assertEquals('Name >= \'Value\'',QB.field('Name').op('>=','Value').toString());
 		System.assertEquals('Name >= \'Value\'',QB.fieldExpr('Name',QB.Op.GE,'Value').toString());
 		System.assertEquals('Name >= \'Value\'',QB.fieldExpr('Name','>=','Value').toString());
 		System.assertEquals('Name >= \'Value\'',QB.field('Name').greaterOrEqual('Value').toString());
@@ -107,8 +93,6 @@ private class QBTest {
 		Test.startTest();
 
 		System.assertEquals('Name <= \'Value\'',QB.field('Name').le('Value').toString());
-		System.assertEquals('Name <= \'Value\'',QB.field('Name').op(QB.Op.LE,'Value').toString());
-		System.assertEquals('Name <= \'Value\'',QB.field('Name').op('<=','Value').toString());
 		System.assertEquals('Name <= \'Value\'',QB.fieldExpr('Name',QB.Op.LE,'Value').toString());
 		System.assertEquals('Name <= \'Value\'',QB.fieldExpr('Name','<=','Value').toString());
 		System.assertEquals('Name <= \'Value\'',QB.field('Name').lessOrEqual('Value').toString());
@@ -117,12 +101,10 @@ private class QBTest {
 	}
 	
 	@isTest 
-	static void fieldConditionIsLikeOrEqualTest() {
+	static void fieldConditionIsLikeTest() {
 		Test.startTest();
 
 		System.assertEquals('Name LIKE \'Value\'',QB.field('Name').lk('Value').toString());
-		System.assertEquals('Name LIKE \'Value\'',QB.field('Name').op(QB.Op.LK,'Value').toString());
-		System.assertEquals('Name LIKE \'Value\'',QB.field('Name').op('LIKE','Value').toString());
 		System.assertEquals('Name LIKE \'Value\'',QB.fieldExpr('Name',QB.Op.LK,'Value').toString());
 		System.assertEquals('Name LIKE \'Value\'',QB.fieldExpr('Name','LIKE','Value').toString());
 		System.assertEquals('Name LIKE \'Value\'',QB.field('Name').isLike('Value').toString());
@@ -154,6 +136,9 @@ private class QBTest {
 		System.assertEquals('COUNT() >= 1',QB.count().greaterOrEqual(1).toString());
 		System.assertEquals('COUNT() <= 1',QB.count().lessOrEqual(1).toString());
 		
+		System.assertEquals('NOT (COUNT() = 1)',QB.not_x(QB.count().eq(1)).toString());
+		System.assertEquals('(COUNT() = 1) OR (COUNT() != 1)',QB.or_x(QB.count().eq(1),QB.count().ne(1)).toString());
+		System.assertEquals('(COUNT() = 1) AND (COUNT() > 1)',QB.and_x(QB.count().eq(1),QB.count().gt(1)).toString());
 		// TODO
 
 		Test.stopTest();
@@ -230,22 +215,38 @@ private class QBTest {
 		System.assertEquals('Name = true', QB.field('Name').eq(true).toString());
 		System.assertEquals('Name = NULL', QB.field('Name').eq(null).toString());
 		System.assertEquals('Name', QB.field('Name').toString());
+		System.assertEquals('Name = :bindVariable',QB.field('Name').eq(QB.bind('Value')).toString());
+
 		try{
-			String test=QB.field('Name').op(QB.Op.EQ,new List<String>()).toString();
+			String test=QB.and_x(QB.field('Name1').eq(QB.bind('Value1')),QB.field('Name2').eq(QB.bind('Value2'))).toString();
 			System.assert(false);
 		}catch(Exception e){
 			System.assert(true);
 		}
 
 		try{
-			String test=QB.field('Name').op('UnkownOperator','Value').toString();
+			String test=QB.field('Name').eq(new List<String>()).toString();
 			System.assert(false);
 		}catch(Exception e){
 			System.assert(true);
 		}
 
 		try{
-			String test=QB.field('Name').op(QB.Op.LK,new List<String>{'Value1','Value2'}).toString();
+			String test=QB.fieldExpr('Name','UnkownOperator','Value').toString();
+			System.assert(false);
+		}catch(Exception e){
+			System.assert(true);
+		}
+
+		try{
+			String test=QB.fieldExpr('Name',QB.Op.LK,new List<String>{'Value1','Value2'}).toString();
+			System.assert(false);
+		}catch(Exception e){
+			System.assert(true);
+		}
+
+		try{
+			String test=QB.fieldExpr('Name',QB.Op.EQ,new Map<String,String>()).toString();
 			System.assert(false);
 		}catch(Exception e){
 			System.assert(true);
@@ -261,11 +262,25 @@ private class QBTest {
 		Test.startTest();
 
 		System.assertEquals('SELECT Name',QB.select_x('Name').toString());
+		System.assertEquals('SELECT Name',QB.select_x(Account.Name).toString());
+		System.assertEquals('SELECT Name1,Name2',
+								QB.select_x('Name1')
+								.addField('Name2').toString());
+		System.assertEquals('SELECT Name1,Name2,Name3',
+								QB.select_x('Name1')
+								.addField('Name2,Name3').toString());
+		System.assertEquals('SELECT Name1,Name2,Name3',
+								QB.select_x('Name1')
+								.addFields(new List<String>{'Name2','Name3'}).toString());
 		System.assertEquals('SELECT Name1,Name2',QB.select_x('Name1,Name2').toString());
 		System.assertEquals('SELECT Name1,Name2',QB.select_x(new List<String>{'Name1','Name2'}).toString());
+		System.assertEquals('SELECT Name1,TOLABEL(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.toLabel('Name2')).toString());
 		System.assertEquals('SELECT Name,(SELECT Name FROM Account)',
 								QB.select_x('Name')
-								.addSubQuery(QB.select_x('Name').from_x('Account')).toString());
+								.addSubQuery(QB.select_x('Name')
+								.from_x('Account')).toString());
 
 		Test.stopTest();
 	}
@@ -276,9 +291,9 @@ private class QBTest {
 
 		System.assertEquals('SELECT COUNT()',QB.select_x(QB.count()).toString());
 		System.assertEquals('SELECT COUNT(Name)',QB.select_x(QB.count('Name')).toString());
-		System.assertEquals('SELECT COUNT(Name1),Name2',QB.select_x(QB.count('Name1'),'Name2').toString());
-		System.assertEquals('SELECT COUNT(Name1),Name2,Name3',QB.select_x(QB.count('Name1'),'Name2,Name3').toString());
-		System.assertEquals('SELECT COUNT(Name1),Name2,Name3',QB.select_x(QB.count('Name1'),new List<String>{'Name2','Name3'}).toString());
+		System.assertEquals('SELECT COUNT(Name1),Name2',QB.select_x(QB.count('Name1')).addField('Name2').toString());
+		System.assertEquals('SELECT COUNT(Name1),Name2,Name3',QB.select_x(QB.count('Name1')).addField('Name2,Name3').toString());
+		System.assertEquals('SELECT COUNT(Name1),Name2,Name3',QB.select_x(QB.count('Name1')).addFields(new List<String>{'Name2','Name3'}).toString());
 		System.assertEquals('SELECT COUNT_DISTINCT(Name)',QB.select_x(QB.count_distinct('Name')).toString());
 		System.assertEquals('SELECT AVG(Name)',QB.select_x(QB.avg('Name')).toString());
 		System.assertEquals('SELECT MIN(Name)',QB.select_x(QB.min('Name')).toString());
@@ -294,6 +309,8 @@ private class QBTest {
 
 		System.assertEquals('SELECT Name FROM Account',QB.select_x('Name')
 														.from_x('Account').toString());
+		System.assertEquals('SELECT Name FROM Account',QB.select_x('Name')
+														.from_x(Account.sObjectType).toString());
 		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\'',QB.select_x('Name')
 														.from_x('Account')
 														.where_x('Name',QB.Op.EQ,'Value').toString());
@@ -411,6 +428,30 @@ private class QBTest {
 		System.assertEquals('SELECT Name FROM Account ORDER BY Name',QB.select_x('Name')
 														.from_x('Account')
 														.orderBy('Name').toString());
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name ASC NULLS FIRST',QB.select_x('Name')
+														.from_x('Account')
+														.orderBy('Name',QB.ascNullsFirst()).toString());
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name ASC NULLS LAST',QB.select_x('Name')
+														.from_x('Account')
+														.orderBy('Name',QB.ascNullsLast()).toString());
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name DESC NULLS FIRST',QB.select_x('Name')
+														.from_x('Account')
+														.orderBy('Name',QB.descNullsFirst()).toString());
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name DESC NULLS LAST',QB.select_x('Name')
+														.from_x('Account')
+														.orderBy('Name',QB.descNullsLast()).toString());
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name1 DESC NULLS LAST Name2',QB.select_x('Name')
+														.from_x('Account')
+														.orderBy('Name1',QB.descNullsLast())
+														.addOrder('Name2').toString());
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name1 DESC NULLS LAST Name2 Name3',QB.select_x('Name')
+														.from_x('Account')
+														.orderBy('Name1',QB.descNullsLast())
+														.addOrder(new List<String>{'Name2','Name3'}).toString());
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name1 DESC NULLS LAST Name2 ASC NULLS FIRST',QB.select_x('Name')
+														.from_x('Account')
+														.orderBy('Name1',QB.descNullsLast())
+														.addOrder('Name2',QB.ascNullsFirst()).toString());
 		System.assertEquals('SELECT Name FROM Account ORDER BY Name LIMIT 1',QB.select_x('Name')
 														.from_x('Account')
 														.orderBy('Name')
