@@ -18,6 +18,7 @@ public class QB {
 	private static final String singleQuote='\'';
 	private static final Util util=new Util();
 	private static final ErrorMessage errMsg=new ErrorMessage();
+	private static Object bindVariable;
 	public enum Op {EQ, EQUAL,
 			NE, NOTEQUAL,
 			GT, GREATERTHAN,
@@ -25,7 +26,6 @@ public class QB {
 			GE, GREATEROREQUAL,
 			LE, LESSOREQUAL,
 			LK, ISLIKE}
-	
 
 	private static final Map <String, Schema.SObjectType> globalSchemaMap;
 
@@ -33,8 +33,6 @@ public class QB {
 	static {
 	    globalSchemaMap = Schema.getGlobalDescribe();
 	}
-
-
 
 	/**
 	* @description apply the logical operator NOT to a condition
@@ -47,7 +45,6 @@ public class QB {
 	public static IHavingCondition not_x(IHavingCondition cnd){
 		return new NotCondition(cnd) ;
 	}
-
 
 	/**
 	* @description apply the logical operator AND to two conditions
@@ -62,7 +59,6 @@ public class QB {
 		return new AndCondition(cnd1,cnd2);
 	}
 
-
 	/**
 	* @description apply the logical operator OR to two conditions
 	* @param cnd1 : the first condition
@@ -76,13 +72,17 @@ public class QB {
 		return new OrCondition(cnd1,cnd2);
 	}
 
+	public static Regex regex(String ptrn){
+		return new Regex(ptrn);
+	}
+
 	/**
 	* @description wrap a field
 	* @param name : field name
 	* @return Field
 	*/
-	public static Field field(String name){
-		return new Field(name);
+	public static IFieldWrap field(String name){
+		return new Wrapper(name);
 	}	
 
 	/**
@@ -92,67 +92,63 @@ public class QB {
 	* @return Field
 	*/
 	public static IFieldCondition fieldExpr(String name, Op operator, Object value){
-		return new Field(name).op(operator,value);
+		return new Wrapper(name).op(operator,value);
 	}
 	public static IFieldCondition fieldExpr(String name, String operator, Object value){
-		return new Field(name).op(operator,value);
+		return new Wrapper(name).op(operator,value);
+	}
+
+	public static BindType bind(Object bindVarValue){
+		if(bindVariable != null)
+			throw new QBBindException('Error only one bind variable is allowed');
+
+		bindVariable=bindVarValue;
+		return new BindType('bindVariable');
 	}
 
 	/**
-	* @description count aggregate function
-	* @return AggregateFunction
+	* @description SOQL aggregate functions
+	* @param fieldName 
+	* @return IAggregateFunctionWrap
 	*/
-	public static AggregateFunction count(){
-		return new AggregateFunction('COUNT');
+	public static IAggregateFunctionWrap count(){
+		return new Wrapper(null,'COUNT');
 	}
-	public static AggregateFunction count(String fieldName){
-		return new AggregateFunction('COUNT',fieldName);
+	public static IAggregateFunctionWrap count(String fieldName){
+		return new Wrapper(fieldName,'COUNT');
 	}
-
-	/**
-	* @description count_distinct aggregate function
-	* @return AggregateFunction
-	*/
-	public static AggregateFunction count_distinct(String fieldName){
-		return new AggregateFunction('COUNT_DISTINCT',fieldName);
+	public static IAggregateFunctionWrap count_distinct(String fieldName){
+		return new Wrapper(fieldName,'COUNT_DISTINCT');
 	}
-
-	/**
-	* @description avg aggregate function
-	* @return AggregateFunction
-	*/
-	public static AggregateFunction avg(String fieldName){
-		return new AggregateFunction('AVG',fieldName);
+	public static IAggregateFunctionWrap avg(String fieldName){
+		return new Wrapper(fieldName,'AVG');
 	}
-
-	/**
-	* @description min aggregate function
-	* @return AggregateFunction
-	*/
-	public static AggregateFunction min(String fieldName){
-		return new AggregateFunction('MIN',fieldName);
+	public static IAggregateFunctionWrap min(String fieldName){
+		return new Wrapper(fieldName,'MIN');
+	}
+	public static IAggregateFunctionWrap max(String fieldName){
+		return new Wrapper(fieldName,'MAX');
+	}
+	public static IAggregateFunctionWrap sum(String fieldName){
+		return new Wrapper(fieldName,'SUM');
 	}
 
 	/**
-	* @description max aggregate function
-	* @return AggregateFunction
+	* @description ToLabel function
+	* @param fieldName 
+	* @return ITranslateFunctionWrap
 	*/
-	public static AggregateFunction max(String fieldName){
-		return new AggregateFunction('MAX',fieldName);
-	}
-
-	/**
-	* @description sum aggregate function
-	* @return AggregateFunction
-	*/
-	public static AggregateFunction sum(String fieldName){
-		return new AggregateFunction('SUM',fieldName);
+	public static ITranslateFunctionWrap toLabel(String fieldName){
+		return new Wrapper(fieldName,'TOLABEL');
 	}
 
 	/**
 	* @description select clause
-	* @return AggregateFunction
+	* @return ISelectClause
 	*/	
+	public static ISelectFieldsClause select_x(Regex rgx){
+		return new SelectClause(rgx);
+	}
 	public static ISelectFieldsClause select_x(String fieldName){
 		return new SelectClause(fieldName);
 	}
@@ -162,19 +158,14 @@ public class QB {
 	public static ISelectFieldsClause select_x(List<String> fieldNames){
 		return new SelectClause(fieldNames);
 	}
-	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc){
+	public static ISelectAggregateClause select_x(IAggregateFunctionWrap aggrFunc){
 		return new SelectClause(aggrFunc);
 	}
-	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc, String fieldName){
-		return new SelectClause(aggrFunc,fieldName);
-	}
-	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc, Schema.SObjectField field){
-		return new SelectClause(aggrFunc,field.getDescribe().getName());
-	}
-	public static ISelectAggregateClause select_x(AggregateFunction aggrFunc, List<String> fieldNames){
-		return new SelectClause(aggrFunc,fieldNames);
-	}
 
+	/**
+	* @description order type for the Order By
+	* @return OrderType
+	*/	
 	public static OrderType ascNullsFirst(){
 		return new OrderType('ASC','FIRST');
 	}
@@ -187,6 +178,28 @@ public class QB {
 	public static OrderType descNullsLast(){
 		return new OrderType('DESC','LAST');
 	}
+
+	/* Date Literals */
+	private static final String YESTERDAY='YESTERDAY';
+	private static final String TODAY='TODAY';
+	private static final String TOMORROW='TOMORROW';
+	private static final String LAST_WEEK='LAST_WEEK';
+	private static final String THIS_WEEK='THIS_WEEK';
+	private static final String NEXT_WEEK='NEXT_WEEK';
+	private static final String LAST_MONTH='LAST_MONTH';
+	private static final String THIS_MONTH='THIS_MONTH';
+	private static final String NEXT_MONTH='NEXT_MONTH';
+	private static final String LAST_90_DAYS='LAST_90_DAYS';
+	private static final String NEXT_90_DAYS='NEXT_90_DAYS';
+	private static String LAST_N_DAYS(Integer n){ return 'LAST_N_DAYS'+':'+n; }
+	private static String NEXT_N_DAYS(Integer n){ return 'NEXT_N_DAYS'+':'+n; }
+	private static String NEXT_N_WEEKS(Integer n){ return 'NEXT_N_WEEKS'+':'+n; }
+	private static String LAST_N_WEEKS(Integer n){ return 'LAST_N_WEEKS'+':'+n; }
+	private static String NEXT_N_MONTHS(Integer n){ return 'NEXT_N_MONTHS'+':'+n; }
+	private static String LAST_N_MONTHS(Integer n){ return 'LAST_N_MONTHS'+':'+n; }
+	private static final String THIS_QUARTER='THIS_QUARTER';
+	private static final String NEXT_QUARTER='NEXT_QUARTER';
+	/* ... */
 
 	/****************************************************************************************/
 	/*					Interfaces					*/
@@ -208,45 +221,15 @@ public class QB {
 	}
 
 	/**
-	* @description Field interface
-	*/
-	public interface IField {
-		// equal to
-		FieldCondition eq(Object value);
-		FieldCondition equal(Object value);
-
-		// not equal to
-		FieldCondition ne(Object value);
-		FieldCondition notEqual(Object value);
-		
-		// greater than
-		FieldCondition gt(Object value);
-		FieldCondition greaterThan(Object value);
-
-		// less than
-		FieldCondition lt(Object value);
-		FieldCondition lessThan(Object value);
-
-		// greater than or equal to
-		FieldCondition ge(Object value);
-		FieldCondition greaterOrEqual(Object value);
-
-		// less than or equal to
-		FieldCondition le(Object value);
-		FieldCondition lessOrEqual(Object value);
-
-		// like 
-		FieldCondition lk(String fieldValue);
-		FieldCondition isLike(String fieldValue);
-	}
-
-	/**
 	* @description Select clause interfaces
 	*/
 	public interface ISelectClause{
 		String toString();
 	}
 	public interface ISelectFieldsClause extends ISelectClause{ 
+		ISelectFieldsClause addField(String fieldName);
+		ISelectFieldsClause addFields(List<String> fieldNames);
+		ISelectFieldsClause addFunction(ITranslateFunctionWrap dateFunc);
 		ISelectFieldsClause addSubQuery(IQuery query);
 		ISelectFromQuery from_x(String sObjectName);
 		ISelectFromQuery from_x(Schema.sObjectType sObjectType); 
@@ -327,10 +310,16 @@ public class QB {
 	/****************************************************************************************/
 	/*					Classes						*/
 	/****************************************************************************************/
+
+	/**
+	* @description ACondition : Abstract class for a single condition
+	*/
+	public abstract class ACondition implements IFieldCondition,IHavingCondition{}
+
 	/**
 	* @description NotCondition : NOT applied to a condition
 	*/
-	public class NotCondition implements IFieldCondition,IHavingCondition {
+	public class NotCondition extends ACondition {
 		private ICondition cnd;
 
 		public NotCondition(ICondition cnd){
@@ -343,14 +332,14 @@ public class QB {
 	}
 
 	/**
-	* @description MultiCondition : Abstract class for operations that can be
+	* @description AMultiCondition : Abstract class for conditions that can be
 	* 			      applied to multiple conditions
 	*/
-	public abstract class MultiCondition implements IFieldMultiCondition,IHavingMultiCondition {
+	public abstract class AMultiCondition implements IFieldMultiCondition,IHavingMultiCondition {
 		protected abstract String getOperator();
 		protected abstract List<ICondition> getListConditions();
 
-		public MultiCondition add(ICondition cnd){
+		public AMultiCondition add(ICondition cnd){
 			getListConditions().add(cnd);
 			return this;
 		}
@@ -368,7 +357,7 @@ public class QB {
 	/**
 	* @description AndCondition : AND applied to multiple conditions
 	*/
-	public class AndCondition extends MultiCondition {
+	public class AndCondition extends AMultiCondition {
 		private List<ICondition> listConditions;
 		private final String operator = 'AND';
 
@@ -388,7 +377,7 @@ public class QB {
 	/**
 	* @description AndCondition : OR applied to multiple conditions
 	*/
-	public class OrCondition extends MultiCondition {
+	public class OrCondition extends AMultiCondition {
 		private List<ICondition> listConditions;
 		private final String operator = 'OR';
 
@@ -405,114 +394,180 @@ public class QB {
 		}
 	}
 
-	/**
-	* @description Field : field wrapper
-	*/
-	public class Field implements IField {
-		private final String fieldName;
+	public interface IWrapper{}
 
-		public Field(String fieldName){
+	public interface IFieldWrap extends IWrapper{
+		IFieldCondition eq(Object value);
+		IFieldCondition equal(Object value);
+		IFieldCondition ne(Object value);
+		IFieldCondition notEqual(Object value);
+		IFieldCondition gt(Object value);
+		IFieldCondition greaterThan(Object value);
+		IFieldCondition lt(Object value);
+		IFieldCondition lessThan(Object value);
+		IFieldCondition ge(Object value);
+		IFieldCondition greaterOrEqual(Object value);
+		IFieldCondition le(Object value);
+		IFieldCondition lessOrEqual(Object value);
+		IFieldCondition lk(Object value);
+		IFieldCondition isLike(Object value);
+	}
+
+	public interface IAggregateFunctionWrap extends IWrapper{
+		IHavingCondition eq(Integer value);
+		IHavingCondition equal(Integer value);
+		IHavingCondition ne(Integer value);
+		IHavingCondition notEqual(Integer value);
+		IHavingCondition gt(Integer value);
+		IHavingCondition greaterThan(Integer value);
+		IHavingCondition lt(Integer value);
+		IHavingCondition lessThan(Integer value);
+		IHavingCondition ge(Integer value);
+		IHavingCondition greaterOrEqual(Integer value);
+		IHavingCondition le(Integer value);
+		IHavingCondition lessOrEqual(Integer value);
+	}
+
+	public interface ITranslateFunctionWrap extends IWrapper{
+		IFieldCondition eq(String value);
+		IFieldCondition equal(String value);
+		IFieldCondition ne(String value);
+		IFieldCondition notEqual(String value);
+		IFieldCondition gt(String value);
+		IFieldCondition greaterThan(String value);
+		IFieldCondition lt(String value);
+		IFieldCondition lessThan(String value);
+		IFieldCondition ge(String value);
+		IFieldCondition greaterOrEqual(String value);
+		IFieldCondition le(String value);
+		IFieldCondition lessOrEqual(String value);
+		IFieldCondition lk(String value);
+		IFieldCondition isLike(String value);
+	}
+
+	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,ITranslateFunctionWrap {} 
+
+	/**
+	* @description Wrapper : field wrapper
+	*/
+	public class Wrapper extends AWrapper{
+		private final String fieldName;
+		private final String functionName;
+
+		public Wrapper(String fieldName){
 			this.fieldName=fieldName;
 		}
 
-		private FieldCondition handleOperator(Op operator,Object value){
-			return new FieldCondition(this,operator,value);
-		}
-		private FieldCondition handleOperator(String operator,Object value){
-			return new FieldCondition(this,operator,value);
+		public Wrapper(String fieldName, String functionName){
+			this.fieldName=fieldName;
+			this.functionName=functionName;
 		}
 
-		public FieldCondition op(Op operator, Object value){
+		private ACondition handleOperator(Op operator,Object value){
+			return new Condition(this,operator,value);
+		}
+		private ACondition handleOperator(String operator,Object value){
+			return new Condition(this,operator,value);
+		}
+
+		public ACondition op(Op operator, Object value){
 			return handleOperator(operator,value);
 		}
-		public FieldCondition op(String operator, Object value){
+		public ACondition op(String operator, Object value){
 			return handleOperator(operator,value);
 		}
 
 		// equal to
-		public FieldCondition eq(Object value){
+		public ACondition eq(Object value){
 			return handleOperator(Op.EQ,value);
 		}
-		public FieldCondition equal(Object value){
+		public ACondition equal(Object value){
 			return eq(value);
 		}
-
 		// not equal to
-		public FieldCondition ne(Object value){
+		public ACondition ne(Object value){
 			return handleOperator(Op.NE,value);	
 		}
-		public FieldCondition notEqual(Object value){
+		public ACondition notEqual(Object value){
 			return ne(value);
 		}
-		
 		// greater than
-		public FieldCondition gt(Object value){
+		public ACondition gt(Object value){
 			return handleOperator(Op.GT,value);
 		}
-		public FieldCondition greaterThan(Object value){
+		public ACondition greaterThan(Object value){
 			return gt(value);
 		}
-
 		// less than
-		public FieldCondition lt(Object value){
+		public ACondition lt(Object value){
 			return handleOperator(Op.LT,value);
 		}
-		public FieldCondition lessThan(Object value){
+		public ACondition lessThan(Object value){
 			return lt(value);
 		}
-
 		// greater than or equal to
-		public FieldCondition ge(Object value){
+		public ACondition ge(Object value){
 			return handleOperator(Op.GE,value);
 		}
-		public FieldCondition greaterOrEqual(Object value){
+		public ACondition greaterOrEqual(Object value){
 			return ge(value);
 		}
-
 		// less than or equal to
-		public FieldCondition le(Object value){
+		public ACondition le(Object value){
 			return handleOperator(Op.LE,value);
 		}
-		public FieldCondition lessOrEqual(Object value){
+		public ACondition lessOrEqual(Object value){
 			return le(value);
 		}
-
 		// like 
-		public FieldCondition lk(Object value){
+		public ACondition lk(Object value){
 			return handleOperator(Op.LK,value);
 		}
-		public FieldCondition isLike(Object value){
+		public ACondition isLike(Object value){
 			return lk(value);
 		}
 
 		public override String toString(){
-			return fieldName;
+			if(fieldName!=null && functionName!=null){
+				return functionName+'('+fieldName+')';
+			} else if(functionName!=null){
+				return functionName+'()';
+			} else if(functionName==null){
+				return fieldName;
+			} 
+
+			System.debug('Throw Error');
+			return null;
 		}
 	}
 
+
 	/**
-	* @description FieldCondition : field condition
+	* @description Condition : field condition
 	*/
-	public class FieldCondition implements IFieldCondition {
-		private final Field field;
+	public class Condition extends ACondition {
+		private final Wrapper cmpble;
 		private final String operator;
 		private final String values;
 
-		public FieldCondition(Field field,Op operator,Object value){
-			this(field,util.operatorToString(operator),value);
+		public Condition(Wrapper cmpble,Op operator,Object value){
+			this(cmpble,util.operatorToString(operator),value);
 		}
-		public FieldCondition(Field field,String operator,Object value){
-			this.field=field;
+		public Condition(Wrapper cmpble,String operator,Object value){
+			this.cmpble=cmpble;
 			this.operator=operator.trim();
 			this.values=parseValue(value);
 		}
 
 		private String parseValue(Object value){
 			if(value == null) return 'NULL';
+			// TODO Handle Date/DateTime
 			if(util.isNumberOrBoolean(value)){
 				return value+'';
 			} else if(value instanceof String){
 				return singleQuote+String.escapeSingleQuotes(value+'')+singleQuote;
+			} else if(value instanceof bindType){
+				return value+'';
 			} else if(value instanceof List<String>){
 				List<String> values=(List<String>)value;
 				if(values.isEmpty()) throw new QBConditionException('Error Value is Empty List');
@@ -526,13 +581,12 @@ public class QB {
 		}
 
 		public override String toString(){
-
 			// Multiple values
 			if(isMultipeValues(values)){
 				if(operator == '='){ // EQUAL
-					return field+' IN '+values;
+					return cmpble+' IN '+values;
 				} else if(this.operator == '!='){ // NOT EQUAL
-					return field+' NOT IN '+values;
+					return cmpble+' NOT IN '+values;
 				} else {
 					throw new QBConditionException(errMsg.operatorDoNotHandleMultiValues);
 				}
@@ -540,33 +594,8 @@ public class QB {
 
 			// Single value
 			if(util.isValidFieldConditionOperator(operator))
-				return field+' '+operator+' '+values;
+				return cmpble+' '+operator+' '+values;
 			else 
-				throw new QBConditionException(errMsg.unkownOperator);
-		}
-	}
-
-	/**
-	* @description HavingCondition : having condition
-	*/
-	public class HavingCondition implements IHavingCondition{
-		private final AggregateFunction aggrFunc;
-		private final String operator;
-		private final Integer value;
-
-		public HavingCondition(AggregateFunction aggrFunc,Op operator,Integer value){
-			this(aggrFunc,util.operatorToString(operator),value);
-		}
-		public HavingCondition(AggregateFunction aggrFunc,String operator,Integer value){
-			this.aggrFunc=aggrFunc;
-			this.operator=operator;
-			this.value=value;
-		}
-
-		public override String toString(){
-			if(util.isValidHavingConditionOperator(operator))
-				return aggrFunc+' '+operator+' '+value;
-			else
 				throw new QBConditionException(errMsg.unkownOperator);
 		}
 	}
@@ -575,21 +604,6 @@ public class QB {
 	* @description Query : a valid query
 	*/
 	public abstract class Query implements IQuery {
-
-		/* handle asterix & simple pattern to filter on fieldNames*/
-		private String getListFieldNames(String fieldName){
-			Schema.SObjectType sObjectType = globalSchemaMap.get(/*sObjectName*/'Account');
-			Map <String, Schema.SObjectField> fieldMap = sObjectType.getDescribe().fields.getMap();
-			
-			List<String> fieldsList = new List<String>();
-			
-			for (Schema.SObjectField sfield : fieldMap.Values()) {
-				String sObjectFieldName = sfield.getDescribe().getname();
-				if(Pattern.matches(fieldName,sObjectFieldName))
-			    	fieldsList.add(sfield.getDescribe().getname());
-			}
-			return null;
-		}
 
 		public List<SObject> getList(){
 			String soqlQuery=toString();
@@ -608,7 +622,12 @@ public class QB {
 	*/
 	public class SelectClause extends ASelectClause{
 		private String soqlQuery;
+		private final Regex rgx;
 
+		public SelectClause(Regex rgx){
+			this.rgx=rgx;
+			this.soqlQuery='SELECT ';
+		}
 		public SelectClause(String fieldName){
 			this(new List<String>{fieldName});
 		}
@@ -617,16 +636,22 @@ public class QB {
 			if(!fieldNames.isEmpty()) 
 				this.soqlQuery+=String.join(fieldNames,',');
 		}
-		public SelectClause(AggregateFunction aggrFunc){
+		public SelectClause(IAggregateFunctionWrap aggrFunc){
 			this.soqlQuery='SELECT '+aggrFunc;
 		}
-		public SelectClause(AggregateFunction aggrFunc, String fieldName){
-			this(aggrFunc,new List<String>{fieldName});
+		
+		public ISelectFieldsClause addField(String fieldName){
+			this.soqlQuery+=','+fieldName;
+			return this;
 		}
-		public SelectClause(AggregateFunction aggrFunc, List<String> fieldNames){
-			this.soqlQuery='SELECT '+aggrFunc;
-			if(!fieldNames.isEmpty()) 
-				this.soqlQuery+=','+String.join(fieldNames,',');
+		public ISelectFieldsClause addFields(List<String> fieldNames){
+			this.soqlQuery+=','+String.join(fieldNames,',');
+			return this;
+		}
+
+		public ISelectFieldsClause addFunction(ITranslateFunctionWrap transFunc){
+			this.soqlQuery+=','+transFunc;
+			return this;
 		}
 
 		public ISelectFieldsClause addSubQuery(IQuery query){
@@ -635,10 +660,12 @@ public class QB {
 		}
 
 		public ISelectFromQuery from_x(String sObjectName){
+			if(rgx != null)
+				this.soqlQuery+=String.join(rgx.getMatches(util.getListFieldNamesFor(sObjectName)),',');
 			return new SelectQuery(sObjectName,this.soqlQuery);
 		}
 		public ISelectFromQuery from_x(Schema.sObjectType sObjectType){
-			return new SelectQuery(sObjectType.getDescribe().getName(),this.soqlQuery);
+			return from_x(sObjectType.getDescribe().getName());
 		}
 
 		public override String toString(){
@@ -658,15 +685,19 @@ public class QB {
 			this.soqlQuery=soqlSelectClause+' FROM '+sObjectName;
 		}
 
+		public SelectQuery(String sObjectName, String soqlSelectClause, String selectType){
+			this.soqlQuery=soqlSelectClause+' FROM '+sObjectName;
+		}
+
 		public ISelectWhereQuery where_x(IFieldCondition cnd){
 			this.soqlQuery+=' WHERE '+cnd;
 			return this;
 		}
 		public ISelectWhereQuery where_x(String fieldName, Op operator, Object value){
-			return where_x(new Field(fieldName).op(operator,value));
+			return where_x(new Wrapper(fieldName).op(operator,value));
 		}
 		public ISelectWhereQuery where_x(String fieldName, String operator, Object value){
-			return where_x(new Field(fieldName).op(operator,value));
+			return where_x(new Wrapper(fieldName).op(operator,value));
 		}
 
 		public ISelectGroupByQuery groupBy(String groupByField){
@@ -740,6 +771,38 @@ public class QB {
 		}
 	}
 	
+	public class Regex{
+		private final String ptrn;
+
+		public Regex(String ptrn){
+			this.ptrn=ptrn;
+		}
+
+		public List<String> getMatches(List<String> inList){
+			List<String> outList = new List<String>();
+			
+			for (String elem : inList) {
+				if(Pattern.matches(ptrn.toUpperCase(),elem.toUpperCase()))
+			    	outList.add(elem);
+			}
+			return outList;
+		}
+	}
+
+	/**
+	* @description BindType : defines the type of the order
+	*/
+	public class BindType {
+		private final Object bindVarName;
+
+		public BindType(Object bindVarName){
+			this.bindVarName=bindVarName;
+		}
+
+		public override String toString(){
+			return ':'+bindVarName;
+		}
+	}
 
 	/**
 	* @description OrderType : defines the type of the order
@@ -777,80 +840,6 @@ public class QB {
 
 		public override String toString(){
 			return String.join(fieldNames,',')	+orderType;
-		}
-	}
-
-	/**
-	* @description AggregateFunction : aggregate function
-	*/
-	public class AggregateFunction {
-		private final String functionType;
-		private final String fieldName;
-
-		public AggregateFunction(String functionType){
-			this(functionType,null);
-		}
-		public AggregateFunction(String functionType, String fieldName){
-			this.functionType=functionType;
-			this.fieldName=fieldName;
-		}
-
-		private HavingCondition handleOperator(Op operator,Integer value){
-			return new HavingCondition(this,operator,value);
-		}
-
-		// equal to
-		public HavingCondition eq(Integer value){
-			return handleOperator(Op.EQ,value); 
-		}
-		public HavingCondition equal(Integer value){
-			return eq(value);
-		}
-
-		// not equal to
-		public HavingCondition ne(Integer value){
-			return handleOperator(Op.NE,value);
-		}
-		public HavingCondition notEqual(Integer value){
-			return ne(value);
-		}
-		
-		// greater than
-		public HavingCondition gt(Integer value){
-			return handleOperator(Op.GT,value);
-		}
-		public HavingCondition greaterThan(Integer value){
-			return gt(value);
-		}
-
-		// less than
-		public HavingCondition lt(Integer value){
-			return handleOperator(Op.LT,value);
-		}
-		public HavingCondition lessThan(Integer value){
-			return lt(value);
-		}
-
-		// greater than or equal to
-		public HavingCondition ge(Integer value){
-			return handleOperator(Op.GE,value);
-		}
-		public HavingCondition greaterOrEqual(Integer value){
-			return ge(value);
-		}
-
-		// less than or equal to
-		public HavingCondition le(Integer value){
-			return handleOperator(Op.LE,value);
-		}
-		public HavingCondition lessOrEqual(Integer value){
-			return le(value);
-		}
-
-		public override String toString(){
-			if(fieldName==null)
-				return functionType+'()';
-			else return functionType+'('+fieldName+')';
 		}
 	}
 
@@ -928,6 +917,20 @@ public class QB {
 			return isValidHavingConditionOperator(operator)
 					|| operator == 'LIKE';
 		}
+
+		public Boolean isPattern(String fieldName){
+			return Pattern.matches('.*(\\+|\\?|\\*)+.*', fieldName);
+		}
+
+		public List<String> getListFieldNamesFor(String sObjectName){
+			Schema.SObjectType sObjectType = globalSchemaMap.get(sObjectName);
+			Map <String, Schema.SObjectField> fieldMap = sObjectType.getDescribe().fields.getMap();
+			List<String> fieldNames = new List<String>();
+			for (Schema.SObjectField sfield : fieldMap.Values()) {
+			    fieldNames.add(sfield.getDescribe().getname());
+			}
+			return fieldNames;
+		}
 	}
 
 	/**
@@ -941,5 +944,6 @@ public class QB {
 	// Exceptions
 	public class QBQueryException extends Exception {}
 	public class QBConditionException extends Exception {}
+	public class QBBindException extends Exception {}
 
 }
