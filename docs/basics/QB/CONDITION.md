@@ -86,3 +86,6 @@ OR logical operator can be applied to multiple conditions
   ```apex
   Name = 'Acme Coproration' OR Name > 'Acme Corporation' OR Name < 'Acme Corporation'
   ```
+  
+  
+  ### Having Condition:
