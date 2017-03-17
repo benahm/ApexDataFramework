@@ -1,6 +1,5 @@
 ## Query Builder
 * [Building a Condition](condition/README.md)
-
 * [Building a Query](query/README.md)
   * [Select clause](query/SELECT.md)
   * [From clause](query/FROM.md)
