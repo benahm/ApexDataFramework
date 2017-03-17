@@ -8,6 +8,8 @@ QB builds two types for conditions
  
 ### Field Condition:
 
+#### 1. Simple field Condition:
+
 QB offers differents ways to create a simple field condition 
 
 QB field conditions 
@@ -27,7 +29,8 @@ Equivalent to :
   ```sql
   Name='Acme Corporation'
   ```
-#### Logical operators:
+#### 2. Logical conditions
+
 **NOT** :
   ```apex
   QB.not_x(QB.field('Name').eq('Acme Corporation'))
