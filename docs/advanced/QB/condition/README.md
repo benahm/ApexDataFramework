@@ -1,4 +1,4 @@
 ## Building a Condition
 
-  * [Field condition](FIELD.md)
-  * [Having condition](HAVING.md)
+  * [Field condition](condition/FIELD.md)
+  * [Having condition](condition/HAVING.md)
