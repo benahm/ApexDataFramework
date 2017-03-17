@@ -26,20 +26,24 @@ QB field conditions
   
 Equivalent to : 
 
-  ```sql
+  ```apex
   Name='Acme Corporation'
   ```
 #### 2. Logical conditions
 
-##### Not Logical operator
+##### Not logical operator
 
   ```apex
   QB.not_x(QB.field('Name').eq('Acme Corporation'))
   ```
+Equivalent to : 
+
   ```apex
   NOT (Name='Acme Coproration')
   ```
-**AND** :
+  
+##### And logical operator
+
   ```apex
   QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','=','Acme Corporation'))
   ```
