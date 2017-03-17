@@ -33,7 +33,7 @@ Equivalent to :
 
 ##### NOT logical operator
 
-NOT logical operator can be applied to a condition 
+NOT logical operator can be applied to one condition 
 
   ```apex
   QB.not_x(QB.field('Name').eq('Acme Corporation'))
