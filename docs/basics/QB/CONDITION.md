@@ -1,19 +1,11 @@
 
 ## Building a Condition
 
+QB builds two types for conditions 
 
-
-The query builder offers a way to create complex conditions 
-
-  Query builder syntax:
-  ```apex
-  QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Type','=','Prospect'))
-  ```
-
-  Equivalent to:
-  ```sql
-  Name='Acme Corporation' AND Type='Prospect'
-  ```
+* Field Condition : condition mean to be used in the where clause 
+* having condition : condition mean to be used in the having clause
+ 
 #### Field Condition:
 
   ```apex
