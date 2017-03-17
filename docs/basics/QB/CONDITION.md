@@ -45,8 +45,18 @@ Equivalent to :
 ##### And logical operator
 
   ```apex
-  QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','=','Acme Corporation'))
+  QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
   ```
   ```apex
-  Name='Acme Coproration' AND Name='Acme Corporation'
+  Name='Acme Coproration' AND Name>'Acme Corporation'
+  ```
+
+
+##### Or logical operator
+
+  ```apex
+  QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','!=','Acme Corporation'))
+  ```
+  ```apex
+  Name='Acme Coproration' AND Name!='Acme Corporation'
   ```
