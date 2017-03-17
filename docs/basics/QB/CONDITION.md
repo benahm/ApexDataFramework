@@ -31,7 +31,7 @@ Equivalent to :
   ```
 #### 2. Composite condition
 
-##### Not logical operator
+##### NOT logical operator
 
 NOT logical operator can be applied to a condition 
 
@@ -44,7 +44,7 @@ Equivalent to :
   NOT (Name = 'Acme Coproration')
   ```
   
-##### And logical operator
+##### AND logical operator
 
 AND logical operator can be applied to multiple conditions
 
@@ -52,6 +52,9 @@ AND logical operator can be applied to multiple conditions
   ```apex
   QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
   ```
+  
+Equivalent to : 
+
   ```apex
   Name = 'Acme Coproration' AND Name>'Acme Corporation'
   ```
@@ -61,11 +64,14 @@ AND logical operator can be applied to multiple conditions
   QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
     .add(QB.fieldExpr('Name',QB.Op.LE,'Acme Corporation'))
   ```
+  
+Equivalent to : 
+
   ```apex
   Name = 'Acme Coproration' AND Name > 'Acme Corporation' AND Name < 'Acme Corporation'
   ```
 
-##### Or logical operator
+##### OR logical operator
 
 OR logical operator can be applied to multiple conditions
 
@@ -73,6 +79,9 @@ OR logical operator can be applied to multiple conditions
   ```apex
   QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
   ```
+  
+Equivalent to : 
+
   ```apex
   Name='Acme Coproration' AND Name!='Acme Corporation'
   ```
@@ -83,6 +92,9 @@ OR logical operator can be applied to multiple conditions
   QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
     .add(QB.fieldExpr('Name',QB.Op.LE,'Acme Corporation'))
   ```
+  
+Equivalent to : 
+
   ```apex
   Name = 'Acme Coproration' OR Name > 'Acme Corporation' OR Name < 'Acme Corporation'
   ```
