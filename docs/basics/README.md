@@ -4,4 +4,6 @@ This section will give you a quick over view of the framework with some basic ex
 If you want to know further more about this framework please read the advanced section 
 
 * [Query builder](QB/README.md)
+  * [Building a Condition](QB/CONDITION.md)
+  * [Building a Query](QB/QUERY.md)
 * [Data Access Object](DAO.md)
