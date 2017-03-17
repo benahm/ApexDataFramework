@@ -17,10 +17,10 @@
   <td><em>=</em></td>
   <td>eq, equal</td>
   <td>
-  <ul>
-    <li>Field</li>
-    <li>AggregateFunction</li>
-  </ul>
+    <ul>
+      <li>Field</li>
+      <li>AggregateFunction</li>
+    </ul>
   </td>
   <td><pre lang="apex">
   QB.field('Name').eq('Value') // Field - SOQL : Name = 'Value'
@@ -31,7 +31,11 @@
 <tr>
   <td><em>IN</em></td>
   <td>eq, equal</td>
-  <td>Field</td>
+  <td>  
+    <ul>
+      <li>Field</li>
+    </ul>
+  </td>
   <td><pre lang="apex">
   QB.field('Name').eq(new List&lt;String&gt;{'Value1','Value2'}) // - SOQL : Name IN ('Value1','Value2')
   </pre></td>
@@ -55,7 +59,11 @@
 <tr>
   <td><em>NOT IN</em></td>
   <td>ne, notequal</td>
-  <td>Field</td>
+  <td>    
+    <ul>
+      <li>Field</li>
+    </ul>
+  </td>
   <td><pre lang="apex">
   QB.field('Name').ne(new List&lt;String&gt;{'Value1','Value2'})
   </pre></td>
@@ -124,7 +132,11 @@
 <tr>
   <td><em>LIKE</em></td>
   <td>lk, isLike</td>
-  <td>Field</td>
+  <td>    
+    <ul>
+      <li>Field</li>
+    </ul>
+  </td>
   <td><pre lang="apex">
   QB.field('Name').lk('Value') 
   </pre></td>
