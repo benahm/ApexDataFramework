@@ -27,7 +27,7 @@ QB field conditions
 Equivalent to : 
 
   ```apex
-  Name='Acme Corporation'
+  Name = 'Acme Corporation'
   ```
 #### 2. Composite condition
 
@@ -41,7 +41,7 @@ NOT logical operator can be applied to a condition
 Equivalent to : 
 
   ```apex
-  NOT (Name='Acme Coproration')
+  NOT (Name = 'Acme Coproration')
   ```
   
 ##### And logical operator
@@ -53,7 +53,7 @@ AND logical operator can be applied to multiple conditions
   QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
   ```
   ```apex
-  Name='Acme Coproration' AND Name>'Acme Corporation'
+  Name = 'Acme Coproration' AND Name>'Acme Corporation'
   ```
 
 **Example 2**
