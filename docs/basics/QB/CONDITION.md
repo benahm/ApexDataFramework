@@ -31,7 +31,8 @@ Equivalent to :
   ```
 #### 2. Logical conditions
 
-**NOT** :
+##### Not Logical operator
+
   ```apex
   QB.not_x(QB.field('Name').eq('Acme Corporation'))
   ```
