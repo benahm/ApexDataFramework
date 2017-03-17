@@ -45,3 +45,14 @@
   ```apex
   List<Account> accs=[select Id from Account where Type='Prospect']
   ```
+
+5. **Example 5**
+  
+  ```apex
+  List<Account> accs=DAO.base('Account').find(QB.select_x('Name').from_x('Account'))
+  ```
+
+
+  ```apex
+  List<Account> accs=[select Name from Account]
+  ```
