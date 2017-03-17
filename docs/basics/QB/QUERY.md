@@ -61,7 +61,7 @@ Query Builder
     .limitTo(1)
     .offset(100)
   ```
-SOQL
+SOQL equivalent:
   ```sql
   select Name from Account where Name='Acme Corporation' group by Type order by Name limit 1 offset 100
   ```
