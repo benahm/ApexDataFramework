@@ -8,11 +8,18 @@ QB builds two types for conditions
  
 ### Field Condition:
 
+QB offers differents ways to create a simple field condition 
+
+QB field conditions 
+
   ```apex
   QB.field('Name').eq('Acme Corporation')
   ```
   ```apex
   QB.fieldExpr('Name','=','Acme Corporation')
+  ```
+  ```apex
+  QB.fieldExpr('Name',QB.Op.EQ,'Acme Corporation')
   ```
   
 Equivalent to : 
