@@ -33,9 +33,7 @@ SOQL equivalent:
   select Id,Name from Account where Name='Acme Corporation'
   ```
 
-
-### Building a SOQL Query:
-1. **Query all the fields of an SObject**
+#### 3. Query all the fields of an SObject
 
 Query Builder 
   ```apex
@@ -46,7 +44,7 @@ SOQL
   select ALL_FIELDS from Account
   ```
   
-2. **Query all fields starting or ending with** 
+#### 4. Query all fields starting or ending with
 
 Query Builder
   ```apex
@@ -57,7 +55,7 @@ SOQL
   select ALL_CUSTOM_FIELDS from Account
   ```
   
-3. **Select with where clause**   
+#### 5. Select with where clause
 
 Query Builder
   ```apex
