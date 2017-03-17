@@ -18,7 +18,7 @@ SOQL equivalent:
   ```
 
 
-#### 2. **Simple query with a where clause**
+#### 2. **Simple query with a simple where clause**
 
 Query builder syntax:
   ```apex
