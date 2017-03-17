@@ -38,7 +38,7 @@ public class QB {
 	/**
 	* @description apply the logical operator NOT to a condition
 	* @param cnd : Condition
-	* @return NotCondition 
+	* @return IFieldCondition 
 	*/
 	public static IFieldCondition not_x(IFieldCondition cnd){
 		return new NotCondition(cnd) ;
@@ -51,7 +51,7 @@ public class QB {
 	* @description apply the logical operator AND to two conditions
 	* @param cnd1 : the first condition
 	* @param cnd2 : the second condition
-	* @return AndCondition
+	* @return IFieldMultiCondition
 	*/
 	public static IFieldMultiCondition and_x(IFieldCondition cnd1, IFieldCondition cnd2){
 		return new AndCondition(cnd1,cnd2);
@@ -64,7 +64,7 @@ public class QB {
 	* @description apply the logical operator OR to two conditions
 	* @param cnd1 : the first condition
 	* @param cnd2 : the second condition
-	* @return OrCondition
+	* @return IFieldMultiCondition
 	*/
 	public static IFieldMultiCondition or_x(IFieldCondition cnd1, IFieldCondition cnd2){
 		return new OrCondition(cnd1,cnd2);
@@ -76,7 +76,7 @@ public class QB {
 	/**
 	* @description wrap a field
 	* @param name : field name
-	* @return Field
+	* @return IFieldWrap
 	*/
 	public static IFieldWrap field(String name){
 		return new Wrapper(name);
@@ -86,7 +86,7 @@ public class QB {
 	* @description field expression
 	* @param name : field name
 	* @param operator : the comparator operator
-	* @return Field
+	* @return IFieldCondition
 	*/
 	public static IFieldCondition fieldExpr(String name, Op operator, Object value){
 		return new Wrapper(name).op(operator,value);
@@ -97,7 +97,7 @@ public class QB {
 
 	public static BindType bind(Object bindVarValue){
 		if(bindVariable != null)
-			throw new QBBindException('Error only one bind variable is allowed');
+			throw new QBBindException(errMsg.maxBindVariable);
 
 		bindVariable=bindVarValue;
 		return new BindType('bindVariable');
@@ -105,7 +105,6 @@ public class QB {
 
 	/**
 	* @description SOQL aggregate functions
-	* @param fieldName 
 	* @return IAggregateFunctionWrap
 	*/
 	public static IAggregateFunctionWrap count(){
@@ -133,9 +132,9 @@ public class QB {
 	/**
 	* @description ToLabel function
 	* @param fieldName 
-	* @return ITranslateFunctionWrap
+	* @return IToLabelFunctionWrap
 	*/
-	public static ITranslateFunctionWrap toLabel(String fieldName){
+	public static IToLabelFunctionWrap toLabel(String fieldName){
 		return new Wrapper(fieldName,'TOLABEL');
 	}
 
@@ -202,7 +201,7 @@ public class QB {
 	public interface ISelectFieldsClause extends ISelectClause{ 
 		ISelectFieldsClause addField(String fieldName);
 		ISelectFieldsClause addFields(List<String> fieldNames);
-		ISelectFieldsClause addFunction(ITranslateFunctionWrap dateFunc);
+		ISelectFieldsClause addFunction(IToLabelFunctionWrap dateFunc);
 		ISelectFieldsClause addSubQuery(IQuery query);
 		ISelectFromQuery from_x(String sObjectName);
 		ISelectFromQuery from_x(Schema.sObjectType sObjectType); 
@@ -318,7 +317,7 @@ public class QB {
 		IHavingCondition lessOrEqual(Integer value);
 	}
 
-	public interface ITranslateFunctionWrap extends IWrapper{
+	public interface IToLabelFunctionWrap extends IWrapper{
 		IFieldCondition eq(String value);
 		IFieldCondition equal(String value);
 		IFieldCondition ne(String value);
@@ -340,14 +339,14 @@ public class QB {
 	* @description NotCondition : NOT applied to a condition
 	*/
 	public class NotCondition extends ACondition {
-		private ICondition cnd;
+		private String sCondition;
 
 		public NotCondition(ICondition cnd){
-			this.cnd=cnd;
+			this.sCondition=''+cnd;
 		}
 
 		public override String toString(){
-			return 'NOT ('+cnd+')';
+			return 'NOT ('+sCondition+')';
 		}
 	}
 
@@ -413,14 +412,14 @@ public class QB {
 			return listConditions;
 		}
 	}
-
 	
-
-
-	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,ITranslateFunctionWrap{} 
+	/**
+	* @description AWrapper : Abstract class for the wrapper 
+	*/
+	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IToLabelFunctionWrap{} 
 
 	/**
-	* @description Wrapper : field wrapper
+	* @description Wrapper : field or function wrapper
 	*/
 	public class Wrapper extends AWrapper{
 		private final String fieldName;
@@ -429,7 +428,6 @@ public class QB {
 		public Wrapper(String fieldName){
 			this.fieldName=fieldName;
 		}
-
 		public Wrapper(String fieldName, String functionName){
 			this.fieldName=fieldName;
 			this.functionName=functionName;
@@ -500,43 +498,45 @@ public class QB {
 			} else if(functionName==null){
 				return fieldName;
 			} 
-			throw new QBConditionException('Error all inputs of the Wrapper are null');
+			throw new QBConditionException(errMsg.wrapperInputsNull);
 		}
 	}
-
 
 	/**
 	* @description Condition : field condition
 	*/
 	public class Condition extends ACondition {
-		private final Wrapper cmpble;
+		private final Wrapper wrp;
 		private final String operator;
 		private final String values;
 
-		public Condition(Wrapper cmpble,Op operator,Object value){
-			this(cmpble,util.operatorToString(operator),value);
+		public Condition(Wrapper wrp,Op operator,Object value){
+			this(wrp,util.operatorToString(operator),value);
 		}
-		public Condition(Wrapper cmpble,String operator,Object value){
-			this.cmpble=cmpble;
+		public Condition(Wrapper wrp,String operator,Object value){
+			this.wrp=wrp;
 			this.operator=operator.trim();
 			this.values=parseValue(value);
 		}
 
 		private String parseValue(Object value){
 			if(value == null) return 'NULL';
-			// TODO Handle Date/DateTime
+			// TODO Handle DateTime
 			if(util.isNumberOrBoolean(value)){
 				return value+'';
+			} else if(value instanceof Date){
+				return singleQuote+String.valueOf((Date)value)+singleQuote;
 			} else if(value instanceof String){
 				return singleQuote+String.escapeSingleQuotes(value+'')+singleQuote;
 			} else if(value instanceof bindType){
 				return value+'';
 			} else if(value instanceof List<String>){
 				List<String> values=(List<String>)value;
-				if(values.isEmpty()) throw new QBConditionException('Error Value is Empty List');
+				if(values.isEmpty()) 
+					throw new QBConditionException(errMsg.emptyListAsValue);
 				return '('+singleQuote+String.join(util.escapeSingleQuotes(values),singleQuote+','+singleQuote)+singleQuote+')';
 			}else 
-				throw new QBConditionException('Error Bad Value Type');
+				throw new QBConditionException(errMsg.badValueType);
 		}
 
 		private Boolean isMultipeValues(String value){
@@ -547,9 +547,9 @@ public class QB {
 			// Multiple values
 			if(isMultipeValues(values)){
 				if(operator == '='){ // EQUAL
-					return cmpble+' IN '+values;
+					return wrp+' IN '+values;
 				} else if(this.operator == '!='){ // NOT EQUAL
-					return cmpble+' NOT IN '+values;
+					return wrp+' NOT IN '+values;
 				} else {
 					throw new QBConditionException(errMsg.operatorDoNotHandleMultiValues);
 				}
@@ -557,24 +557,9 @@ public class QB {
 
 			// Single value
 			if(util.isValidFieldConditionOperator(operator))
-				return cmpble+' '+operator+' '+values;
+				return wrp+' '+operator+' '+values;
 			else 
 				throw new QBConditionException(errMsg.unkownOperator);
-		}
-	}
-
-	/**
-	* @description Query : a valid query
-	*/
-	public abstract class Query implements IQuery {
-
-		public List<SObject> getList(){
-			String soqlQuery=toString();
-			return new List<SObject>(Database.query(soqlQuery));
-		}
-
-		public map<Id,SObject> getMap(){
-			return new Map<Id,SObject>(getList());
 		}
 	}
 
@@ -584,12 +569,12 @@ public class QB {
 	* @description SelectClause : select clause
 	*/
 	public class SelectClause extends ASelectClause{
-		private String soqlQuery;
+		private String sQuery;
 		private final Regex rgx;
 
 		public SelectClause(Regex rgx){
 			this.rgx=rgx;
-			this.soqlQuery='SELECT ';
+			this.sQuery='SELECT ';
 		}
 		public SelectClause(String fieldName){
 			if(util.isPattern(fieldName)){
@@ -599,61 +584,70 @@ public class QB {
 			}
 		}
 		public SelectClause(List<String> fieldNames){
-			this.soqlQuery='SELECT ';
+			this.sQuery='SELECT ';
 			if(!fieldNames.isEmpty()) 
-				this.soqlQuery+=String.join(fieldNames,',');
+				this.sQuery+=String.join(fieldNames,',');
 		}
 		public SelectClause(IAggregateFunctionWrap aggrFunc){
-			this.soqlQuery='SELECT '+aggrFunc;
+			this.sQuery='SELECT '+aggrFunc;
 		}
 		
 		public ISelectFieldsClause addField(String fieldName){
-			this.soqlQuery+=','+fieldName;
+			this.sQuery+=','+fieldName;
 			return this;
 		}
 		public ISelectFieldsClause addFields(List<String> fieldNames){
-			this.soqlQuery+=','+String.join(fieldNames,',');
+			this.sQuery+=','+String.join(fieldNames,',');
 			return this;
 		}
 
-		public ISelectFieldsClause addFunction(ITranslateFunctionWrap transFunc){
-			this.soqlQuery+=','+transFunc;
+		public ISelectFieldsClause addFunction(IToLabelFunctionWrap toLblFunc){
+			this.sQuery+=','+toLblFunc;
 			return this;
 		}
 
 		public ISelectFieldsClause addSubQuery(IQuery query){
-			soqlQuery+=','+'('+query+')';
+			sQuery+=','+'('+query+')';
 			return this;
 		}
 
 		public ISelectFromQuery from_x(String sObjectName){
 			if(rgx != null)
-				this.soqlQuery+=String.join(rgx.getMatches(util.getListFieldNamesFor(sObjectName)),',');
-			return new SelectQuery(sObjectName,this.soqlQuery);
+				this.sQuery+=String.join(rgx.getMatches(util.getListFieldNamesFor(sObjectName)),',');
+			return new SelectQuery(sObjectName,this.sQuery);
 		}
 		public ISelectFromQuery from_x(Schema.sObjectType sObjectType){
 			return from_x(sObjectType.getDescribe().getName());
 		}
 
 		public override String toString(){
-			return soqlQuery;
+			return sQuery;
 		}
 	}
 
-	public abstract class ASelectQuery implements ISelectFromQuery,ISelectWhereQuery,ISelectGroupByQuery,ISelectOrderByQuery,ISelectLimitQuery,ISelectOffsetQuery {}
+	public abstract class ASelectQuery implements ISelectFromQuery,ISelectWhereQuery,ISelectGroupByQuery,ISelectOrderByQuery,ISelectLimitQuery,ISelectOffsetQuery {
+
+		public List<SObject> getList(){
+			return new List<SObject>(Database.query(toString()));
+		}
+
+		public map<Id,SObject> getMap(){
+			return new Map<Id,SObject>(getList());
+		}
+	}
 
 	/**
 	* @description SelectQuery : select query without a where clause
 	*/
 	public class SelectQuery extends ASelectQuery {
-		private String soqlQuery;
+		private String sQuery;
 
 		public SelectQuery(String sObjectName, String soqlSelectClause){
-			this.soqlQuery=soqlSelectClause+' FROM '+sObjectName;
+			this.sQuery=soqlSelectClause+' FROM '+sObjectName;
 		}
 
 		public ISelectWhereQuery where_x(IFieldCondition cnd){
-			this.soqlQuery+=' WHERE '+cnd;
+			this.sQuery+=' WHERE '+cnd;
 			return this;
 		}
 		public ISelectWhereQuery where_x(String fieldName, Op operator, Object value){
@@ -673,9 +667,9 @@ public class QB {
 			return groupBy(new List<String>{groupByField},havingCtr);
 		}
 		public ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr){
-			this.soqlQuery+=' GROUP BY '+String.join(groupByFields, ',');
+			this.sQuery+=' GROUP BY '+String.join(groupByFields, ',');
 			if(havingCtr!=null)
-				this.soqlQuery+=' HAVING '+havingCtr;
+				this.sQuery+=' HAVING '+havingCtr;
 			return this;
 		}
 
@@ -689,9 +683,9 @@ public class QB {
 			return orderBy(new List<String>{orderByField},orderType);
 		}
 		public ISelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType){
-			this.soqlQuery+=' ORDER BY '+String.join(orderByFields,',');
+			this.sQuery+=' ORDER BY '+String.join(orderByFields,',');
 			if(orderType != null)
-				this.soqlQuery+=orderType;
+				this.sQuery+=orderType;
 			return this;
 		}
 		public ISelectOrderByQuery addOrder(String orderByField){
@@ -704,33 +698,28 @@ public class QB {
 			return addOrder(new List<String>{orderByField},orderType);
 		}
 		public ISelectOrderByQuery addOrder(List<String> orderByFields, OrderType orderType){
-			this.soqlQuery+=' '+String.join(orderByFields,' ');
+			this.sQuery+=' '+String.join(orderByFields,' ');
 			if(orderType != null)
-				this.soqlQuery+=orderType;
+				this.sQuery+=orderType;
 			return this;
 		}
 
 		public ISelectLimitQuery limitTo(Integer lmt){
-			this.soqlQuery+=' LIMIT '+lmt;
+			if(lmt != null){
+				this.sQuery+=' LIMIT '+lmt;
+			}
 			return this;
 		}
 
 		public ISelectOffsetQuery offset(Integer ofst){
-			this.soqlQuery+=' OFFSET '+ofst;
+			if(ofst != null){
+				this.sQuery+=' OFFSET '+ofst;
+			}
 			return this;
 		}
 
 		public override String toString(){
-			return soqlQuery;
-		}
-
-		public List<SObject> getList(){
-			String soqlQuery=toString();
-			return new List<SObject>(Database.query(soqlQuery));
-		}
-
-		public map<Id,SObject> getMap(){
-			return new Map<Id,SObject>(getList());
+			return sQuery;
 		}
 	}
 	
@@ -791,37 +780,6 @@ public class QB {
 	}
 
 	/**
-	* @description OrderOption : defines the order fields with there orderType
-	*/
-	public class OrderOption {
-		private OrderType orderType;
-		private List<String> fieldNames;
-
-		public OrderOption(List<String> fieldNames,OrderType orderType){
-			this.fieldNames=fieldNames;	
-			this.orderType=orderType;
-		}
-
-		public override String toString(){
-			return String.join(fieldNames,',')	+orderType;
-		}
-	}
-
-	/**
-	* @description Validator : all validating methods
-	*/
-	private class Validator {
-
-		// validate field name
-		public Boolean validateFieldName(String fieldName){
-			return null;
-		}
-		// validate operator
-		// ...
-
-	}
-
-	/**
 	* @description Util : Utility class
 	*/
 	private class Util {
@@ -842,14 +800,6 @@ public class QB {
 				return 'LIKE';
 			}
 			return null;
-		}
-
-		public String joinListObjects(List<Object> listObj, String separator){
-			String result='';
-			for(Object obj:listObj){
-				result+=obj+separator;
-			}
-			return result.removeEnd(separator);
 		}
 
 		public List<String> escapeSingleQuotes(List<String> values){
@@ -903,6 +853,10 @@ public class QB {
 	private class ErrorMessage {
 		public final String unkownOperator='Unkown Operator';
 		public final String operatorDoNotHandleMultiValues='Only the operators EQUAL & NOTEQUAL can handle a list of values';
+		public final String wrapperInputsNull='Error all inputs of the Wrapper are null';
+		public final String emptyListAsValue='Error Value is an Empty List';
+		public final String badValueType='Error Bad Value Type';
+		public final String maxBindVariable='Error only one bind variable is allowed';
 	}
 
 	// Exceptions

@@ -19,7 +19,7 @@ private class QBTest {
 	
 	/* Tests for Condition builder */
 	@isTest 
-	static void fieldConditionEqualTest() {
+	private static void fieldConditionEqualTest() {
 		Test.startTest();
 
 		System.assertEquals('Name = \'Value\'',QB.field('Name').eq('Value').toString());
@@ -36,7 +36,7 @@ private class QBTest {
 	}
 	
 	@isTest 
-	static void fieldConditionNotEqualTest() {
+	private static void fieldConditionNotEqualTest() {
 		Test.startTest();
 
 		System.assertEquals('Name != \'Value\'',QB.field('Name').ne('Value').toString());
@@ -53,7 +53,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void fieldConditionGreaterThanTest() {
+	private static void fieldConditionGreaterThanTest() {
 		Test.startTest();
 
 		System.assertEquals('Name > \'Value\'',QB.field('Name').gt('Value').toString());
@@ -65,7 +65,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void fieldConditionLessThanTest() {
+	private static void fieldConditionLessThanTest() {
 		Test.startTest();
 
 		System.assertEquals('Name < \'Value\'',QB.field('Name').lt('Value').toString());
@@ -77,7 +77,7 @@ private class QBTest {
 	}
 	
 	@isTest 
-	static void fieldConditionGreaterOrEqualTest() {
+	private static void fieldConditionGreaterOrEqualTest() {
 		Test.startTest();
 
 		System.assertEquals('Name >= \'Value\'',QB.field('Name').ge('Value').toString());
@@ -89,7 +89,7 @@ private class QBTest {
 	}
 	
 	@isTest 
-	static void fieldConditionLessOrEqualTest() {
+	private static void fieldConditionLessOrEqualTest() {
 		Test.startTest();
 
 		System.assertEquals('Name <= \'Value\'',QB.field('Name').le('Value').toString());
@@ -101,7 +101,7 @@ private class QBTest {
 	}
 	
 	@isTest 
-	static void fieldConditionIsLikeTest() {
+	private static void fieldConditionIsLikeTest() {
 		Test.startTest();
 
 		System.assertEquals('Name LIKE \'Value\'',QB.field('Name').lk('Value').toString());
@@ -113,7 +113,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void havingConditionTest() {
+	private static void havingConditionTest() {
 		Test.startTest();
 
 		System.assertEquals('COUNT() = 1',QB.count().eq(1).toString());
@@ -145,7 +145,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void notConditionTest() {
+	private static void notConditionTest() {
 		Test.startTest();
 
 		System.assertEquals('NOT (Name = \'Value\')',QB.not_x(QB.field('Name').eq('Value')).toString());
@@ -156,7 +156,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void andConditionTest() {
+	private static void andConditionTest() {
 		Test.startTest();
 
 		System.assertEquals('(Name = \'Value\') AND (Name != \'Value\')',
@@ -172,7 +172,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void orConditionTest() {
+	private static void orConditionTest() {
 		Test.startTest();
 
 		System.assertEquals('(Name = \'Value\') OR (Name != \'Value\')',
@@ -188,7 +188,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void conditionTest() {
+	private static void conditionTest() {
 		Test.startTest();
 
 		System.assertEquals('(Name = \'Value1\') AND (NOT (Name != \'Value2\'))',
@@ -208,12 +208,13 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void conditionSpecialCasesTest() {
+	private static void conditionSpecialCasesTest() {
 		Test.startTest();
 
 		System.assertEquals('Name = 1', QB.field('Name').eq(1).toString());
 		System.assertEquals('Name = true', QB.field('Name').eq(true).toString());
 		System.assertEquals('Name = NULL', QB.field('Name').eq(null).toString());
+		System.assertEquals('Name = \'1960-02-17\'', QB.field('Name').eq(date.newinstance(1960, 2, 17)).toString());
 		System.assertEquals('Name', QB.field('Name').toString());
 		System.assertEquals('Name = :bindVariable',QB.field('Name').eq(QB.bind('Value')).toString());
 
@@ -258,9 +259,12 @@ private class QBTest {
 
 	/* Tests for Query builder */
 	@isTest 
-	static void selectFieldsClauseTest() {
+	private static void selectFieldsClauseTest() {
 		Test.startTest();
 
+		System.assertEquals('SELECT ',QB.select_x('*').toString());
+		System.assertEquals('SELECT ',QB.select_x('?').toString());
+		System.assertEquals('SELECT ',QB.select_x('+').toString());
 		System.assertEquals('SELECT Name',QB.select_x('Name').toString());
 		System.assertEquals('SELECT Name',QB.select_x(Account.Name).toString());
 		System.assertEquals('SELECT Name1,Name2',
@@ -286,7 +290,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void selectAggregateClauseTest() {
+	private static void selectAggregateClauseTest() {
 		Test.startTest();
 
 		System.assertEquals('SELECT COUNT()',QB.select_x(QB.count()).toString());
@@ -304,9 +308,10 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void selectQueryTest() {
+	private static void selectQueryTest() {
 		Test.startTest();
-
+		System.assertEquals('SELECT Name FROM Account',QB.select_x('Name')
+														.from_x('Account').toString());
 		System.assertEquals('SELECT Name FROM Account',QB.select_x('Name')
 														.from_x('Account').toString());
 		System.assertEquals('SELECT Name FROM Account',QB.select_x('Name')
@@ -314,6 +319,9 @@ private class QBTest {
 		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\'',QB.select_x('Name')
 														.from_x('Account')
 														.where_x('Name',QB.Op.EQ,'Value').toString());
+		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\'',QB.select_x('Name')
+														.from_x('Account')
+														.where_x('Name','=','Value').toString());
 		System.assertEquals('SELECT Name FROM Account WHERE Name IN (\'Value1\',\'Value2\')',QB.select_x('Name')
 														.from_x('Account')
 														.where_x('Name',QB.Op.EQ,new List<String>{'Value1','Value2'}).toString());
@@ -347,12 +355,16 @@ private class QBTest {
 		System.assertEquals('SELECT Name FROM Account OFFSET 1',QB.select_x('Name')
 														.from_x('Account')
 														.offset(1).toString());
+		System.assert(QB.select_x('*')
+							.from_x('Account').toString().contains('Name'));
+		System.assert(QB.select_x('N?me?')
+							.from_x('Account').toString().contains('Name'));
 
 		Test.stopTest();
 	}
 
 	@isTest 
-	static void selectWhereQueryTest() {
+	private static void selectWhereQueryTest() {
 		Test.startTest();
 
 		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\'',QB.select_x('Name')
@@ -395,7 +407,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void selectGroupByQueryTest() {
+	private static void selectGroupByQueryTest() {
 		Test.startTest();
 
 		System.assertEquals('SELECT Name FROM Account GROUP BY Name',QB.select_x('Name')
@@ -422,7 +434,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void selectOrderByQueryTest() {
+	private static void selectOrderByQueryTest() {
 		Test.startTest();
 
 		System.assertEquals('SELECT Name FROM Account ORDER BY Name',QB.select_x('Name')
@@ -465,7 +477,7 @@ private class QBTest {
 	}
 
 	@isTest 
-	static void selectLimitQueryTest() {
+	private static void selectLimitQueryTest() {
 		Test.startTest();
 
 		System.assertEquals('SELECT Name FROM Account LIMIT 1',QB.select_x('Name')
@@ -478,5 +490,5 @@ private class QBTest {
 
 		Test.stopTest();
 	}
-
+	
 }
