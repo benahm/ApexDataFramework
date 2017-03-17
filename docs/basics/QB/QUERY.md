@@ -35,7 +35,7 @@ SOQL equivalent:
 
 #### 3. Query all the fields of an SObject
 
-Query Builder 
+Query builder syntax:
   ```apex
   QB.select_x('*')
     .from_x('Account')
@@ -43,7 +43,7 @@ Query Builder
   
 #### 4. Query all fields starting or ending with
 
-Query Builder
+Query builder syntax:
   ```apex
   QB.select_x('*__c')
     .from_x('Account')
@@ -51,7 +51,7 @@ Query Builder
   
 #### 5. Select with where options
 
-Query Builder
+Query builder syntax:
   ```apex
   QB.select_x('Name,Type')
     .from_x('Account')
