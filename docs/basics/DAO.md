@@ -1,9 +1,29 @@
 ## Data Access Object
 
+The DAO class offers the powerful find method to query the Salesforce database without writing SOQL queries 
+
+The class DAO has 3 methods to query the salesforce db
+
+| Method    | Description      |
+|-----------|------------------|
+| *find*    | find a list      |
+| *findMap* | find a map       |
+| *findOne* | find one sObject |
+
+Each of the three methods supports the following signatures 
+
+* find(ids, fieldNames)
+* find(fieldName, fieldValues, fieldNames)
+* find(Condition, fieldNames) 
+* find(Query)
+
+See the examples below
+
 #### Basic examples
 
 1. **Example 1**
 
+Query by list of Ids
   ```apex
   List<Account> accs=DAO.base('Account').find(listIds)
   ```
