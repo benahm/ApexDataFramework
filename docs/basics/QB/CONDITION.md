@@ -100,4 +100,20 @@ Equivalent to :
   ```
   
   
-  ### Having Condition:
+### Having Condition:
+
+#### 1. Simple having Condition:
+
+QB offers differents ways to create a simple having condition 
+
+QB having conditions 
+
+  ```apex
+  QB.count().eq(1)
+  ```
+
+Equivalent to : 
+
+  ```apex
+  COUNT() = 1
+  ```
