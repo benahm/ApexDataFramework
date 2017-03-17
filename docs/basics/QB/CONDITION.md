@@ -4,15 +4,21 @@
 QB builds two types for conditions 
 
 * Field Condition : condition mean to be used in the where clause 
-* having condition : condition mean to be used in the having clause
+* Having condition : condition mean to be used in the having clause
  
-#### Field Condition:
+### Field Condition:
 
   ```apex
   QB.field('Name').eq('Acme Corporation')
   ```
   ```apex
   QB.fieldExpr('Name','=','Acme Corporation')
+  ```
+  
+Equivalent to : 
+
+  ```sql
+  Name='Acme Corporation'
   ```
 #### Logical operators:
 **NOT** :
