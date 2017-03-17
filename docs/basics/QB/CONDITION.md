@@ -8,7 +8,7 @@ QB builds two types for conditions
  
 ### Field Condition:
 
-#### 1. Simple field Condition:
+#### 1. Simple field condition:
 
 QB offers differents ways to create a simple field condition 
 
@@ -102,7 +102,7 @@ Equivalent to :
   
 ### Having Condition:
 
-#### 1. Simple having Condition:
+#### 1. Simple having condition:
 
 QB offers differents ways to create a simple having condition 
 
@@ -117,3 +117,7 @@ Equivalent to :
   ```apex
   COUNT() = 1
   ```
+
+#### 2. Composite condition:
+
+Having condition supports the same operators as the field condition
