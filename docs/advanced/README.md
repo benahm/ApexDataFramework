@@ -2,6 +2,8 @@
 
 * [Query Builder](QB/README.md)
   * [Building a Condition](QB/condition/README.md)
+    * [Field condition](/docs/advanced/QB/condition/FIELD.md)
+    * [Having condition](/docs/advanced/QB/condition/HAVING.md)
   * [Building a Query](QB/query/README.md)
     * [Select clause](QB/query/SELECT.md)
     * [From clause](QB/query/FROM.md)
