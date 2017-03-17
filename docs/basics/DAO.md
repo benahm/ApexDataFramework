@@ -65,7 +65,7 @@ See the examples below
   List<Account> accs=[select Id from Account where Type='Prospect']
   ```
 
-5. **Query by specifing a query built by the Query Builder**
+5. **Query by specifying a query built by the Query Builder**
   
   ```apex
   List<Account> accs=DAO.base('Account').find(QB.select_x('Name').from_x('Account'))
