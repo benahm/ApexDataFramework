@@ -1,4 +1,4 @@
-## Query Builder
+## Building a Query
 
 * [Select clause](SELECT.md)
 * [From clause](FROM.md)
