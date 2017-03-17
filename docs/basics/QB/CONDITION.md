@@ -48,7 +48,7 @@ Equivalent to :
 
 AND logical operator can be applied to multiple conditions
 
-** Example 1 **
+**Example 1**
   ```apex
   QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
   ```
@@ -56,7 +56,7 @@ AND logical operator can be applied to multiple conditions
   Name='Acme Coproration' AND Name>'Acme Corporation'
   ```
 
-** Example 2 **
+**Example 2**
   ```apex
   QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
     .add(QB.fieldExpr('Name',QB.Op.LE,'Acme Corporation'))
@@ -69,7 +69,7 @@ AND logical operator can be applied to multiple conditions
 
 OR logical operator can be applied to multiple conditions
 
-** Example 1 **
+**Example 1**
   ```apex
   QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
   ```
@@ -77,7 +77,7 @@ OR logical operator can be applied to multiple conditions
   Name='Acme Coproration' AND Name!='Acme Corporation'
   ```
 
-** Example 2 **
+**Example 2**
 
   ```apex
   QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
