@@ -37,33 +37,33 @@ SOQL equivalent:
 
 Query Builder 
   ```apex
-  QB.select_x('*').from_x('Account')
-  ```
-SOQL
-  ```sql
-  select ALL_FIELDS from Account
+  QB.select_x('*')
+    .from_x('Account')
   ```
   
 #### 4. Query all fields starting or ending with
 
 Query Builder
   ```apex
-  QB.select_x('*__c').from_x('Account')
-  ```
-SOQL
-  ```sql
-  select ALL_CUSTOM_FIELDS from Account
+  QB.select_x('*__c')
+    .from_x('Account')
   ```
   
-#### 5. Select with where clause
+#### 5. Select with where options
 
 Query Builder
   ```apex
-  QB.select_x('Owner.Id').from_x('Account').where_x('')
+  QB.select_x('Name,Type')
+    .from_x('Account')
+    .where_x(QB.field('Name').eq('Acme Corporation'))
+    .groupby('Type')
+    .orderby('Name')
+    .limitTo(1)
+    .offset(100)
   ```
 SOQL
   ```sql
-  select Owner.Id from Account where
+  select Name from Account where Name='Acme Corporation' group by Type order by Name limit 1 offset 100
   ```
   
 *__NOTE__: 'select', 'from' and 'where' are all reserved words in apex and can not be used as names of methods, to get around the suffix '__\_x__' is appended to the reserved words*
