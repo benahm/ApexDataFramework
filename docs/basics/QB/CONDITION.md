@@ -3,8 +3,8 @@
 
 QB builds two types for conditions 
 
-* Field Condition : condition mean to be used in the where clause 
-* Having condition : condition mean to be used in the having clause
+* [Field Condition](#field-condition) : condition mean to be used in the where clause 
+* [Having condition](#having-condition) : condition mean to be used in the having clause
  
 ### Field Condition:
 
