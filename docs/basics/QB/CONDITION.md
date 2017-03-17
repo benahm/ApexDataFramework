@@ -56,7 +56,7 @@ AND logical operator can be applied to multiple conditions
 Equivalent to : 
 
   ```apex
-  (Name = 'Acme Coproration') AND (Name>'Acme Corporation')
+  (Name = 'Acme Coproration') AND (Name > 'Acme Corporation')
   ```
 
 **Example 2**
@@ -83,7 +83,7 @@ OR logical operator can be applied to multiple conditions
 Equivalent to : 
 
   ```apex
-  (Name='Acme Coproration') AND (Name!='Acme Corporation')
+  (Name = 'Acme Coproration') AND (Name > 'Acme Corporation')
   ```
 
 **Example 2**
