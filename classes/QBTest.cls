@@ -257,6 +257,27 @@ private class QBTest {
 		Test.stopTest();
 	}	
 
+	@isTest 
+	private static void dateLiteralsTest() {
+		Test.startTest();
+
+		System.assertEquals('LAST_N_DAYS:1',QB.LAST_N_DAYS(1));
+		System.assertEquals('NEXT_N_DAYS:1',QB.NEXT_N_DAYS(1));
+		System.assertEquals('NEXT_N_WEEKS:1',QB.NEXT_N_WEEKS(1));
+		System.assertEquals('LAST_N_WEEKS:1',QB.LAST_N_WEEKS(1));
+		System.assertEquals('NEXT_N_MONTHS:1',QB.NEXT_N_MONTHS(1));
+		System.assertEquals('LAST_N_MONTHS:1',QB.LAST_N_MONTHS(1));
+		System.assertEquals('NEXT_N_QUARTERS:1',QB.NEXT_N_QUARTERS(1));
+		System.assertEquals('LAST_N_QUARTERS:1',QB.LAST_N_QUARTERS(1));
+		System.assertEquals('NEXT_N_YEARS:1',QB.NEXT_N_YEARS(1));
+		System.assertEquals('LAST_N_YEARS:1',QB.LAST_N_YEARS(1));
+		System.assertEquals('NEXT_N_FISCAL_QUARTERS:1',QB.NEXT_N_FISCAL_QUARTERS(1));
+		System.assertEquals('LAST_N_FISCAL_QUARTERS:1',QB.LAST_N_FISCAL_QUARTERS(1));
+		System.assertEquals('LAST_N_FISCAL_YEARS:1',QB.LAST_N_FISCAL_YEARS(1));
+			
+		Test.stopTest();
+	}
+
 	/* Tests for Query builder */
 	@isTest 
 	private static void selectFieldsClauseTest() {
@@ -278,6 +299,42 @@ private class QBTest {
 								.addFields(new List<String>{'Name2','Name3'}).toString());
 		System.assertEquals('SELECT Name1,Name2',QB.select_x('Name1,Name2').toString());
 		System.assertEquals('SELECT Name1,Name2',QB.select_x(new List<String>{'Name1','Name2'}).toString());
+		System.assertEquals('SELECT Name1,CALENDAR_MONTH(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.calendar_month('Name2')).toString());
+		System.assertEquals('SELECT Name1,CALENDAR_QUARTER(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.calendar_quarter('Name2')).toString());
+		System.assertEquals('SELECT Name1,CALENDAR_YEAR(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.calendar_year('Name2')).toString());
+		System.assertEquals('SELECT Name1,DAY_IN_MONTH(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.day_in_month('Name2')).toString());
+		System.assertEquals('SELECT Name1,DAY_IN_WEEK(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.day_in_week('Name2')).toString());
+		System.assertEquals('SELECT Name1,FISCAL_MONTH(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.fiscal_month('Name2')).toString());
+		System.assertEquals('SELECT Name1,FISCAL_QUARTER(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.fiscal_quarter('Name2')).toString());
+		System.assertEquals('SELECT Name1,FISCAL_YEAR(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.fiscal_year('Name2')).toString());
+		System.assertEquals('SELECT Name1,HOUR_IN_DAY(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.hour_in_day('Name2')).toString());
+		System.assertEquals('SELECT Name1,WEEK_IN_MONTH(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.week_in_month('Name2')).toString());
+		System.assertEquals('SELECT Name1,WEEK_IN_YEAR(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.week_in_year('Name2')).toString());
+		System.assertEquals('SELECT Name1,DATE_ONLY(Name2)',
+								QB.select_x('Name1')
+								.addFunction(QB.date_only('Name2')).toString());
 		System.assertEquals('SELECT Name1,TOLABEL(Name2)',
 								QB.select_x('Name1')
 								.addFunction(QB.toLabel('Name2')).toString());
@@ -334,6 +391,9 @@ private class QBTest {
 		System.assertEquals('SELECT Name FROM Account GROUP BY Name',QB.select_x('Name')
 														.from_x('Account')
 														.groupBy('Name').toString());
+		System.assertEquals('SELECT Name FROM Account GROUP BY CALENDAR_MONTH(Name)',QB.select_x('Name')
+														.from_x('Account')
+														.groupBy(QB.calendar_month('Name')).toString());
 		System.assertEquals('SELECT Name FROM Account GROUP BY Name1,Name2',QB.select_x('Name')
 														.from_x('Account')
 														.groupBy(new List<String>{'Name1','Name2'}).toString());

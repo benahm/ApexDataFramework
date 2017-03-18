@@ -28,6 +28,44 @@ public class QB {
 			LE, LESSOREQUAL,
 			LK, ISLIKE}
 
+	/* Date literals */
+	public static final String YESTERDAY='YESTERDAY';
+	public static final String TODAY='TODAY';
+	public static final String TOMORROW='TOMORROW';
+	public static final String LAST_WEEK='LAST_WEEK';
+	public static final String THIS_WEEK='THIS_WEEK';
+	public static final String NEXT_WEEK='NEXT_WEEK';
+	public static final String LAST_MONTH='LAST_MONTH';
+	public static final String THIS_MONTH='THIS_MONTH';
+	public static final String NEXT_MONTH='NEXT_MONTH';
+	public static final String LAST_90_DAYS='LAST_90_DAYS';
+	public static final String NEXT_90_DAYS='NEXT_90_DAYS';
+	public static String LAST_N_DAYS(Integer n){ return 'LAST_N_DAYS'+':'+n; }
+	public static String NEXT_N_DAYS(Integer n){ return 'NEXT_N_DAYS'+':'+n; }
+	public static String NEXT_N_WEEKS(Integer n){ return 'NEXT_N_WEEKS'+':'+n; }
+	public static String LAST_N_WEEKS(Integer n){ return 'LAST_N_WEEKS'+':'+n; }
+	public static String NEXT_N_MONTHS(Integer n){ return 'NEXT_N_MONTHS'+':'+n; }
+	public static String LAST_N_MONTHS(Integer n){ return 'LAST_N_MONTHS'+':'+n; }
+	public static final String THIS_QUARTER='THIS_QUARTER';
+	public static final String LAST_QUARTER='LAST_QUARTER';
+	public static final String NEXT_QUARTER='NEXT_QUARTER';
+	public static String NEXT_N_QUARTERS(Integer n){ return 'NEXT_N_QUARTERS'+':'+n; }
+	public static String LAST_N_QUARTERS(Integer n){ return 'LAST_N_QUARTERS'+':'+n; }
+	public static final String THIS_YEAR='THIS_YEAR';
+	public static final String LAST_YEAR='LAST_YEAR';
+	public static final String NEXT_YEAR='NEXT_YEAR';
+	public static String NEXT_N_YEARS(Integer n){ return 'NEXT_N_YEARS'+':'+n; }
+	public static String LAST_N_YEARS(Integer n){ return 'LAST_N_YEARS'+':'+n; }
+	public static final String THIS_FISCAL_QUARTER='THIS_FISCAL_QUARTER';
+	public static final String LAST_FISCAL_QUARTER='LAST_FISCAL_QUARTER';
+	public static final String NEXT_FISCAL_QUARTER='NEXT_FISCAL_QUARTER';
+	public static String NEXT_N_FISCAL_QUARTERS(Integer n){ return 'NEXT_N_FISCAL_QUARTERS'+':'+n; }
+	public static String LAST_N_FISCAL_QUARTERS(Integer n){ return 'LAST_N_FISCAL_QUARTERS'+':'+n; }
+	public static final String THIS_FISCAL_YEAR='THIS_FISCAL_YEAR';
+	public static final String LAST_FISCAL_YEAR='LAST_FISCAL_YEAR';
+	public static final String NEXT_FISCAL_YEAR='NEXT_FISCAL_YEAR';
+	public static String LAST_N_FISCAL_YEARS(Integer n){ return 'LAST_N_FISCAL_YEARS'+':'+n; }
+
 	private static final Map <String, Schema.SObjectType> globalSchemaMap;
 
 	// class initialisation code
@@ -130,8 +168,53 @@ public class QB {
 	}
 
 	/**
+	* @description SOQL date functions
+	* @return IDateFunctionWrap
+	*/
+	public static IDateFunctionWrap calendar_month(String fieldName){
+		return new Wrapper(fieldName,'CALENDAR_MONTH');
+	}
+	public static IDateFunctionWrap calendar_quarter(String fieldName){
+		return new Wrapper(fieldName,'CALENDAR_QUARTER');
+	}
+	public static IDateFunctionWrap calendar_year(String fieldName){
+		return new Wrapper(fieldName,'CALENDAR_YEAR');
+	}
+	public static IDateFunctionWrap day_in_month(String fieldName){
+		return new Wrapper(fieldName,'DAY_IN_MONTH');
+	}
+	public static IDateFunctionWrap day_in_week(String fieldName){
+		return new Wrapper(fieldName,'DAY_IN_WEEK');
+	}
+	public static IDateFunctionWrap fiscal_month(String fieldName){
+		return new Wrapper(fieldName,'FISCAL_MONTH');
+	}
+	public static IDateFunctionWrap fiscal_quarter(String fieldName){
+		return new Wrapper(fieldName,'FISCAL_QUARTER');
+	}
+	public static IDateFunctionWrap fiscal_year(String fieldName){
+		return new Wrapper(fieldName,'FISCAL_YEAR');
+	}
+	public static IDateFunctionWrap hour_in_day(String fieldName){
+		return new Wrapper(fieldName,'HOUR_IN_DAY');
+	}
+	public static IDateFunctionWrap week_in_month(String fieldName){
+		return new Wrapper(fieldName,'WEEK_IN_MONTH');
+	}
+	public static IDateFunctionWrap week_in_year(String fieldName){
+		return new Wrapper(fieldName,'WEEK_IN_YEAR');
+	}
+
+	/**
 	* @description ToLabel function
-	* @param fieldName 
+	* @return IDateOnlyFunctionWrap
+	*/
+	public static IDateOnlyFunctionWrap date_only(String fieldName){
+		return new Wrapper(fieldName,'DATE_ONLY');
+	}
+
+	/**
+	* @description ToLabel function
 	* @return IToLabelFunctionWrap
 	*/
 	public static IToLabelFunctionWrap toLabel(String fieldName){
@@ -172,7 +255,6 @@ public class QB {
 		return new OrderType('DESC','LAST');
 	}
 
-
 	/****************************************************************************************/
 	/*					Interfaces					*/
 	/****************************************************************************************/
@@ -201,6 +283,8 @@ public class QB {
 	public interface ISelectFieldsClause extends ISelectClause{ 
 		ISelectFieldsClause addField(String fieldName);
 		ISelectFieldsClause addFields(List<String> fieldNames);
+		ISelectFieldsClause addFunction(IDateFunctionWrap dateFunc);
+		ISelectFieldsClause addFunction(IDateOnlyFunctionWrap dateFunc);
 		ISelectFieldsClause addFunction(IToLabelFunctionWrap dateFunc);
 		ISelectFieldsClause addSubQuery(IQuery query);
 		ISelectFromQuery from_x(String sObjectName);
@@ -227,6 +311,7 @@ public class QB {
 		ISelectWhereQuery where_x(String fieldName, String operator, Object value);
 
 		ISelectGroupByQuery groupBy(String groupByField);
+		ISelectGroupByQuery groupBy(IDateFunctionWrap groupByField);
 		ISelectGroupByQuery groupBy(List<String> groupByFields);
 		ISelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr);
 		ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr);
@@ -315,6 +400,36 @@ public class QB {
 		IHavingCondition greaterOrEqual(Integer value);
 		IHavingCondition le(Integer value);
 		IHavingCondition lessOrEqual(Integer value);
+	}
+
+	public interface IDateFunctionWrap extends IWrapper{
+		IHavingCondition eq(Integer value);
+		IHavingCondition equal(Integer value);
+		IHavingCondition ne(Integer value);
+		IHavingCondition notEqual(Integer value);
+		IHavingCondition gt(Integer value);
+		IHavingCondition greaterThan(Integer value);
+		IHavingCondition lt(Integer value);
+		IHavingCondition lessThan(Integer value);
+		IHavingCondition ge(Integer value);
+		IHavingCondition greaterOrEqual(Integer value);
+		IHavingCondition le(Integer value);
+		IHavingCondition lessOrEqual(Integer value);
+	}
+
+	public interface IDateOnlyFunctionWrap extends IWrapper{
+		IFieldCondition eq(Date value);
+		IFieldCondition equal(Date value);
+		IFieldCondition ne(Date value);
+		IFieldCondition notEqual(Date value);
+		IFieldCondition gt(Date value);
+		IFieldCondition greaterThan(Date value);
+		IFieldCondition lt(Date value);
+		IFieldCondition lessThan(Date value);
+		IFieldCondition ge(Date value);
+		IFieldCondition greaterOrEqual(Date value);
+		IFieldCondition le(Date value);
+		IFieldCondition lessOrEqual(Date value);
 	}
 
 	public interface IToLabelFunctionWrap extends IWrapper{
@@ -416,7 +531,7 @@ public class QB {
 	/**
 	* @description AWrapper : Abstract class for the wrapper 
 	*/
-	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IToLabelFunctionWrap{} 
+	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IDateFunctionWrap,IDateOnlyFunctionWrap,IToLabelFunctionWrap{} 
 
 	/**
 	* @description Wrapper : field or function wrapper
@@ -601,6 +716,16 @@ public class QB {
 			return this;
 		}
 
+		public ISelectFieldsClause addFunction(IDateFunctionWrap dateFunc){
+			this.sQuery+=','+dateFunc;
+			return this;
+		}
+
+		public ISelectFieldsClause addFunction(IDateOnlyFunctionWrap dateOnlyFunc){
+			this.sQuery+=','+dateOnlyFunc;
+			return this;
+		}
+
 		public ISelectFieldsClause addFunction(IToLabelFunctionWrap toLblFunc){
 			this.sQuery+=','+toLblFunc;
 			return this;
@@ -659,6 +784,9 @@ public class QB {
 
 		public ISelectGroupByQuery groupBy(String groupByField){
 			return groupBy(new List<String>{groupByField},null);
+		}
+		public ISelectGroupByQuery groupBy(IDateFunctionWrap groupByField){
+			return groupBy(new List<String>{''+groupByField},null);
 		}
 		public ISelectGroupByQuery groupBy(List<String> groupByFields){
 			return groupBy(groupByFields,null);
