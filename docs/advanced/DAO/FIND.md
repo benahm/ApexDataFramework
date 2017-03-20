@@ -43,7 +43,7 @@
 <tr></tr>
 <tr>
   <td><em>findOne</em></td>
-  <td>find one sObject</td>
+  <td>find one record</td>
   <td>
 <pre lang='apex'> 
 * findOne()  // select all fields where limit is 1 
