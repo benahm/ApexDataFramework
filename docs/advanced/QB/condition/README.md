@@ -163,8 +163,8 @@
     </ul>
   </td>
   <td><pre lang="apex">
-  QB.field('Name').lk('Value') // Field - SOQL : Name LIKE 'Value'
-  QB.toLabel('Name').lk('My Name') // ToLabelFunction - SOQL : toLabel(Name) LIKE 'My Name'
+  QB.field('Name').lk('Val%') // Field - SOQL : Name LIKE 'Val%'
+  QB.toLabel('Name').lk('My N%') // ToLabelFunction - SOQL : toLabel(Name) LIKE 'My N%'
   </pre></td>
 </tr>
 </tbody>
