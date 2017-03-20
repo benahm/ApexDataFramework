@@ -32,6 +32,7 @@ The class DAO has 3 methods to query the salesforce db
   <td><em>findMap</em></td>
   <td>find a map</td>
   <td>
+<pre lang='apex'> 
 * findMap(ids) // select all fields where Id in ids
 * findMap(ids, fieldNames) // select fieldNames where Id in ids
 * findMap(fieldName, fieldValues) // select all fields where fieldName in fieldValues
@@ -39,6 +40,7 @@ The class DAO has 3 methods to query the salesforce db
 * findMap(Condition) // select all fields where condition is true
 * findMap(Condition, fieldNames) // select fieldNames where condition is true
 * findMap(Query) // get Query results
+</pre>
   </td>
 </tr>
 <tr></tr>
