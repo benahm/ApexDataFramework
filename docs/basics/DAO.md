@@ -2,11 +2,10 @@
 
 The DAO class offers the powerful find method to query the Salesforce database without writing SOQL queries 
 
-The class DAO has 3 methods to query the salesforce db
 
 ### Find method
 
-Each of the three methods supports the following signatures 
+The find method offers a flexible way to query data in Salesforce
 
 * find(ids, fieldNames)
 * find(fieldName, fieldValues, fieldNames)
