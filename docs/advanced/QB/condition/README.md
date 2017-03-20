@@ -164,7 +164,7 @@
   </td>
   <td><pre lang="apex">
   QB.field('Name').lk('Value') // Field - SOQL : Name LIKE 'Value'
-  QB.toLabel('Name').eq('My Name') // ToLabelFunction - SOQL : toLabel(Name) LIKE 'My Name'
+  QB.toLabel('Name').lk('My Name') // ToLabelFunction - SOQL : toLabel(Name) LIKE 'My Name'
   </pre></td>
 </tr>
 </tbody>
