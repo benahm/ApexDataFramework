@@ -16,10 +16,13 @@
 <pre lang='apex'>  
 * find(ids) // select all fields where Id in ids
 * find(ids, fieldNames) // select fieldNames where Id in ids
+* find(ids, fieldNames, limitOption) // select fieldNames where Id in ids limit to limitOption
 * find(fieldName, fieldValues) // select all fields where fieldName in fieldValues
 * find(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
+* find(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
 * find(Condition) // select all fields where condition is true
 * find(Condition, fieldNames) // select fieldNames where condition is true
+* find(Condition, fieldNames, limitOption) // select fieldNames where condition is true limit to limitOption
 * find(Query) // get Query results
 </pre>
   </td>
@@ -32,10 +35,13 @@
 <pre lang='apex'> 
 * findMap(ids) // select all fields where Id in ids
 * findMap(ids, fieldNames) // select fieldNames where Id in ids
+* findMap(ids, fieldNames, limitOption) // select fieldNames where Id in ids limit to limitOption
 * findMap(fieldName, fieldValues) // select all fields where fieldName in fieldValues
 * findMap(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
+* findMap(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
 * findMap(Condition) // select all fields where condition is true
-* findMap(Condition, fieldNames) // select fieldNames where condition is true
+* findMap(Condition, fieldNames) // select fieldNames where condition is true 
+* findMap(Condition, fieldNames, limitOption) // select fieldNames where condition is true limit to limitOption
 * findMap(Query) // get Query results
 </pre>
   </td>
