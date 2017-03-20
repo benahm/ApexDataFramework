@@ -20,5 +20,6 @@
       * [Order by keyword](/docs/advanced/QB/query/ORDERBY.md)
       * [Limit keyword](/docs/advanced/QB/query/LIMIT.md)
       * [Offset Keyword](/docs/advanced/QB/query/OFFSET.md)
-  * [Data Access Object](/docs/advanced/DAO.md)
+  * [Data Access Object](/docs/advanced/DAO/README.md)
+    * [Find method](/docs/advanced/DAO/FIND.md)
 * [FAQ](/docs/FAQ.md)
