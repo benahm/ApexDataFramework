@@ -4,11 +4,42 @@ The DAO class offers the powerful find method to query the Salesforce database w
 
 The class DAO has 3 methods to query the salesforce db
 
-| Method    | Description      |
-|-----------|------------------|
-| *find*    | find a list      |
-| *findMap* | find a map       |
-| *findOne* | find one sObject |
+<table>
+<thead>
+<tr>
+  <th>Method</th>
+  <th>Description</th>
+  <th>Supported signatures</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td><em>find</em></td>
+  <td>find a list</td>
+  <td>
+<pre lang='apex'>  
+* find(ids) // select all fields where Id in ids
+* find(ids, fieldNames) // select fieldNames where Id in ids
+* find(fieldName, fieldValues) // select all fields where fieldName in fieldValues
+* find(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
+* find(Condition) // select all fields where condition is true
+* find(Condition, fieldNames) // select fieldNames where condition is true
+* find(Query) // get Query results
+</pre>
+  </td>
+</tr>
+<tr></tr>
+<tr>
+  <td><em>findMap</em></td>
+  <td>find a map</td>
+  <td></td>
+</tr>
+<tr></tr>
+<tr>
+  <td><em>findOne</em></td>
+  <td>find one sObject</td>
+  <td></td>
+</tr>
+</tbody></table>
 
 Each of the three methods supports the following signatures 
 
