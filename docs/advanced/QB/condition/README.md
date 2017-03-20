@@ -25,7 +25,7 @@
   QB.field('Name').eq('Value') // Field - SOQL : Name = 'Value'
   QB.count().eq(1) // AggregateFunction - SOQL : COUNT() = 1
   QB.calendar_month('CreatedDate').eq(1) // IDateFunctionWrap - SOQL : CALENDAR_MONTH(CreatedDate) = 1
-  QB.date_only('CreatedDate).eq(Date.newinstance(1960, 2, 17)) // IDateOnlyFunctionWrap - SOQL : DATE_ONLY(CreatedDate) = '17-2-1960'
+  QB.date_only('CreatedDate').eq(Date.newinstance(1960, 2, 17)) // IDateOnlyFunctionWrap - SOQL : DATE_ONLY(CreatedDate) = '17-2-1960'
   QB.toLabel('Name').eq('My Name') // AggregateFunction - SOQL : toLabel(Name) = 'My Name'
   </pre></td>
 </tr>
