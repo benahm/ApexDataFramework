@@ -4,6 +4,7 @@ The DAO class offers the powerful find method to query the Salesforce database w
 
 The class DAO has 3 methods to query the salesforce db
 
+### Find method
 
 Each of the three methods supports the following signatures 
 
