@@ -16,17 +16,17 @@
     <ul>
       <li>Field</li>
       <li>AggregateFunction</li>
-      <li>IDateFunctionWrap</li>
-      <li>IDateOnlyFunctionWrap</li>
-      <li>IToLabelFunctionWrap</li>
+      <li>DateFunction</li>
+      <li>DateOnlyFunction</li>
+      <li>ToLabelFunction</li>
     </ul>
   </td>
   <td><pre lang="apex">
   QB.field('Name').eq('Value') // Field - SOQL : Name = 'Value'
   QB.count().eq(1) // AggregateFunction - SOQL : COUNT() = 1
-  QB.calendar_month('CreatedDate').eq(1) // IDateFunctionWrap - SOQL : CALENDAR_MONTH(CreatedDate) = 1
-  QB.date_only('CreatedDate').eq(Date.newinstance(1960, 2, 17)) // IDateOnlyFunctionWrap - SOQL : DATE_ONLY(CreatedDate) = '17-2-1960'
-  QB.toLabel('Name').eq('My Name') // AggregateFunction - SOQL : toLabel(Name) = 'My Name'
+  QB.calendar_month('CreatedDate').eq(1) // DateFunction - SOQL : CALENDAR_MONTH(CreatedDate) = 1
+  QB.date_only('CreatedDate').eq(Date.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) = '17-2-1960'
+  QB.toLabel('Name').eq('My Name') // ToLabelFunction - SOQL : toLabel(Name) = 'My Name'
   </pre></td>
 </tr>
 <tr></tr>
@@ -39,7 +39,7 @@
     </ul>
   </td>
   <td><pre lang="apex">
-  QB.field('Name').eq(new List&lt;String&gt;{'Value1','Value2'}) // - SOQL : Name IN ('Value1','Value2')
+  QB.field('Name').eq(new List&lt;String&gt;{'Value1','Value2'}) // Field - SOQL : Name IN ('Value1','Value2')
   </pre></td>
 </tr>
 <tr></tr>
@@ -50,17 +50,17 @@
     <ul>
       <li>Field</li>
       <li>AggregateFunction</li>
-      <li>IDateFunctionWrap</li>
-      <li>IDateOnlyFunctionWrap</li>
-      <li>IToLabelFunctionWrap</li>
+      <li>DateFunction</li>
+      <li>DateOnlyFunction</li>
+      <li>ToLabelFunction</li>
     </ul>
   </td>
   <td><pre lang="apex">
   QB.field('Name').ne('Value') // Field
   QB.count().ne(1) // AggregateFunction
-  QB.calendar_month('CreatedDate').ne(1) // IDateFunctionWrap - SOQL : CALENDAR_MONTH(CreatedDate) != 1
-  QB.date_only('CreatedDate').ne(Date.newinstance(1960, 2, 17)) // IDateOnlyFunctionWrap - SOQL : DATE_ONLY(CreatedDate) != '17-2-1960'
-  QB.toLabel('Name').ne('My Name') // AggregateFunction - SOQL : toLabel(Name) != 'My Name'
+  QB.calendar_month('CreatedDate').ne(1) // DateFunction - SOQL : CALENDAR_MONTH(CreatedDate) != 1
+  QB.date_only('CreatedDate').ne(Date.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) != '17-2-1960'
+  QB.toLabel('Name').ne('My Name') // ToLabelFunction - SOQL : toLabel(Name) != 'My Name'
   </pre></td>
 </tr>
 <tr></tr>
@@ -73,7 +73,7 @@
     </ul>
   </td>
   <td><pre lang="apex">
-  QB.field('Name').ne(new List&lt;String&gt;{'Value1','Value2'})
+  QB.field('Name').ne(new List&lt;String&gt;{'Value1','Value2'}) // Field - SOQL : Name NOT IN ('Value1','Value2')
   </pre></td>
 </tr>
 <tr></tr>
