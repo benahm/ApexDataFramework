@@ -19,7 +19,7 @@ Below the mapping between the soql keywords and the QB method names
 | *offset*     | offset        | chained    |                    |
 
 
-### Details of building a SOQL query with QB
+### Details of building a Query
 * [Select clause](SELECT.md)
 * [From clause](FROM.md)
 * [Where clause](WHERE.md)
