@@ -1,5 +1,5 @@
 ## Basics
-This section will give you a quick over view of the framework with some basic examples 
+This section will give you a quick overview of the framework with some basic examples 
 
 If you want to know further more about this framework please read the advanced section 
 
