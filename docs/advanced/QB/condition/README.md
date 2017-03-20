@@ -1,5 +1,9 @@
 ## Building a Condition
 
+Query builder (QB) let you build complex conditions to use in the where clause or in the havine clause 
+
+Below an overview of the conditions you can build with QB
+
 <table>
 <thead>
 <tr>
@@ -169,3 +173,6 @@
 </tr>
 </tbody>
 </table>
+
+
+## Details of building a Condition
