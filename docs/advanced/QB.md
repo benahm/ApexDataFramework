@@ -16,11 +16,3 @@
 
 
 
-
-#### Comparison Operators
-
-
-
-           
-
-#### Where options
