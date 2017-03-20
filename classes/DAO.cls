@@ -11,66 +11,66 @@ public with sharing class DAO {
 	}
 
 	public interface IBase{
-		/* find specification */
-		/* find ( Ids, Fields, WhereOptions ) */
-		/* find ( field, Values, Fields, WhereOptions ) */
-		/* find ( Criteria, Fields, WhereOptions ) */
-		/* find ( Query ) */
 
+		/* find a list */
 
-		// find list of sobjects by ids
+		// find list by ids
 		List<SObject> find(List<Id> ids);
 		List<SObject> find(Set<Id> ids);
+		List<SObject> find(List<Id> ids, String fieldNames);
+		List<SObject> find(Set<Id> ids, String fieldNames);
+		List<SObject> find(List<Id> ids, String fieldNames, Integer limitOption);
+		List<SObject> find(Set<Id> ids, String fieldNames, Integer limitOption);
 
-		List<SObject> find(List<Id> ids, String fieldName);
-		List<SObject> find(Set<Id> ids, String fieldName);
-		List<SObject> find(List<Id> ids, String fieldName, Integer limitOption);
-		List<SObject> find(Set<Id> ids, String fieldName, Integer limitOption);
-		//List<SObject> find(List<Id> ids, String fieldName, QB.WhereOption whereOption);
-		//List<SObject> find(Set<Id> ids, String fieldName, QB.WhereOption whereOption);
-
-		/*
-		List<SObject> find(List<Id> ids, List<String> fieldNames);
-		List<SObject> find(Set<Id> ids, List<String> fieldNames);
-		List<SObject> find(List<Id> ids, List<String> fieldNames, Integer limitOption);
-		List<SObject> find(Set<Id> ids, List<String> fieldNames, Integer limitOption);
-		List<SObject> find(List<Id> ids, List<String> fieldNames, QB.WhereOption whereOption);
-		List<SObject> find(Set<Id> ids, List<String> fieldNames, QB.WhereOption whereOption);
-		*/
-
-		// find list by field other than Id
-		/*		
-		List<SObject> find(String fieldName, String fieldValue);
-		List<SObject> find(String fieldName, Set<String> fieldValue);
-		List<SObject> find(String fieldName, List<String> fieldValue);
-		*/		
+		// find list by a specific field
+		List<SObject> find(String fieldName, Object value);
+		List<SObject> find(String fieldName, Object value, String fieldNames);
+		List<SObject> find(String fieldName, Object value, String fieldNames,Integer limitOption);
 		
-		List<SObject> find(QB.ICondition condition);
-		List<SObject> find(QB.ICondition condition, String fieldName);
-		List<SObject> find(QB.ICondition condition, List<String> fieldNames);
-		List<SObject> find(QB.ICondition condition, Set<String> fieldNames);
+		// find a list by condition
+		List<SObject> find(QB.IFieldCondition condition);
+		List<SObject> find(QB.IFieldCondition condition, String fieldNames);
+		List<SObject> find(QB.IFieldCondition condition, String fieldNames, Integer limitOption);
 
-
-		// find list by query
+		// find a list by query
 		List<SObject> find(QB.IQuery query);
 
 
+		/* find a map */
 
-		/* findOne Sepcification */
-		/* findOne(Criteria, fieldNames) */
+		// find list by ids
+		Map<Id,SObject> findMap(List<Id> ids);
+		Map<Id,SObject> findMap(Set<Id> ids);
+		Map<Id,SObject> findMap(List<Id> ids, String fieldNames);
+		Map<Id,SObject> findMap(Set<Id> ids, String fieldNames);
+		Map<Id,SObject> findMap(List<Id> ids, String fieldNames, Integer limitOption);
+		Map<Id,SObject> findMap(Set<Id> ids, String fieldNames, Integer limitOption);
 
-		// find one sobject by id
-		SObject findOne(Id id);
-		SObject findOne(Id id, String fieldName);
-		SObject findOne(Id id, List<String> fieldNames);
+		// find list by a specific field
+		Map<Id,SObject> findMap(String fieldName, Object value);
+		Map<Id,SObject> findMap(String fieldName, Object value, String fieldNames);
+		Map<Id,SObject> findMap(String fieldName, Object value, String fieldNames,Integer limitOption);
+		
+		// find a list by condition
+		Map<Id,SObject> findMap(QB.IFieldCondition condition);
+		Map<Id,SObject> findMap(QB.IFieldCondition condition, String fieldNames);
+		Map<Id,SObject> findMap(QB.IFieldCondition condition, String fieldNames, Integer limitOption);
+
+		// find a list by query
+		Map<Id,SObject> findMap(QB.IQuery query);
 
 
-		// findMap a find method that returns a map 
-		/*Map<Id,SObject> findMap(List<Id> String);*/
+		/* find one record */
 
-
-		// find one random sobject
 		SObject findOne();
+		SObject findOne(Id id);
+		SObject findOne(Id id, String fieldNames);
+		SObject findOne(String fieldName, Object value);
+		SObject findOne(String fieldName, Object value, String fieldNames);
+		SObject findOne(QB.IFieldCondition condition);
+		SObject findOne(QB.IFieldCondition condition, String fieldNames);
+		SObject findOne(QB.IQuery query);
+		
 	}
 
 	public class Base implements IBase{
@@ -81,113 +81,133 @@ public with sharing class DAO {
 			this.sObjectName=sObjectName;
 		}
 
-		/* Request handle data */
-		// find list of sobjects by ids
+		/* find a list */
 		public List<SObject> find(List<Id> ids){
 			return find(ids,'*',0);
 		}
-
 		public List<SObject> find(Set<Id> ids){
 			return find(new List<Id>(ids),'*',0);
 		}
-
-		public List<SObject> find(List<Id> ids, String fieldName){
-			return find(ids,fieldName,0);
+		public List<SObject> find(Set<Id> ids, String fieldNames){
+			return find(new List<Id>(ids),fieldNames,0);
 		}
-
-		public List<SObject> find(Set<Id> ids, String fieldName){
-			return find(new List<Id>(ids),fieldName,0);
+		public List<SObject> find(List<Id> ids, String fieldNames){
+			return find(ids,fieldNames,0);
 		}
-
-		public List<SObject> find(List<Id> ids, String fieldName, Integer limitOption){
-			return find(ids,new List<String>{fieldName},0);
+		public List<SObject> find(Set<Id> ids, String fieldNames, Integer limitOption){
+			return find(new List<Id>(ids),fieldNames,0);
 		}
-
-		public List<SObject> find(Set<Id> ids, String fieldName, Integer limitOption){
-			return find(new List<Id>(ids),new List<String>{fieldName},0);
+		public List<SObject> find(List<Id> ids, String fieldNames, Integer limitOption){
+			return QB.select_x(fieldNames)
+			  		 .from_x(sObjectName)
+		  			 .where_x('Id','=',QB.bind(ids))
+		  			 .getList();
 		}
-
-
-		public List<SObject> find(List<Id> ids, List<String> fieldNames, Integer limitOption){
-			String soqlQuery='SELECT '+String.join(fieldNames,',')
-							+' FROM '+sObjectName
-							+' WHERE '+'Id IN :ids';
-			return new List<SObject>(Database.query(soqlQuery));
+		public List<SObject> find(String fieldName, Object value){
+			return find(fieldName,value,'*',null);
 		}
-
-		public List<SObject> find(Set<Id> ids, List<String> fieldNames, Integer limitOption){
-			return find(new List<Id>(ids),fieldNames,limitOption);
+		public List<SObject> find(String fieldName, Object value, String fieldNames){
+			return find(fieldName,value,fieldNames,null);
 		}
-
-
-		// find list with restricted list of fieldNames by ids
-		public List<SObject> find(List<Id> ids, List<String> fieldNames){
-			return null;
+		public List<SObject> find(String fieldName, Object value, String fieldNames, Integer limitOption){
+				return QB.select_x(fieldNames)
+				  		 .from_x(sObjectName)
+			  			 .where_x(fieldName,'=',QB.bind(value))
+			  			 .limitTo(limitOption)
+			  			 .getList();
 		}
-
-		public List<SObject> find(List<Id> ids, Set<String> fieldNames){
-			return null;
+		public List<SObject> find(QB.IFieldCondition condition){
+			return find(condition,'*',null);
 		}
-
-		public List<SObject> find(Set<Id> ids, List<String> fieldNames){
-			return null;
+		public List<SObject> find(QB.IFieldCondition condition, String fieldNames){
+			return find(condition,fieldNames,null);
 		}
-
-		public List<SObject> find(Set<Id> ids, Set<String> fieldNames){
-			return null;
+		public List<SObject> find(QB.IFieldCondition condition, String fieldNames, Integer limitOption){
+			return QB.select_x(fieldNames)
+			  		 .from_x(sObjectName)
+		  			 .where_x(condition)
+		  			 .limitTo(limitOption)
+		  			 .getList();
 		}
-
-
-		public List<SObject> find(QB.ICondition condition){
-			return find(condition,new List<String>());
-		}
-
-		public List<SObject> find(QB.ICondition condition, String fieldName){
-			return find(condition,new List<String>{fieldName});
-		}
-
-		public List<SObject> find(QB.ICondition condition, List<String> fieldNames){
-			String soqlQuery='SELECT '+String.join(fieldNames,',')
-							+' FROM '+sObjectName
-							+' WHERE '+condition;
-			return new List<SObject>(Database.query(soqlQuery));
-		}
-
-		public List<SObject> find(QB.ICondition condition, Set<String> fieldNames){
-			return find(condition,new List<String>(fieldNames));
-		}
-
-
-
-		// find list by query
 		public List<SObject> find(QB.IQuery query){
 			return query.getList();
 		}
 
 
-		/* findOne Sepcification */
-		/* findOne(Criteria, fieldNames) */
-
-		// find one sobject by id
-		public SObject findOne(Id id){
-			return null;
+		/* find a map */
+		public Map<Id,SObject> findMap(List<Id> ids){
+			return new Map<Id,SObject>(find(Ids));
+		}
+		public Map<Id,SObject> findMap(Set<Id> ids){
+			return new Map<Id,SObject>(find(Ids));
+		}
+		public Map<Id,SObject> findMap(Set<Id> ids, String fieldNames){
+			return new Map<Id,SObject>(find(Ids,fieldNames));
+		}
+		public Map<Id,SObject> findMap(List<Id> ids, String fieldNames){
+			return new Map<Id,SObject>(find(Ids,fieldNames));
+		}
+		public Map<Id,SObject> findMap(Set<Id> ids, String fieldNames, Integer limitOption){
+			return new Map<Id,SObject>(find(Ids,fieldNames,limitOption));
+		}
+		public Map<Id,SObject> findMap(List<Id> ids, String fieldNames, Integer limitOption){
+			return new Map<Id,SObject>(find(Ids,fieldNames,limitOption));
+		}
+		public Map<Id,SObject> findMap(String fieldName, Object value){
+			return new Map<Id,SObject>(find(fieldName,value));
+		}
+		public Map<Id,SObject> findMap(String fieldName, Object value, String fieldNames){
+			return new Map<Id,SObject>(find(fieldName,value,fieldNames));
+		}
+		public Map<Id,SObject> findMap(String fieldName, Object value, String fieldNames, Integer limitOption){
+			return new Map<Id,SObject>(find(fieldName,value,fieldNames,limitOption));
+		}
+		public Map<Id,SObject> findMap(QB.IFieldCondition condition){
+			return new Map<Id,SObject>(find(condition));
+		}
+		public Map<Id,SObject> findMap(QB.IFieldCondition condition, String fieldNames){
+			return new Map<Id,SObject>(find(condition,fieldNames));
+		}
+		public Map<Id,SObject> findMap(QB.IFieldCondition condition, String fieldNames, Integer limitOption){
+			return new Map<Id,SObject>(find(condition,fieldNames,limitOption));
+		}
+		public Map<Id,SObject> findMap(QB.IQuery query){
+			return new Map<Id,SObject>(find(query));
 		}
 
-		public SObject findOne(Id id, String fieldName){
-			return null;
-		}
-
-		public SObject findOne(Id id, List<String> fieldNames){
-			return null;
-		}
-
-
-
-		// find one random sobject
+		/* find one record */
 		public SObject findOne(){
 			return null;
 		}
-		
+		public SObject findOne(Id id){
+			return findOne(id,'*');
+		}
+		public SObject findOne(Id id, String fieldNames){
+			return getOne(find(new List<Id>{Id},fieldNames));
+		}
+		public SObject findOne(String fieldName, Object value){
+			return findOne(fieldName,value,'*');
+		}
+		public SObject findOne(String fieldName, Object value, String fieldNames){
+			return getOne(find(fieldName,value,fieldNames));
+		}
+		public SObject findOne(QB.IFieldCondition condition){
+			return findOne(condition,'*');
+		}
+		public SObject findOne(QB.IFieldCondition condition, String fieldNames){
+			return getOne(find(condition,fieldNames));
+		}
+		public SObject findOne(QB.IQuery query){
+			return getOne(find(query));
+		}
+
+
+		/* private methods */
+		private SObject getOne(List<SObject> listObj){
+			if(listObj.isEmpty()) return null;
+			return listObj.get(0);
+		}
+
 	}
 
 	public class Meta /*implements INT_DAO_META*/{

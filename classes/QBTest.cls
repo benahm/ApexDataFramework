@@ -216,7 +216,7 @@ private class QBTest {
 		System.assertEquals('Name = NULL', QB.field('Name').eq(null).toString());
 		System.assertEquals('Name = \'1960-02-17\'', QB.field('Name').eq(date.newinstance(1960, 2, 17)).toString());
 		System.assertEquals('Name', QB.field('Name').toString());
-		System.assertEquals('Name = :bindVariable',QB.field('Name').eq(QB.bind('Value')).toString());
+		System.assertEquals('Name = :qbBindVariable',QB.field('Name').eq(QB.bind('Value')).toString());
 
 		try{
 			String test=QB.and_x(QB.field('Name1').eq(QB.bind('Value1')),QB.field('Name2').eq(QB.bind('Value2'))).toString();

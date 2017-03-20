@@ -19,7 +19,7 @@ public class QB {
 	private static final List<String> standardIncludedFields=new List<String>{'Id'};
 	private static final Util util=new Util();
 	private static final ErrorMessage errMsg=new ErrorMessage();
-	private static Object bindVariable;
+	private static Object qbBindVariable;
 	public enum Op {EQ, EQUAL,
 			NE, NOTEQUAL,
 			GT, GREATERTHAN,
@@ -134,11 +134,11 @@ public class QB {
 	}
 
 	public static BindType bind(Object bindVarValue){
-		if(bindVariable != null)
+		if(qbBindVariable != null)
 			throw new QBBindException(errMsg.maxBindVariable);
 
-		bindVariable=bindVarValue;
-		return new BindType('bindVariable');
+		qbBindVariable=bindVarValue;
+		return new BindType('qbBindVariable');
 	}
 
 	/**
@@ -253,6 +253,10 @@ public class QB {
 	}
 	public static OrderType descNullsLast(){
 		return new OrderType('DESC','LAST');
+	}
+
+	private static void clearBindVariables(){
+		qbBindVariable=null;
 	}
 
 	/****************************************************************************************/
@@ -753,7 +757,9 @@ public class QB {
 	public abstract class ASelectQuery implements ISelectFromQuery,ISelectWhereQuery,ISelectGroupByQuery,ISelectOrderByQuery,ISelectLimitQuery,ISelectOffsetQuery {
 
 		public List<SObject> getList(){
-			return new List<SObject>(Database.query(toString()));
+			List<SObject> resultList=new List<SObject>(Database.query(toString()));
+			clearBindVariables();
+			return resultList;
 		}
 
 		public map<Id,SObject> getMap(){
