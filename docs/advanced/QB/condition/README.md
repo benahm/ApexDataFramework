@@ -50,11 +50,17 @@
     <ul>
       <li>Field</li>
       <li>AggregateFunction</li>
+      <li>IDateFunctionWrap</li>
+      <li>IDateOnlyFunctionWrap</li>
+      <li>IToLabelFunctionWrap</li>
     </ul>
   </td>
   <td><pre lang="apex">
   QB.field('Name').ne('Value') // Field
   QB.count().ne(1) // AggregateFunction
+  QB.calendar_month('CreatedDate').ne(1) // IDateFunctionWrap - SOQL : CALENDAR_MONTH(CreatedDate) != 1
+  QB.date_only('CreatedDate').ne(Date.newinstance(1960, 2, 17)) // IDateOnlyFunctionWrap - SOQL : DATE_ONLY(CreatedDate) != '17-2-1960'
+  QB.toLabel('Name').ne('My Name') // AggregateFunction - SOQL : toLabel(Name) != 'My Name'
   </pre></td>
 </tr>
 <tr></tr>
