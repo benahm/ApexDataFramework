@@ -47,7 +47,18 @@ The class DAO has 3 methods to query the salesforce db
 <tr>
   <td><em>findOne</em></td>
   <td>find one sObject</td>
-  <td></td>
+  <td>
+<pre lang='apex'> 
+* findOne()  // select all fields where limit is 1 
+* findOne(id) // select all fields where Id is equal to id
+* findMap(id, fieldNames) // select fieldNames where Id is equal to id
+* findMap(fieldName, fieldValue) // select all fields where fieldName is equal to fieldValue
+* findMap(fieldName, fieldValue, fieldNames) // select fieldNames where fieldName is equal to fieldValue
+* findMap(Condition) // select all fields where condition is true
+* findMap(Condition, fieldNames) // select fieldNames where condition is true
+* findMap(Query) // get one from Query results
+</pre>  
+  </td>
 </tr>
 </tbody></table>
 
