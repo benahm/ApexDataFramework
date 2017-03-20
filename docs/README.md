@@ -10,8 +10,6 @@
 * [Advanced](/docs/advanced/README.md)
   * [Query Builder](/docs/advanced/QB/README.md)
     * [Building a Condition](/docs/advanced/QB/condition/README.md)
-      * [Field condition](/docs/advanced/QB/condition/FIELD.md)
-      * [Having condition](/docs/advanced/QB/condition/HAVING.md)
     * [Building a Query](/docs/advanced/QB/query/README.md)
       * [Select clause](/docs/advanced/QB/query/SELECT.md)
       * [From clause](/docs/advanced/QB/query/FROM.md)
