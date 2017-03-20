@@ -1,6 +1,6 @@
 ## Find method
 
-Find method offers different ways to query salesforce datat 
+Find method offers different ways to query salesforce data 
 
 
 <table>
