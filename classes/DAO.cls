@@ -3,10 +3,9 @@
 * @date 2017
 * @description DAO Class
 */
-public with sharing class DAO {
+public class DAO{
 
-
-	public static Base base(String sObjectName){
+	public static IBase base(String sObjectName){
 		return new Base(sObjectName);
 	}
 
@@ -61,10 +60,9 @@ public with sharing class DAO {
 
 
 		/* find one record */
-
 		SObject findOne();
-		SObject findOne(Id id);
-		SObject findOne(Id id, String fieldNames);
+		SObject findOne(List<Id> id);
+		SObject findOne(List<Id> id, String fieldNames);
 		SObject findOne(String fieldName, Object value);
 		SObject findOne(String fieldName, Object value, String fieldNames);
 		SObject findOne(QB.IFieldCondition condition);
@@ -74,12 +72,12 @@ public with sharing class DAO {
 	}
 
 	public class Base implements IBase{
-
 		private final String sObjectName;
 
 		public Base(String sObjectName){
 			this.sObjectName=sObjectName;
 		}
+
 
 		/* find a list */
 		public List<SObject> find(List<Id> ids){
@@ -175,15 +173,19 @@ public with sharing class DAO {
 			return new Map<Id,SObject>(find(query));
 		}
 
+
 		/* find one record */
 		public SObject findOne(){
-			return null;
+			return getOne(QB.select_x('*')
+				  		 .from_x(sObjectName)
+			  			 .limitTo(1)
+			  			 .getList());
 		}
-		public SObject findOne(Id id){
-			return findOne(id,'*');
+		public SObject findOne(List<Id> ids){
+			return findOne(ids,'*');
 		}
-		public SObject findOne(Id id, String fieldNames){
-			return getOne(find(new List<Id>{Id},fieldNames));
+		public SObject findOne(List<Id> ids, String fieldNames){
+			return getOne(find(ids,fieldNames));
 		}
 		public SObject findOne(String fieldName, Object value){
 			return findOne(fieldName,value,'*');

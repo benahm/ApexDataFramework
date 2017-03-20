@@ -18,7 +18,7 @@
 private class DAOTest {
 	
 	@isTest 
-	static void findTest() {
+	private static void findTest() {
 		Test.startTest();
  		 
 		System.assertEquals(0,DAO.base('Account').find(new List<Id>()).size());
@@ -35,16 +35,6 @@ private class DAOTest {
 		System.assertEquals(0,DAO.base('Account').find(QB.field('Name').eq('Test'),'Id,Name',1).size());
 		System.assertEquals(0,DAO.base('Account').find(QB.select_x('Id,Name').from_x('Account')).size());
 
-
-		System.assertEquals(1,DAO.base('ApexClass').find('Name','DAO').size());
-		System.assertEquals(1,DAO.base('ApexClass').find('Name','DAO','Id').size());
-		System.assertEquals(1,DAO.base('ApexClass').find('Name','DAO','Id,Name',1).size());
-		System.assertEquals(1,DAO.base('ApexClass').find(QB.field('Name').eq('DAO')).size());
-		System.assertEquals(1,DAO.base('ApexClass').find(QB.field('Name').eq('DAO'),'Id,Name').size());
-		System.assertEquals(1,DAO.base('ApexClass').find(QB.field('Name').eq('DAO'),'Id,Name',1).size());
-		System.assertEquals(1,DAO.base('ApexClass').find(QB.select_x('Id,Name')
-														.from_x('ApexClass')
-														.where_x('Name','=','DAO')).size());
 		
 		ApexClass daoClass=(ApexClass)DAO.base('ApexClass').findOne('Name','DAO','Id');
 		if(daoClass == null)
@@ -58,12 +48,21 @@ private class DAOTest {
 			System.assertEquals(1,DAO.base('ApexClass').find(new List<Id>{daoClassId},'Id,Name',1).size());
 			System.assertEquals(1,DAO.base('ApexClass').find(new Set<Id>{daoClassId},'Id,Name',1).size());
 		}
+		System.assertEquals(1,DAO.base('ApexClass').find('Name','DAO').size());
+		System.assertEquals(1,DAO.base('ApexClass').find('Name','DAO','Id').size());
+		System.assertEquals(1,DAO.base('ApexClass').find('Name','DAO','Id,Name',1).size());
+		System.assertEquals(1,DAO.base('ApexClass').find(QB.field('Name').eq('DAO')).size());
+		System.assertEquals(1,DAO.base('ApexClass').find(QB.field('Name').eq('DAO'),'Id,Name').size());
+		System.assertEquals(1,DAO.base('ApexClass').find(QB.field('Name').eq('DAO'),'Id,Name',1).size());
+		System.assertEquals(1,DAO.base('ApexClass').find(QB.select_x('Id,Name')
+														.from_x('ApexClass')
+														.where_x('Name','=','DAO')).size());
 
 		Test.stopTest();
 	}
 	
 	@isTest 
-	static void findMapTest() {
+	private static void findMapTest() {
 		Test.startTest();
 
 		System.assertEquals(0,DAO.base('Account').findMap(new List<Id>()).values().size());
@@ -80,15 +79,6 @@ private class DAOTest {
 		System.assertEquals(0,DAO.base('Account').findMap(QB.field('Name').eq('Test'),'Id,Name',1).values().size());
 		System.assertEquals(0,DAO.base('Account').findMap(QB.select_x('Id,Name').from_x('Account')).values().size());
 
-		System.assertEquals(1,DAO.base('ApexClass').findMap('Name','DAO').values().size());
-		System.assertEquals(1,DAO.base('ApexClass').findMap('Name','DAO','Id').values().size());
-		System.assertEquals(1,DAO.base('ApexClass').findMap('Name','DAO','Id,Name',1).values().size());
-		System.assertEquals(1,DAO.base('ApexClass').findMap(QB.field('Name').eq('DAO')).values().size());
-		System.assertEquals(1,DAO.base('ApexClass').findMap(QB.field('Name').eq('DAO'),'Id,Name').values().size());
-		System.assertEquals(1,DAO.base('ApexClass').findMap(QB.field('Name').eq('DAO'),'Id,Name',1).values().size());
-		System.assertEquals(1,DAO.base('ApexClass').findMap(QB.select_x('Id,Name')
-														.from_x('ApexClass')
-														.where_x('Name','=','DAO')).values().size());
 		
 		ApexClass daoClass=(ApexClass)DAO.base('ApexClass').findOne('Name','DAO','Id');
 		if(daoClass == null)
@@ -102,30 +92,48 @@ private class DAOTest {
 			System.assertEquals(1,DAO.base('ApexClass').findMap(new List<Id>{daoClassId},'Id,Name',1).values().size());
 			System.assertEquals(1,DAO.base('ApexClass').findMap(new Set<Id>{daoClassId},'Id,Name',1).values().size());
 		}
+		System.assertEquals(1,DAO.base('ApexClass').findMap('Name','DAO').values().size());
+		System.assertEquals(1,DAO.base('ApexClass').findMap('Name','DAO','Id').values().size());
+		System.assertEquals(1,DAO.base('ApexClass').findMap('Name','DAO','Id,Name',1).values().size());
+		System.assertEquals(1,DAO.base('ApexClass').findMap(QB.field('Name').eq('DAO')).values().size());
+		System.assertEquals(1,DAO.base('ApexClass').findMap(QB.field('Name').eq('DAO'),'Id,Name').values().size());
+		System.assertEquals(1,DAO.base('ApexClass').findMap(QB.field('Name').eq('DAO'),'Id,Name',1).values().size());
+		System.assertEquals(1,DAO.base('ApexClass').findMap(QB.select_x('Id,Name')
+														.from_x('ApexClass')
+														.where_x('Name','=','DAO')).values().size());
 
 		Test.stopTest();
 	}
 
 
 	@isTest
-	static void findOneTest(){
+	private static void findOneTest(){
 		Test.startTest();
 
 		System.assertEquals(null,DAO.base('Account').findOne());
-		//System.assertEquals(null,DAO.base('Account').findOne('Name','Test'));
+		System.assertEquals(null,DAO.base('Account').findOne('Name','Test'));
 		System.assertEquals(null,DAO.base('Account').findOne('Name','Test','Id,Name'));
 		System.assertEquals(null,DAO.base('Account').findOne(QB.field('Name').eq('Test')));
 		System.assertEquals(null,DAO.base('Account').findOne(QB.field('Name').eq('Test'),'Id,Name'));
 		System.assertEquals(null,DAO.base('Account').findOne(QB.select_x('Id,Name').from_x('Account')));
 
+
+		System.assertNotEquals(null,DAO.base('ApexClass').findOne());
 		ApexClass daoClass=(ApexClass)DAO.base('ApexClass').findOne('Name','DAO','Id');
 		if(daoClass == null)
 			System.assert(false);
 		else{
 			Id daoClassId=daoClass.Id;
-			System.assertNotEquals(null,DAO.base('ApexClass').findOne(daoClassId));
-			System.assertNotEquals(null,DAO.base('ApexClass').findOne(daoClassId,'Id,Name'));
+			System.assertNotEquals(null,DAO.base('ApexClass').findOne(new List<Id>{daoClassId}));
+			System.assertNotEquals(null,DAO.base('ApexClass').findOne(new List<Id>{daoClassId},'Id,Name'));
 		}
+		System.assertNotEquals(null,DAO.base('ApexClass').findOne('Name','DAO'));
+		System.assertNotEquals(null,DAO.base('ApexClass').findOne('Name','DAO','Id'));
+		System.assertNotEquals(null,DAO.base('ApexClass').findOne(QB.field('Name').eq('DAO')));
+		System.assertNotEquals(null,DAO.base('ApexClass').findOne(QB.field('Name').eq('DAO'),'Id,Name'));
+		System.assertNotEquals(null,DAO.base('ApexClass').findOne(QB.select_x('Id,Name')
+														.from_x('ApexClass')
+														.where_x('Name','=','DAO')));
 
 		Test.stopTest();
 	}

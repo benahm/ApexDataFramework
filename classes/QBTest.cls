@@ -214,7 +214,7 @@ private class QBTest {
 		System.assertEquals('Name = 1', QB.field('Name').eq(1).toString());
 		System.assertEquals('Name = true', QB.field('Name').eq(true).toString());
 		System.assertEquals('Name = NULL', QB.field('Name').eq(null).toString());
-		System.assertEquals('Name = \'1960-02-17\'', QB.field('Name').eq(date.newinstance(1960, 2, 17)).toString());
+		System.assertEquals('Name = 1960-02-17', QB.field('Name').eq(Date.newinstance(1960, 2, 17)).toString());
 		System.assertEquals('Name', QB.field('Name').toString());
 		System.assertEquals('Name = :qbBindVariable',QB.field('Name').eq(QB.bind('Value')).toString());
 
@@ -547,6 +547,18 @@ private class QBTest {
 														.from_x('Account')
 														.limitTo(1)
 														.offset(1).toString());
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	private static void runSelectQueryTest() {
+		Test.startTest();
+
+		System.assertEquals(0,QB.select_x('Name').from_x('Account').getList().size());
+		System.assertEquals(0,QB.select_x('Name').from_x('Account').getMap().values().size());
+		System.assertEquals(1,QB.select_x('Name').from_x('ApexClass').where_x('Name','=','QB').getList().size());
+		System.assertEquals(1,QB.select_x('Name').from_x('ApexClass').where_x('Name','=','QB').getMap().values().size());
 
 		Test.stopTest();
 	}

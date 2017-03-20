@@ -255,6 +255,7 @@ public class QB {
 		return new OrderType('DESC','LAST');
 	}
 
+	/* private methods */
 	private static void clearBindVariables(){
 		qbBindVariable=null;
 	}
@@ -316,6 +317,7 @@ public class QB {
 
 		ISelectGroupByQuery groupBy(String groupByField);
 		ISelectGroupByQuery groupBy(IDateFunctionWrap groupByField);
+		ISelectGroupByQuery groupBy(IDateOnlyFunctionWrap groupByField);
 		ISelectGroupByQuery groupBy(List<String> groupByFields);
 		ISelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr);
 		ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr);
@@ -369,7 +371,6 @@ public class QB {
 	}
 	public interface ISelectOffsetQuery extends IQuery{}
 
-
 	public interface IWrapper{
 		String toString();
 	}
@@ -422,18 +423,18 @@ public class QB {
 	}
 
 	public interface IDateOnlyFunctionWrap extends IWrapper{
-		IFieldCondition eq(Date value);
-		IFieldCondition equal(Date value);
-		IFieldCondition ne(Date value);
-		IFieldCondition notEqual(Date value);
-		IFieldCondition gt(Date value);
-		IFieldCondition greaterThan(Date value);
-		IFieldCondition lt(Date value);
-		IFieldCondition lessThan(Date value);
-		IFieldCondition ge(Date value);
-		IFieldCondition greaterOrEqual(Date value);
-		IFieldCondition le(Date value);
-		IFieldCondition lessOrEqual(Date value);
+		IHavingCondition eq(Datetime value);
+		IHavingCondition equal(Datetime value);
+		IHavingCondition ne(Datetime value);
+		IHavingCondition notEqual(Datetime value);
+		IHavingCondition gt(Datetime value);
+		IHavingCondition greaterThan(Datetime value);
+		IHavingCondition lt(Datetime value);
+		IHavingCondition lessThan(Datetime value);
+		IHavingCondition ge(Datetime value);
+		IHavingCondition greaterOrEqual(Datetime value);
+		IHavingCondition le(Datetime value);
+		IHavingCondition lessOrEqual(Datetime value);
 	}
 
 	public interface IToLabelFunctionWrap extends IWrapper{
@@ -448,7 +449,6 @@ public class QB {
 	/****************************************************************************************/
 	/*					Classes						*/
 	/****************************************************************************************/
-
 	/**
 	* @description ACondition : Abstract class for a single condition
 	*/
@@ -644,7 +644,9 @@ public class QB {
 			if(util.isNumberOrBoolean(value)){
 				return value+'';
 			} else if(value instanceof Date){
-				return singleQuote+String.valueOf((Date)value)+singleQuote;
+				return String.valueOf((Date)value);
+			} else if(value instanceof Datetime){
+				return util.datetimeToUTC((Datetime)value);
 			} else if(value instanceof String){
 				return singleQuote+String.escapeSingleQuotes(value+'')+singleQuote;
 			} else if(value instanceof bindType){
@@ -792,6 +794,9 @@ public class QB {
 			return groupBy(new List<String>{groupByField},null);
 		}
 		public ISelectGroupByQuery groupBy(IDateFunctionWrap groupByField){
+			return groupBy(new List<String>{''+groupByField},null);
+		}
+		public ISelectGroupByQuery groupBy(IDateOnlyFunctionWrap groupByField){
 			return groupBy(new List<String>{''+groupByField},null);
 		}
 		public ISelectGroupByQuery groupBy(List<String> groupByFields){
@@ -978,6 +983,10 @@ public class QB {
 			    fieldNames.add(sfield.getDescribe().getname());
 			}
 			return fieldNames;
+		}
+
+		public String datetimeToUTC(Datetime dt){
+			return dt.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss.SSSZ');
 		}
 	}
 
