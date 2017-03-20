@@ -1,5 +1,7 @@
 ## Find method
 
+Find method offers different ways to query salesforce datat 
+
 
 <table>
 <thead>
