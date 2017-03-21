@@ -1,7 +1,7 @@
 ## Building a Query
 
 
-Query Builder (QB) let you build soql queries with ease 
+The Query Builder (QB) let you build SOQL queries with ease 
 
 Below the mapping between the soql keywords and the QB method names 
 
