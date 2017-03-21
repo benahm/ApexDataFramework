@@ -103,13 +103,38 @@ Aggregate function count with pram
   ```sql
   SELECT COUNT(Name) FROM Account
   ```
+Aggregate function count with alias
 
+  ```apex
+  QB.select_x(QB.count().alias('Total'))
+    .from_x('Account')
+  ```
+  ```sql
+  SELECT COUNT() Total FROM Account
+  ```
 Aggregate function count with a field
 
   ```apex
-  QB.select_x(QB.count('Name'),'Type')
+  QB.select_x(QB.count('Name'))
+    .addField('Type')
     .from_x('Account')
   ```
   ```sql
   SELECT COUNT(Name),Type FROM Account
+  ```
+Aggregate function count with multiple fields
+
+  ```apex
+  QB.select_x(QB.count('Name'))
+    .addField('Id')
+    .addField('Type')
+    .from_x('Account')
+  ```
+  ```apex
+  QB.select_x(QB.count('Name'))
+    .addFields(new List<String>{'Id','Type'})
+    .from_x('Account')
+  ```
+  ```sql
+  SELECT COUNT(Name),Id,Type FROM Account
   ```
