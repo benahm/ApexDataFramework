@@ -50,7 +50,7 @@ AND logical operator can be applied to multiple conditions
 
 **Example 1**
   ```apex
-  QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
+  QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Name','>','Acme Corporation'))
   ```
   
 Equivalent to : 
@@ -61,7 +61,7 @@ Equivalent to :
 
 **Example 2**
   ```apex
-  QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
+  QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Name','>','Acme Corporation'))
     .add(QB.fieldExpr('Name',QB.Op.LE,'Acme Corporation'))
   ```
   
@@ -77,7 +77,7 @@ OR logical operator can be applied to multiple conditions
 
 **Example 1**
   ```apex
-  QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
+  QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Name','>','Acme Corporation'))
   ```
   
 Equivalent to : 
@@ -89,7 +89,7 @@ Equivalent to :
 **Example 2**
 
   ```apex
-  QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.field('Name','>','Acme Corporation'))
+  QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Name','>','Acme Corporation'))
     .add(QB.fieldExpr('Name',QB.Op.LE,'Acme Corporation'))
   ```
   
@@ -152,7 +152,7 @@ Equivalent to :
 
 **Example 2**
   ```apex
-  QB.and_x(QB.count('Name').eq(100),QB.count('Name')gt(100))
+  QB.and_x(QB.count('Name').eq(100),QB.count('Name').gt(100))
     .add(QB.count('Name').lt(100))
   ```
   
@@ -179,7 +179,7 @@ Equivalent to :
 
 **Example 2**
   ```apex
-  QB.or_x(QB.count('Name').eq(100),QB.count('Name')gt(100))
+  QB.or_x(QB.count('Name').eq(100),QB.count('Name').gt(100))
     .add(QB.count('Name').lt(100))
   ```
   
