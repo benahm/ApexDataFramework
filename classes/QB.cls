@@ -237,6 +237,9 @@ public class QB {
 	public static ISelectAggregateClause select_x(IAggregateFunctionWrap aggrFunc){
 		return new SelectClause(aggrFunc);
 	}
+	public static ISelectAggregateClause select_x(IAliasAggregateFunctionWrap aggrFunc){
+		return new SelectClause(aggrFunc);
+	}
 
 	/**
 	* @description order type for the Order By
@@ -405,7 +408,9 @@ public class QB {
 		IHavingCondition greaterOrEqual(Integer value);
 		IHavingCondition le(Integer value);
 		IHavingCondition lessOrEqual(Integer value);
+		IAliasAggregateFunctionWrap alias(String alias);
 	}
+	public interface IAliasAggregateFunctionWrap extends IWrapper{}
 
 	public interface IDateFunctionWrap extends IWrapper{
 		IHavingCondition eq(Integer value);
@@ -535,7 +540,8 @@ public class QB {
 	/**
 	* @description AWrapper : Abstract class for the wrapper 
 	*/
-	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IDateFunctionWrap,IDateOnlyFunctionWrap,IToLabelFunctionWrap{} 
+	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IDateFunctionWrap,IDateOnlyFunctionWrap,IToLabelFunctionWrap,
+											  IAliasAggregateFunctionWrap{} 
 
 	/**
 	* @description Wrapper : field or function wrapper
@@ -543,6 +549,7 @@ public class QB {
 	public class Wrapper extends AWrapper{
 		private final String fieldName;
 		private final String functionName;
+		private String alias; 
 
 		public Wrapper(String fieldName){
 			this.fieldName=fieldName;
@@ -609,15 +616,25 @@ public class QB {
 			return lk(value);
 		}
 
+		public IAliasAggregateFunctionWrap alias(String alias){
+			this.alias=alias;
+			return this;
+		}
+
 		public override String toString(){
-			if(fieldName!=null && functionName!=null){
-				return functionName+'('+fieldName+')';
-			} else if(functionName!=null){
-				return functionName+'()';
-			} else if(functionName==null){
-				return fieldName;
+			String result='';
+			if(functionName != null){
+				result+=functionName+'('+((fieldName != null)?fieldName:'')+')';
+			}else if(fieldName != null){
+				result+=fieldName;
+			}else 
+				throw new QBConditionException(errMsg.wrapperInputsNull);
+			
+			if(alias != null){
+				result+=' '+alias;
 			} 
-			throw new QBConditionException(errMsg.wrapperInputsNull);
+
+			return result;
 		}
 	}
 
@@ -712,7 +729,10 @@ public class QB {
 		public SelectClause(IAggregateFunctionWrap aggrFunc){
 			this.sQuery='SELECT '+aggrFunc;
 		}
-		
+		public SelectClause(IAliasAggregateFunctionWrap aggrFunc){
+			this.sQuery='SELECT '+aggrFunc;
+		}
+
 		public ISelectFieldsClause addField(String fieldName){
 			this.sQuery+=','+fieldName;
 			return this;

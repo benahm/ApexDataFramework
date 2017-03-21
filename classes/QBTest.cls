@@ -215,6 +215,7 @@ private class QBTest {
 		System.assertEquals('Name = true', QB.field('Name').eq(true).toString());
 		System.assertEquals('Name = NULL', QB.field('Name').eq(null).toString());
 		System.assertEquals('Name = 1960-02-17', QB.field('Name').eq(Date.newinstance(1960, 2, 17)).toString());
+		System.assertEquals('Name = 1960-02-16T23:00:00.000+0000', QB.field('Name').eq(Datetime.newinstance(1960, 2, 17)).toString());
 		System.assertEquals('Name', QB.field('Name').toString());
 		System.assertEquals('Name = :qbBindVariable',QB.field('Name').eq(QB.bind('Value')).toString());
 
@@ -352,6 +353,7 @@ private class QBTest {
 
 		System.assertEquals('SELECT COUNT()',QB.select_x(QB.count()).toString());
 		System.assertEquals('SELECT COUNT(Name)',QB.select_x(QB.count('Name')).toString());
+		System.assertEquals('SELECT COUNT(Name) Total',QB.select_x(QB.count('Name').alias('Total')).toString());
 		System.assertEquals('SELECT COUNT(Name1),Name2',QB.select_x(QB.count('Name1')).addField('Name2').toString());
 		System.assertEquals('SELECT COUNT(Name1),Name2,Name3',QB.select_x(QB.count('Name1')).addField('Name2,Name3').toString());
 		System.assertEquals('SELECT COUNT(Name1),Name2,Name3',QB.select_x(QB.count('Name1')).addFields(new List<String>{'Name2','Name3'}).toString());
@@ -394,6 +396,9 @@ private class QBTest {
 		System.assertEquals('SELECT Name FROM Account GROUP BY CALENDAR_MONTH(Name)',QB.select_x('Name')
 														.from_x('Account')
 														.groupBy(QB.calendar_month('Name')).toString());
+		System.assertEquals('SELECT Name FROM Account GROUP BY DATE_ONLY(Name)',QB.select_x('Name')
+														.from_x('Account')
+														.groupBy(QB.date_only('Name')).toString());
 		System.assertEquals('SELECT Name FROM Account GROUP BY Name1,Name2',QB.select_x('Name')
 														.from_x('Account')
 														.groupBy(new List<String>{'Name1','Name2'}).toString());
