@@ -30,7 +30,6 @@ public class QB {
 
 	private static final Map <String, Schema.SObjectType> globalSchemaMap;
 
-	// class initialisation code
 	static {
 	    globalSchemaMap = Schema.getGlobalDescribe();
 	}
@@ -74,7 +73,7 @@ public class QB {
 	public static DateLiteral LAST_N_FISCAL_YEARS(Integer n){ return new DateLiteral('LAST_N_FISCAL_YEARS'+':'+n); }
 
 	/**
-	* @description apply the logical operator NOT to a condition
+	* @description Apply the logical operator NOT to a condition
 	* @param cnd : Condition
 	* @return IFieldCondition 
 	*/
@@ -86,7 +85,7 @@ public class QB {
 	}
 
 	/**
-	* @description apply the logical operator AND to two conditions
+	* @description Apply the logical operator AND to two conditions
 	* @param cnd1 : the first condition
 	* @param cnd2 : the second condition
 	* @return IFieldMultiCondition
@@ -99,7 +98,7 @@ public class QB {
 	}
 
 	/**
-	* @description apply the logical operator OR to two conditions
+	* @description Apply the logical operator OR to two conditions
 	* @param cnd1 : the first condition
 	* @param cnd2 : the second condition
 	* @return IFieldMultiCondition
@@ -112,7 +111,7 @@ public class QB {
 	}
 
 	/**
-	* @description wrap a field
+	* @description Wrap a field
 	* @param name : field name
 	* @return IFieldWrap
 	*/
@@ -121,9 +120,9 @@ public class QB {
 	}	
 
 	/**
-	* @description field expression
+	* @description Field expression
 	* @param name : field name
-	* @param operator : the comparator operator
+	* @param operator : operator
 	* @return IFieldCondition
 	*/
 	public static IFieldCondition fieldExpr(String name, Op operator, Object value){
@@ -133,6 +132,10 @@ public class QB {
 		return new Wrapper(name).op(operator,value);
 	}
 
+	/**
+	* @description Bind a variable
+	* @return BindType
+	*/
 	public static BindType bind(Object bindVarValue){
 		if(qbBindVariable != null)
 			throw new QBBindException(errMsg.maxBindVariable);
@@ -206,7 +209,7 @@ public class QB {
 	}
 
 	/**
-	* @description ToLabel function
+	* @description Day_only function
 	* @return IDayOnlyFunctionWrap
 	*/
 	public static IDayOnlyFunctionWrap day_only(String fieldName){
@@ -222,7 +225,7 @@ public class QB {
 	}
 
 	/**
-	* @description select clause
+	* @description Select clause
 	* @return ISelectClause
 	*/	
 	public static ISelectClause select_x(){
@@ -242,7 +245,7 @@ public class QB {
 	}
 
 	/**
-	* @description order type for the Order By
+	* @description Order type for an Order By
 	* @return OrderType
 	*/	
 	public static OrderType ascNullsFirst(){
@@ -369,10 +372,12 @@ public class QB {
 	}
 	public interface ISelectOffsetQuery extends IQuery{}
 
+	/**
+	* @description Wrapper interfaces
+	*/
 	public interface IWrapper{
 		String toString();
 	}
-
 	public interface IFieldWrap extends IWrapper{
 		IFieldCondition eq(Object value);
 		IFieldCondition equal(Object value);
@@ -389,9 +394,7 @@ public class QB {
 		IFieldCondition lk(Object value);
 		IFieldCondition isLike(Object value);
 	}
-
 	public interface IFunctionWrap extends IWrapper{}
-
 	public interface IAggregateFunctionWrap extends IFunctionWrap{
 		IHavingCondition eq(Integer value);
 		IHavingCondition equal(Integer value);
@@ -408,7 +411,6 @@ public class QB {
 		IAliasAggregateFunctionWrap alias(String alias);
 	}
 	public interface IAliasAggregateFunctionWrap extends IFunctionWrap{}
-
 	public interface IDateFunctionWrap extends IFunctionWrap{
 		IHavingCondition eq(Integer value);
 		IHavingCondition equal(Integer value);
@@ -425,7 +427,6 @@ public class QB {
 		IAliasDateFunctionWrap alias(String alias);
 	}
 	public interface IAliasDateFunctionWrap extends IFunctionWrap{}
-
 	public interface IDayOnlyFunctionWrap extends IFunctionWrap{
 		IHavingCondition eq(Date value);
 		IHavingCondition equal(Date value);
@@ -454,7 +455,6 @@ public class QB {
 		IAliasDayOnlyFunctionWrap alias(String alias);
 	}
 	public interface IAliasDayOnlyFunctionWrap extends IFunctionWrap{}
-
 	public interface IToLabelFunctionWrap extends IFunctionWrap{
 		IFieldCondition eq(String value);
 		IFieldCondition equal(String value);
@@ -463,7 +463,6 @@ public class QB {
 		IFieldCondition lk(String value);
 		IFieldCondition isLike(String value);
 	}
-
 	public interface IFormatFunctionWrap extends IFunctionWrap{}
 
 	/****************************************************************************************/
@@ -481,7 +480,7 @@ public class QB {
 		private String sCondition;
 
 		public NotCondition(ICondition cnd){
-			this.sCondition='NOT ('+cnd+')';
+			this.sCondition='NOT'+' '+'('+cnd+')';
 		}
 
 		public override String toString(){
@@ -633,24 +632,35 @@ public class QB {
 			this(wrp,util.operatorToString(operator),value);
 		}
 		public Condition(Wrapper wrp,String operator,Object value){
-			String op=operator.trim();
-			String val=parseValue(value);
-
-			if(isMultipeValues(val)){ // Multiple values
-				if(op == '='){ // EQUAL
-					this.sCondition=wrp+' IN '+val;
-				} else if(op == '!='){ // NOT EQUAL
-					this.sCondition=wrp+' NOT IN '+val;
+			if(isList(value)){ // List values
+				String listVal=parseListValue((List<Object>)value);
+				if(operator == '='){ // EQUAL
+					this.sCondition=wrp+' IN '+listVal;
+				} else if(operator == '!='){ // NOT EQUAL
+					this.sCondition=wrp+' NOT IN '+listVal;
 				} else {
 					throw new QBConditionException(errMsg.operatorDoNotHandleMultiValues);
 				}
 			}else { // Single value
-				if(util.isValidFieldConditionOperator(op))
-					this.sCondition=wrp+' '+op+' '+val;
+				String val=parseValue(value);
+				if(util.isValidFieldConditionOperator(operator))
+					this.sCondition=wrp+' '+operator+' '+val;
 				else 
 					throw new QBConditionException(errMsg.unkownOperator);
 			}
 
+		}
+
+		private String parseListValue(List<Object> value){
+			List<Object> values=(List<Object>)value;
+			if(values.isEmpty()) 
+				throw new QBConditionException(errMsg.emptyListAsValue);
+			String result='';
+			for(Object val:values){
+				result+=parseValue(val)+',';
+			}
+			result=result.removeEnd(',');
+			return '('+result+')';
 		}
 
 		private String parseValue(Object value){
@@ -666,17 +676,11 @@ public class QB {
 				return singleQuote+String.escapeSingleQuotes(value+'')+singleQuote;
 			if(value instanceof BindType || value instanceof DateLiteral) // bindType or dateLiteral
 				return value+'';
-			if(value instanceof List<String>){ // List
-				List<String> values=(List<String>)value;
-				if(values.isEmpty()) 
-					throw new QBConditionException(errMsg.emptyListAsValue);
-				return '('+singleQuote+String.join(util.escapeSingleQuotes(values),singleQuote+','+singleQuote)+singleQuote+')';
-			}else 
-				throw new QBConditionException(errMsg.badValueType);
+			throw new QBConditionException(errMsg.badValueType);
 		}
 
-		private Boolean isMultipeValues(String value){
-			return value.startsWith('(') && value.endsWith(')');
+		private Boolean isList(Object value){
+			return value instanceof List<Object>;
 		}
 
 		public override String toString(){
