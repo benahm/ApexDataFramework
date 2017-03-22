@@ -8,7 +8,7 @@
     .where_x('Name','=','Acme Corporation')
   ```
   ```sql
-  SELECT Name FROM Account WHERE Name='Acme Corporation'
+  SELECT Name FROM Account WHERE Name = 'Acme Corporation'
   ```
 
 ### 2. Where with a complex condition
@@ -24,7 +24,7 @@
              )
   ```
   ```sql
-  SELECT Name FROM Account WHERE Name='Acme Corporation' AND Type='Prospect'
+  SELECT Name FROM Account WHERE Name = 'Acme Corporation' AND Type = 'Prospect'
   ```
 
 **Example 2**
@@ -39,7 +39,7 @@
              )
   ```
   ```sql
-  SELECT Name FROM Account WHERE Name='Acme Corporation' AND (Type='Prospect' OR Type='Customer')
+  SELECT Name FROM Account WHERE Name = 'Acme Corporation' AND (Type = 'Prospect' OR Type = 'Customer')
   ```
   
 **Example 3**
@@ -54,7 +54,7 @@
              )
   ```
   ```sql
-  SELECT Name FROM Account WHERE Name='Acme Corporation' AND (Type='Prospect' OR Type='Customer' OR (NOT Type!='Partner'))
+  SELECT Name FROM Account WHERE Name = Acme Corporation' AND (Type = 'Prospect' OR Type = 'Customer' OR (NOT Type != 'Partner'))
   ```
   
 ### 3. Where with a bind variable
@@ -65,10 +65,21 @@
     .where_x('Name','=',QB.bind(myListOfNames))
   ```
   ```sql
-  SELECT Name FROM Account WHERE Name=:myListOfNames
+  SELECT Name FROM Account WHERE Name = :myListOfNames
   ```
 QB supports only one bind variable per query
 
+### 4. Where with a date literal
+
+  ```apex
+  QB.select_x('Name')
+    .from_x('Account')
+    .where_x('CreatedDate','<',QB.YESTERDAY)
+  ```
+  ```sql
+  SELECT Name FROM Account WHERE CreatedDate < YESTERDAY
+  ```
+QB supports only one bind variable per query
 
 ## Next
 
