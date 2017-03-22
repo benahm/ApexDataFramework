@@ -1,6 +1,6 @@
 ## Building a Condition
 
-Query builder (QB) let you build complex conditions to use in the where clause and the having clause 
+The Query builder (QB) let you build complex conditions to use in the where clause and the having clause 
 
 Below an overview of the conditions you can build with QB
 
