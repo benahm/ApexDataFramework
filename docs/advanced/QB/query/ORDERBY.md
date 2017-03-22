@@ -28,3 +28,7 @@
   ```sql
   SELECT Name FROM Account ORDER BY Name ASC NULLS LAST, Type DESC NULLS LAST
   ```
+
+## Next
+
+* [Limit clause](LIMIT.md) 
