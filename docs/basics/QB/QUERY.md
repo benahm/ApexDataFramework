@@ -65,5 +65,6 @@ SOQL equivalent:
   ```sql
   select Name from Account where Name='Acme Corporation' group by Type order by Name limit 1 offset 100
   ```
-  
->*__NOTE__: 'select', 'from' and 'where' are all reserved words in apex and can not be used as names of methods, to get around the >suffix '__\_x__' is appended to the reserved words*
+--------  
+>*__NOTE__: 
+>'select', 'from' and 'where' are all reserved words in apex and can not be used as names of methods, to get around the >suffix '__\_x__' is appended to the reserved words*
