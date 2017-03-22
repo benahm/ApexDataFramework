@@ -29,7 +29,7 @@ Below an overview of the conditions you can build with QB
   QB.field('Name').eq('Value') // Field - SOQL : Name = 'Value'
   QB.count().eq(1) // AggregateFunction - SOQL : COUNT() = 1
   QB.calendar_month('CreatedDate').eq(1) // DateFunction - SOQL : CALENDAR_MONTH(CreatedDate) = 1
-  QB.date_only('CreatedDate').eq(Date.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) = '1960-2-17'
+  QB.date_only('CreatedDate').eq(Datetime.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) = '1960-2-17'
   QB.toLabel('Name').eq('My Name') // ToLabelFunction - SOQL : toLabel(Name) = 'My Name'
   </pre></td>
 </tr>
@@ -63,7 +63,7 @@ Below an overview of the conditions you can build with QB
   QB.field('Name').ne('Value') // Field - SOQL : Name != 'Value'
   QB.count().ne(1) // AggregateFunction - SOQL : COUNT() != 1
   QB.calendar_month('CreatedDate').ne(1) // DateFunction - SOQL : CALENDAR_MONTH(CreatedDate) != 1
-  QB.date_only('CreatedDate').ne(Date.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) != '1960-2-17'
+  QB.date_only('CreatedDate').ne(Datetime.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) != '1960-2-17'
   QB.toLabel('Name').ne('My Name') // ToLabelFunction - SOQL : toLabel(Name) != 'My Name'
   </pre></td>
 </tr>
@@ -96,7 +96,7 @@ Below an overview of the conditions you can build with QB
   QB.field('Name').gt('Value') // Field - SOQL : Name &gt; 'Value'
   QB.count().gt(1) // AggregateFunction - SOQL : COUNT() &gt; 1
   QB.calendar_month('CreatedDate').gt(1) // DateFunction - SOQL : CALENDAR_MONTH(CreatedDate) &gt; 1
-  QB.date_only('CreatedDate').gt(Date.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) &gt; '1960-2-17'
+  QB.date_only('CreatedDate').gt(Datetime.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) &gt; '1960-2-17'
   </pre></td>
 </tr>
 <tr></tr>
@@ -115,7 +115,7 @@ Below an overview of the conditions you can build with QB
   QB.field('Name').lt('Value') // Field - SOQL : Name &lt; 'Value'
   QB.count().lt(1) // AggregateFunction - SOQL : COUNT() &lt; 1
   QB.calendar_month('CreatedDate').lt(1) // DateFunction - SOQL : CALENDAR_MONTH(CreatedDate) &lt; 1
-  QB.date_only('CreatedDate').lt(Date.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) &lt; '1960-2-17'
+  QB.date_only('CreatedDate').lt(Datetime.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) &lt; '1960-2-17'
   </pre></td>
 </tr>
 <tr></tr>
@@ -134,7 +134,7 @@ Below an overview of the conditions you can build with QB
   QB.field('Name').ge('Value') // Field - SOQL : Name &gt;= 'Value'
   QB.count().ge(1) // AggregateFunction - SOQL : COUNT() &gt;= 1
   QB.calendar_month('CreatedDate').ge(1) // DateFunction - SOQL : CALENDAR_MONTH(CreatedDate) &gt;= 1
-  QB.date_only('CreatedDate').ge(Date.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) &gt;= '1960-2-17'
+  QB.date_only('CreatedDate').ge(Datetime.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) &gt;= '1960-2-17'
   </pre></td>
 </tr>
 <tr></tr>
@@ -153,7 +153,7 @@ Below an overview of the conditions you can build with QB
   QB.field('Name').le('Value') // Field - SOQL : Name &lt;= 'Value'
   QB.count().le(1) // AggregateFunction - SOQL : COUNT() &lt;= 1
   QB.calendar_month('CreatedDate').le(1) // DateFunction - SOQL : CALENDAR_MONTH(CreatedDate) &lt;= 1
-  QB.date_only('CreatedDate').le(Date.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) &lt;= '1960-2-17'
+  QB.date_only('CreatedDate').le(Datetime.newinstance(1960, 2, 17)) // DateOnlyFunction - SOQL : DATE_ONLY(CreatedDate) &lt;= '1960-2-17'
   </pre></td>
 </tr>
 <tr></tr>
