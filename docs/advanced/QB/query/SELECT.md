@@ -141,4 +141,4 @@ Aggregate function count with multiple fields
   
 ## Next
 
-* [Where clause](WHERE.md) 
+* [From clause](FROM.md) 
