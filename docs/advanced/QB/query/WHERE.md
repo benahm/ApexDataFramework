@@ -67,5 +67,9 @@
   ```sql
   SELECT Name FROM Account WHERE Name=:myListOfNames
   ```
-QB supports only one bind variable
+QB supports only one bind variable per query
 
+
+## Next
+
+* [Group by clause](GROUPBY.md) 
