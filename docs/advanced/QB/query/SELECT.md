@@ -138,3 +138,7 @@ Aggregate function count with multiple fields
   ```sql
   SELECT COUNT(Name),Id,Type FROM Account
   ```
+  
+## Next
+
+* [Where clause](WHERE.md) 
