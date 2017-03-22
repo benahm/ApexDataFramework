@@ -1,6 +1,6 @@
 ## Building a Condition
 
-Query builder (QB) let you build complex conditions to use in the where clause or in the havine clause 
+Query builder (QB) let you build complex conditions to use in the where clause and the having clause 
 
 Below an overview of the conditions you can build with QB
 
@@ -176,3 +176,6 @@ Below an overview of the conditions you can build with QB
 
 
 ## Details of building a Condition
+
+* [Field condition](FIELD.md)
+* [Having condition](HAVING.md)
