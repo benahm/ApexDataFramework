@@ -12,7 +12,7 @@ QB can build two types of conditions
 
 QB offers differents ways to create a simple field condition 
 
-QB field conditions 
+Field conditions:
 
   ```apex
   QB.field('Name').eq('Acme Corporation')
@@ -106,7 +106,7 @@ Equivalent to :
 
 QB offers differents ways to create a simple having condition 
 
-QB having conditions 
+Having conditions:
 
   ```apex
   QB.count().eq(1)
