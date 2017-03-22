@@ -48,7 +48,7 @@ Equivalent to :
 
 AND logical operator can be applied to multiple conditions
 
-**Example 1**
+*Example 1*
   ```apex
   QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Name','>','Acme Corporation'))
   ```
@@ -59,7 +59,7 @@ Equivalent to :
   (Name = 'Acme Coproration') AND (Name > 'Acme Corporation')
   ```
 
-**Example 2**
+*Example 2*
   ```apex
   QB.and_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Name','>','Acme Corporation'))
     .add(QB.fieldExpr('Name',QB.Op.LE,'Acme Corporation'))
@@ -75,7 +75,7 @@ Equivalent to :
 
 OR logical operator can be applied to multiple conditions
 
-**Example 1**
+*Example 1*
   ```apex
   QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Name','>','Acme Corporation'))
   ```
@@ -86,7 +86,7 @@ Equivalent to :
   (Name = 'Acme Coproration') AND (Name > 'Acme Corporation')
   ```
 
-**Example 2**
+*Example 2*
 
   ```apex
   QB.or_x(QB.field('Name').eq('Acme Corporation'),QB.fieldExpr('Name','>','Acme Corporation'))
@@ -139,7 +139,7 @@ Equivalent to :
 
 AND logical operator can be applied to multiple conditions
 
-**Example 1**
+*Example 1*
   ```apex
   QB.and_x(QB.count('Name').eq(100),QB.count('Name').gt(100))
   ```
@@ -150,7 +150,7 @@ Equivalent to :
   (COUNT(Name) = 100) AND (COUNT(Name) > 100)
   ```
 
-**Example 2**
+*Example 2*
   ```apex
   QB.and_x(QB.count('Name').eq(100),QB.count('Name').gt(100))
     .add(QB.count('Name').lt(100))
@@ -166,7 +166,7 @@ Equivalent to :
 
 OR logical operator can be applied to multiple conditions
 
-**Example 1**
+*Example 1*
   ```apex
   QB.or_x(QB.count('Name').eq(100),QB.count('Name').gt(100))
   ```
@@ -177,7 +177,7 @@ Equivalent to :
   (COUNT(Name) = 100) OR (COUNT(Name) > 100)
   ```
 
-**Example 2**
+*Example 2*
   ```apex
   QB.or_x(QB.count('Name').eq(100),QB.count('Name').gt(100))
     .add(QB.count('Name').lt(100))
