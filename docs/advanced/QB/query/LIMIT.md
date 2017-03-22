@@ -8,3 +8,7 @@
   ```sql
   SELECT Id FROM Account LIMIT 1
   ```
+
+## Next
+
+* [Offset clause](OFFSET.md) 
