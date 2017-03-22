@@ -68,10 +68,10 @@ public class DAO{
 		SObject findOne(QB.IFieldCondition condition);
 		SObject findOne(QB.IFieldCondition condition, String fieldNames);
 		SObject findOne(QB.IQuery query);
-		
+
 	}
 
-	public class Base implements IBase{
+	public virtual class Base implements IBase{
 		private final String sObjectName;
 
 		public Base(String sObjectName){

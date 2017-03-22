@@ -28,50 +28,50 @@ public class QB {
 			LE, LESSOREQUAL,
 			LK, ISLIKE}
 
-	/* Date literals */
-	public static final String YESTERDAY='YESTERDAY';
-	public static final String TODAY='TODAY';
-	public static final String TOMORROW='TOMORROW';
-	public static final String LAST_WEEK='LAST_WEEK';
-	public static final String THIS_WEEK='THIS_WEEK';
-	public static final String NEXT_WEEK='NEXT_WEEK';
-	public static final String LAST_MONTH='LAST_MONTH';
-	public static final String THIS_MONTH='THIS_MONTH';
-	public static final String NEXT_MONTH='NEXT_MONTH';
-	public static final String LAST_90_DAYS='LAST_90_DAYS';
-	public static final String NEXT_90_DAYS='NEXT_90_DAYS';
-	public static String LAST_N_DAYS(Integer n){ return 'LAST_N_DAYS'+':'+n; }
-	public static String NEXT_N_DAYS(Integer n){ return 'NEXT_N_DAYS'+':'+n; }
-	public static String NEXT_N_WEEKS(Integer n){ return 'NEXT_N_WEEKS'+':'+n; }
-	public static String LAST_N_WEEKS(Integer n){ return 'LAST_N_WEEKS'+':'+n; }
-	public static String NEXT_N_MONTHS(Integer n){ return 'NEXT_N_MONTHS'+':'+n; }
-	public static String LAST_N_MONTHS(Integer n){ return 'LAST_N_MONTHS'+':'+n; }
-	public static final String THIS_QUARTER='THIS_QUARTER';
-	public static final String LAST_QUARTER='LAST_QUARTER';
-	public static final String NEXT_QUARTER='NEXT_QUARTER';
-	public static String NEXT_N_QUARTERS(Integer n){ return 'NEXT_N_QUARTERS'+':'+n; }
-	public static String LAST_N_QUARTERS(Integer n){ return 'LAST_N_QUARTERS'+':'+n; }
-	public static final String THIS_YEAR='THIS_YEAR';
-	public static final String LAST_YEAR='LAST_YEAR';
-	public static final String NEXT_YEAR='NEXT_YEAR';
-	public static String NEXT_N_YEARS(Integer n){ return 'NEXT_N_YEARS'+':'+n; }
-	public static String LAST_N_YEARS(Integer n){ return 'LAST_N_YEARS'+':'+n; }
-	public static final String THIS_FISCAL_QUARTER='THIS_FISCAL_QUARTER';
-	public static final String LAST_FISCAL_QUARTER='LAST_FISCAL_QUARTER';
-	public static final String NEXT_FISCAL_QUARTER='NEXT_FISCAL_QUARTER';
-	public static String NEXT_N_FISCAL_QUARTERS(Integer n){ return 'NEXT_N_FISCAL_QUARTERS'+':'+n; }
-	public static String LAST_N_FISCAL_QUARTERS(Integer n){ return 'LAST_N_FISCAL_QUARTERS'+':'+n; }
-	public static final String THIS_FISCAL_YEAR='THIS_FISCAL_YEAR';
-	public static final String LAST_FISCAL_YEAR='LAST_FISCAL_YEAR';
-	public static final String NEXT_FISCAL_YEAR='NEXT_FISCAL_YEAR';
-	public static String LAST_N_FISCAL_YEARS(Integer n){ return 'LAST_N_FISCAL_YEARS'+':'+n; }
-
 	private static final Map <String, Schema.SObjectType> globalSchemaMap;
 
 	// class initialisation code
 	static {
 	    globalSchemaMap = Schema.getGlobalDescribe();
 	}
+
+	/* Date literals */
+	public static final DateLiteral YESTERDAY=new DateLiteral('YESTERDAY');
+	public static final DateLiteral TODAY=new DateLiteral('TODAY');
+	public static final DateLiteral TOMORROW=new DateLiteral('TOMORROW');
+	public static final DateLiteral LAST_WEEK=new DateLiteral('LAST_WEEK');
+	public static final DateLiteral THIS_WEEK=new DateLiteral('THIS_WEEK');
+	public static final DateLiteral NEXT_WEEK=new DateLiteral('NEXT_WEEK');
+	public static final DateLiteral LAST_MONTH=new DateLiteral('LAST_MONTH');
+	public static final DateLiteral THIS_MONTH=new DateLiteral('THIS_MONTH');
+	public static final DateLiteral NEXT_MONTH=new DateLiteral('NEXT_MONTH');
+	public static final DateLiteral LAST_90_DAYS=new DateLiteral('LAST_90_DAYS');
+	public static final DateLiteral NEXT_90_DAYS=new DateLiteral('NEXT_90_DAYS');
+	public static DateLiteral LAST_N_DAYS(Integer n){ return new DateLiteral('LAST_N_DAYS'+':'+n); }
+	public static DateLiteral NEXT_N_DAYS(Integer n){ return new DateLiteral('NEXT_N_DAYS'+':'+n); }
+	public static DateLiteral NEXT_N_WEEKS(Integer n){ return new DateLiteral('NEXT_N_WEEKS'+':'+n); }
+	public static DateLiteral LAST_N_WEEKS(Integer n){ return new DateLiteral('LAST_N_WEEKS'+':'+n); }
+	public static DateLiteral NEXT_N_MONTHS(Integer n){ return new DateLiteral('NEXT_N_MONTHS'+':'+n); }
+	public static DateLiteral LAST_N_MONTHS(Integer n){ return new DateLiteral('LAST_N_MONTHS'+':'+n); }
+	public static final DateLiteral THIS_QUARTER=new DateLiteral('THIS_QUARTER');
+	public static final DateLiteral LAST_QUARTER=new DateLiteral('LAST_QUARTER');
+	public static final DateLiteral NEXT_QUARTER=new DateLiteral('NEXT_QUARTER');
+	public static DateLiteral NEXT_N_QUARTERS(Integer n){ return new DateLiteral('NEXT_N_QUARTERS'+':'+n); }
+	public static DateLiteral LAST_N_QUARTERS(Integer n){ return new DateLiteral('LAST_N_QUARTERS'+':'+n); }
+	public static final DateLiteral THIS_YEAR=new DateLiteral('THIS_YEAR');
+	public static final DateLiteral LAST_YEAR=new DateLiteral('LAST_YEAR');
+	public static final DateLiteral NEXT_YEAR=new DateLiteral('NEXT_YEAR');
+	public static DateLiteral NEXT_N_YEARS(Integer n){ return new DateLiteral('NEXT_N_YEARS'+':'+n); }
+	public static DateLiteral LAST_N_YEARS(Integer n){ return new DateLiteral('LAST_N_YEARS'+':'+n); }
+	public static final DateLiteral THIS_FISCAL_QUARTER=new DateLiteral('THIS_FISCAL_QUARTER');
+	public static final DateLiteral LAST_FISCAL_QUARTER=new DateLiteral('LAST_FISCAL_QUARTER');
+	public static final DateLiteral NEXT_FISCAL_QUARTER=new DateLiteral('NEXT_FISCAL_QUARTER');
+	public static DateLiteral NEXT_N_FISCAL_QUARTERS(Integer n){ return new DateLiteral('NEXT_N_FISCAL_QUARTERS'+':'+n); }
+	public static DateLiteral LAST_N_FISCAL_QUARTERS(Integer n){ return new DateLiteral('LAST_N_FISCAL_QUARTERS'+':'+n); }
+	public static final DateLiteral THIS_FISCAL_YEAR=new DateLiteral('THIS_FISCAL_YEAR');
+	public static final DateLiteral LAST_FISCAL_YEAR=new DateLiteral('LAST_FISCAL_YEAR');
+	public static final DateLiteral NEXT_FISCAL_YEAR=new DateLiteral('NEXT_FISCAL_YEAR');
+	public static DateLiteral LAST_N_FISCAL_YEARS(Integer n){ return new DateLiteral('LAST_N_FISCAL_YEARS'+':'+n); }
 
 	/**
 	* @description apply the logical operator NOT to a condition
@@ -207,10 +207,10 @@ public class QB {
 
 	/**
 	* @description ToLabel function
-	* @return IDateOnlyFunctionWrap
+	* @return IDayOnlyFunctionWrap
 	*/
-	public static IDateOnlyFunctionWrap date_only(String fieldName){
-		return new Wrapper(fieldName,'DATE_ONLY');
+	public static IDayOnlyFunctionWrap day_only(String fieldName){
+		return new Wrapper(fieldName,'DAY_ONLY');
 	}
 
 	/**
@@ -225,20 +225,20 @@ public class QB {
 	* @description select clause
 	* @return ISelectClause
 	*/	
-	public static ISelectFieldsClause select_x(String fieldName){
+	public static ISelectClause select_x(){
+		return new SelectClause('Id');
+	}
+	public static ISelectClause select_x(String fieldName){
 		return new SelectClause(fieldName);
 	}
-	public static ISelectFieldsClause select_x(Schema.SObjectField field){
+	public static ISelectClause select_x(Schema.SObjectField field){
 		return new SelectClause(field.getDescribe().getName());
 	}
-	public static ISelectFieldsClause select_x(List<String> fieldNames){
+	public static ISelectClause select_x(List<String> fieldNames){
 		return new SelectClause(fieldNames);
 	}
-	public static ISelectAggregateClause select_x(IAggregateFunctionWrap aggrFunc){
-		return new SelectClause(aggrFunc);
-	}
-	public static ISelectAggregateClause select_x(IAliasAggregateFunctionWrap aggrFunc){
-		return new SelectClause(aggrFunc);
+	public static ISelectClause select_x(IFunctionWrap func){
+		return new SelectClause(func);
 	}
 
 	/**
@@ -266,7 +266,6 @@ public class QB {
 	/****************************************************************************************/
 	/*					Interfaces					*/
 	/****************************************************************************************/
-
 	/**
 	* @description Condition interfaces
 	*/
@@ -286,23 +285,13 @@ public class QB {
 	* @description Select clause interfaces
 	*/
 	public interface ISelectClause{
-		String toString();
-	}
-	public interface ISelectFieldsClause extends ISelectClause{ 
-		ISelectFieldsClause addField(String fieldName);
-		ISelectFieldsClause addFields(List<String> fieldNames);
-		ISelectFieldsClause addFunction(IDateFunctionWrap dateFunc);
-		ISelectFieldsClause addFunction(IDateOnlyFunctionWrap dateFunc);
-		ISelectFieldsClause addFunction(IToLabelFunctionWrap dateFunc);
-		ISelectFieldsClause addSubQuery(IQuery query);
+		ISelectClause addField(String fieldName);
+		ISelectClause addFields(List<String> fieldNames);
+		ISelectClause addFunction(IFunctionWrap func);
+		ISelectClause addSubQuery(IQuery query);
 		ISelectFromQuery from_x(String sObjectName);
 		ISelectFromQuery from_x(Schema.sObjectType sObjectType); 
-	}
-	public interface ISelectAggregateClause extends ISelectClause{
-		ISelectFieldsClause addField(String fieldName);
-		ISelectFieldsClause addFields(List<String> fieldNames);
-		ISelectFromQuery from_x(String sObjectName);
-		ISelectFromQuery from_x(Schema.sObjectType sObjectType);
+		String toString();
 	}
 
 	/**
@@ -319,10 +308,12 @@ public class QB {
 		ISelectWhereQuery where_x(String fieldName, String operator, Object value);
 
 		ISelectGroupByQuery groupBy(String groupByField);
-		ISelectGroupByQuery groupBy(IDateFunctionWrap groupByField);
-		ISelectGroupByQuery groupBy(IDateOnlyFunctionWrap groupByField);
+		ISelectGroupByQuery groupBy(IDateFunctionWrap groupByFunc);
+		ISelectGroupByQuery groupBy(IDayOnlyFunctionWrap groupByFunc);
 		ISelectGroupByQuery groupBy(List<String> groupByFields);
 		ISelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr);
+		ISelectGroupByQuery groupBy(IDateFunctionWrap groupByFunc, IHavingCondition havingCtr);
+		ISelectGroupByQuery groupBy(IDayOnlyFunctionWrap groupByFunc, IHavingCondition havingCtr);
 		ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr);
 
 		ISelectOrderByQuery orderBy(String orderByField);
@@ -336,8 +327,12 @@ public class QB {
 	}
 	public interface ISelectWhereQuery extends IQuery{
 		ISelectGroupByQuery groupBy(String groupByField);
+		ISelectGroupByQuery groupBy(IDateFunctionWrap groupByFunc);
+		ISelectGroupByQuery groupBy(IDayOnlyFunctionWrap groupByFunc);
 		ISelectGroupByQuery groupBy(List<String> groupByFields);
 		ISelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr);
+		ISelectGroupByQuery groupBy(IDateFunctionWrap groupByFunc, IHavingCondition havingCtr);
+		ISelectGroupByQuery groupBy(IDayOnlyFunctionWrap groupByFunc, IHavingCondition havingCtr);
 		ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr);
 
 		ISelectOrderByQuery orderBy(String orderByField);
@@ -395,7 +390,9 @@ public class QB {
 		IFieldCondition isLike(Object value);
 	}
 
-	public interface IAggregateFunctionWrap extends IWrapper{
+	public interface IFunctionWrap extends IWrapper{}
+
+	public interface IAggregateFunctionWrap extends IFunctionWrap{
 		IHavingCondition eq(Integer value);
 		IHavingCondition equal(Integer value);
 		IHavingCondition ne(Integer value);
@@ -410,9 +407,9 @@ public class QB {
 		IHavingCondition lessOrEqual(Integer value);
 		IAliasAggregateFunctionWrap alias(String alias);
 	}
-	public interface IAliasAggregateFunctionWrap extends IWrapper{}
+	public interface IAliasAggregateFunctionWrap extends IFunctionWrap{}
 
-	public interface IDateFunctionWrap extends IWrapper{
+	public interface IDateFunctionWrap extends IFunctionWrap{
 		IHavingCondition eq(Integer value);
 		IHavingCondition equal(Integer value);
 		IHavingCondition ne(Integer value);
@@ -425,24 +422,40 @@ public class QB {
 		IHavingCondition greaterOrEqual(Integer value);
 		IHavingCondition le(Integer value);
 		IHavingCondition lessOrEqual(Integer value);
+		IAliasDateFunctionWrap alias(String alias);
 	}
+	public interface IAliasDateFunctionWrap extends IFunctionWrap{}
 
-	public interface IDateOnlyFunctionWrap extends IWrapper{
-		IHavingCondition eq(Datetime value);
-		IHavingCondition equal(Datetime value);
-		IHavingCondition ne(Datetime value);
-		IHavingCondition notEqual(Datetime value);
-		IHavingCondition gt(Datetime value);
-		IHavingCondition greaterThan(Datetime value);
-		IHavingCondition lt(Datetime value);
-		IHavingCondition lessThan(Datetime value);
-		IHavingCondition ge(Datetime value);
-		IHavingCondition greaterOrEqual(Datetime value);
-		IHavingCondition le(Datetime value);
-		IHavingCondition lessOrEqual(Datetime value);
+	public interface IDayOnlyFunctionWrap extends IFunctionWrap{
+		IHavingCondition eq(Date value);
+		IHavingCondition equal(Date value);
+		IHavingCondition ne(Date value);
+		IHavingCondition notEqual(Date value);
+		IHavingCondition gt(Date value);
+		IHavingCondition greaterThan(Date value);
+		IHavingCondition lt(Date value);
+		IHavingCondition lessThan(Date value);
+		IHavingCondition ge(Date value);
+		IHavingCondition greaterOrEqual(Date value);
+		IHavingCondition le(Date value);
+		IHavingCondition lessOrEqual(Date value);
+		IHavingCondition eq(DateLiteral value);
+		IHavingCondition equal(DateLiteral value);
+		IHavingCondition ne(DateLiteral value);
+		IHavingCondition notEqual(DateLiteral value);
+		IHavingCondition gt(DateLiteral value);
+		IHavingCondition greaterThan(DateLiteral value);
+		IHavingCondition lt(DateLiteral value);
+		IHavingCondition lessThan(DateLiteral value);
+		IHavingCondition ge(DateLiteral value);
+		IHavingCondition greaterOrEqual(DateLiteral value);
+		IHavingCondition le(DateLiteral value);
+		IHavingCondition lessOrEqual(DateLiteral value);
+		IAliasDayOnlyFunctionWrap alias(String alias);
 	}
+	public interface IAliasDayOnlyFunctionWrap extends IFunctionWrap{}
 
-	public interface IToLabelFunctionWrap extends IWrapper{
+	public interface IToLabelFunctionWrap extends IFunctionWrap{
 		IFieldCondition eq(String value);
 		IFieldCondition equal(String value);
 		IFieldCondition ne(String value);
@@ -450,6 +463,8 @@ public class QB {
 		IFieldCondition lk(String value);
 		IFieldCondition isLike(String value);
 	}
+
+	public interface IFormatFunctionWrap extends IFunctionWrap{}
 
 	/****************************************************************************************/
 	/*					Classes						*/
@@ -466,11 +481,11 @@ public class QB {
 		private String sCondition;
 
 		public NotCondition(ICondition cnd){
-			this.sCondition=''+cnd;
+			this.sCondition='NOT ('+cnd+')';
 		}
 
 		public override String toString(){
-			return 'NOT ('+sCondition+')';
+			return sCondition;
 		}
 	}
 
@@ -479,21 +494,16 @@ public class QB {
 	* 			      applied to multiple conditions
 	*/
 	public abstract class AMultiCondition implements IFieldMultiCondition,IHavingMultiCondition {
+		protected String sCondition;
 		protected abstract String getOperator();
-		protected abstract List<ICondition> getListConditions();
 
 		public AMultiCondition add(ICondition cnd){
-			getListConditions().add(cnd);
+			this.sCondition+=' '+getOperator()+' '+'('+cnd+')';
 			return this;
 		}
 
 		public override String toString(){
-			String result='';
-
-			for(ICondition cnd:getListConditions()){
-				result+='('+cnd+')'+' '+getOperator()+' ';
-			}
-			return result.removeEnd(' '+getOperator()+' ');
+			return sCondition;
 		}
 	}
 
@@ -501,19 +511,14 @@ public class QB {
 	* @description AndCondition : AND applied to multiple conditions
 	*/
 	public class AndCondition extends AMultiCondition {
-		private List<ICondition> listConditions;
 		private final String operator = 'AND';
 
 		public AndCondition(ICondition cnd1, ICondition cnd2){
-			this.listConditions=new List<ICondition>{cnd1,cnd2};
+			this.sCondition='('+cnd1+')'+' '+operator+' '+'('+cnd2+')';
 		}
 
 		public override String getOperator(){
 			return operator;
-		}
-
-		public override List<ICondition> getListConditions(){
-			return listConditions;
 		}
 	}
 
@@ -521,42 +526,34 @@ public class QB {
 	* @description AndCondition : OR applied to multiple conditions
 	*/
 	public class OrCondition extends AMultiCondition {
-		private List<ICondition> listConditions;
 		private final String operator = 'OR';
 
 		public OrCondition(ICondition cnd1, ICondition cnd2){
-			this.listConditions=new List<ICondition>{cnd1,cnd2};
+			this.sCondition='('+cnd1+')'+' '+operator+' '+'('+cnd2+')';
 		}
 
 		public override String getOperator(){
 			return operator;
-		}
-
-		public override List<ICondition> getListConditions(){
-			return listConditions;
 		}
 	}
 	
 	/**
 	* @description AWrapper : Abstract class for the wrapper 
 	*/
-	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IDateFunctionWrap,IDateOnlyFunctionWrap,IToLabelFunctionWrap,
-											  IAliasAggregateFunctionWrap{} 
+	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IDateFunctionWrap,IDayOnlyFunctionWrap,IToLabelFunctionWrap,IFormatFunctionWrap,
+											  IAliasAggregateFunctionWrap,IAliasDateFunctionWrap,IAliasDayOnlyFunctionWrap{} 
 
 	/**
 	* @description Wrapper : field or function wrapper
 	*/
 	public class Wrapper extends AWrapper{
-		private final String fieldName;
-		private final String functionName;
-		private String alias; 
+		private String sWrap;
 
 		public Wrapper(String fieldName){
-			this.fieldName=fieldName;
+			this.sWrap=fieldName;
 		}
 		public Wrapper(String fieldName, String functionName){
-			this.fieldName=fieldName;
-			this.functionName=functionName;
+			this.sWrap=functionName+'('+util.ifNull(fieldName,'')+')';
 		}
 
 		private ACondition op(Op operator, Object value){
@@ -616,59 +613,60 @@ public class QB {
 			return lk(value);
 		}
 
-		public IAliasAggregateFunctionWrap alias(String alias){
-			this.alias=alias;
+		public Wrapper alias(String alias){
+			this.sWrap+=' '+alias;
 			return this;
 		}
 
 		public override String toString(){
-			String result='';
-			if(functionName != null){
-				result+=functionName+'('+((fieldName != null)?fieldName:'')+')';
-			}else if(fieldName != null){
-				result+=fieldName;
-			}else 
-				throw new QBConditionException(errMsg.wrapperInputsNull);
-			
-			if(alias != null){
-				result+=' '+alias;
-			} 
-
-			return result;
+			return sWrap;
 		}
 	}
 
 	/**
 	* @description Condition : field condition
 	*/
-	public class Condition extends ACondition {
-		private final Wrapper wrp;
-		private final String operator;
-		private final String values;
+	public class Condition extends ACondition { 
+		private String sCondition;
 
 		public Condition(Wrapper wrp,Op operator,Object value){
 			this(wrp,util.operatorToString(operator),value);
 		}
 		public Condition(Wrapper wrp,String operator,Object value){
-			this.wrp=wrp;
-			this.operator=operator.trim();
-			this.values=parseValue(value);
+			String op=operator.trim();
+			String val=parseValue(value);
+
+			if(isMultipeValues(val)){ // Multiple values
+				if(op == '='){ // EQUAL
+					this.sCondition=wrp+' IN '+val;
+				} else if(op == '!='){ // NOT EQUAL
+					this.sCondition=wrp+' NOT IN '+val;
+				} else {
+					throw new QBConditionException(errMsg.operatorDoNotHandleMultiValues);
+				}
+			}else { // Single value
+				if(util.isValidFieldConditionOperator(op))
+					this.sCondition=wrp+' '+op+' '+val;
+				else 
+					throw new QBConditionException(errMsg.unkownOperator);
+			}
+
 		}
 
 		private String parseValue(Object value){
-			if(value == null) return 'NULL';
-			// TODO Handle DateTime
-			if(util.isNumberOrBoolean(value)){
+			if(value == null) // null
+				return 'NULL';
+			if(util.isNumberOrBoolean(value)) // number or boolean
 				return value+'';
-			} else if(value instanceof Date){
+			if(value instanceof Date) // date
 				return String.valueOf((Date)value);
-			} else if(value instanceof Datetime){
+			if(value instanceof Datetime) // datetime
 				return util.datetimeToUTC((Datetime)value);
-			} else if(value instanceof String){
+			if(value instanceof String) // string
 				return singleQuote+String.escapeSingleQuotes(value+'')+singleQuote;
-			} else if(value instanceof bindType){
+			if(value instanceof BindType || value instanceof DateLiteral) // bindType or dateLiteral
 				return value+'';
-			} else if(value instanceof List<String>){
+			if(value instanceof List<String>){ // List
 				List<String> values=(List<String>)value;
 				if(values.isEmpty()) 
 					throw new QBConditionException(errMsg.emptyListAsValue);
@@ -682,26 +680,11 @@ public class QB {
 		}
 
 		public override String toString(){
-			// Multiple values
-			if(isMultipeValues(values)){
-				if(operator == '='){ // EQUAL
-					return wrp+' IN '+values;
-				} else if(this.operator == '!='){ // NOT EQUAL
-					return wrp+' NOT IN '+values;
-				} else {
-					throw new QBConditionException(errMsg.operatorDoNotHandleMultiValues);
-				}
-			}
-
-			// Single value
-			if(util.isValidFieldConditionOperator(operator))
-				return wrp+' '+operator+' '+values;
-			else 
-				throw new QBConditionException(errMsg.unkownOperator);
+			return sCondition;
 		}
 	}
 
-	public abstract class ASelectClause implements ISelectFieldsClause,ISelectAggregateClause {}
+	public abstract class ASelectClause implements ISelectClause{}
 
 	/**
 	* @description SelectClause : select clause
@@ -710,7 +693,7 @@ public class QB {
 		private String sQuery;
 		private final Regex rgx;
 
-		public SelectClause(Regex rgx){
+		private SelectClause(Regex rgx){
 			this.rgx=rgx;
 			this.sQuery='SELECT ';
 		}
@@ -726,38 +709,25 @@ public class QB {
 			if(!fieldNames.isEmpty()) 
 				this.sQuery+=String.join(fieldNames,',');
 		}
-		public SelectClause(IAggregateFunctionWrap aggrFunc){
-			this.sQuery='SELECT '+aggrFunc;
-		}
-		public SelectClause(IAliasAggregateFunctionWrap aggrFunc){
-			this.sQuery='SELECT '+aggrFunc;
+		public SelectClause(IFunctionWrap func){
+			this.sQuery='SELECT '+func;
 		}
 
-		public ISelectFieldsClause addField(String fieldName){
+		public ISelectClause addField(String fieldName){
 			this.sQuery+=','+fieldName;
 			return this;
 		}
-		public ISelectFieldsClause addFields(List<String> fieldNames){
+		public ISelectClause addFields(List<String> fieldNames){
 			this.sQuery+=','+String.join(fieldNames,',');
 			return this;
 		}
 
-		public ISelectFieldsClause addFunction(IDateFunctionWrap dateFunc){
-			this.sQuery+=','+dateFunc;
+		public ISelectClause addFunction(IFunctionWrap func){
+			this.sQuery+=','+func;
 			return this;
 		}
 
-		public ISelectFieldsClause addFunction(IDateOnlyFunctionWrap dateOnlyFunc){
-			this.sQuery+=','+dateOnlyFunc;
-			return this;
-		}
-
-		public ISelectFieldsClause addFunction(IToLabelFunctionWrap toLblFunc){
-			this.sQuery+=','+toLblFunc;
-			return this;
-		}
-
-		public ISelectFieldsClause addSubQuery(IQuery query){
+		public ISelectClause addSubQuery(IQuery query){
 			sQuery+=','+'('+query+')';
 			return this;
 		}
@@ -813,17 +783,23 @@ public class QB {
 		public ISelectGroupByQuery groupBy(String groupByField){
 			return groupBy(new List<String>{groupByField},null);
 		}
-		public ISelectGroupByQuery groupBy(IDateFunctionWrap groupByField){
-			return groupBy(new List<String>{''+groupByField},null);
+		public ISelectGroupByQuery groupBy(IDateFunctionWrap groupByFunc){
+			return groupBy(new List<String>{groupByFunc+''},null);
 		}
-		public ISelectGroupByQuery groupBy(IDateOnlyFunctionWrap groupByField){
-			return groupBy(new List<String>{''+groupByField},null);
+		public ISelectGroupByQuery groupBy(IDayOnlyFunctionWrap groupByFunc){
+			return groupBy(new List<String>{groupByFunc+''},null);
 		}
 		public ISelectGroupByQuery groupBy(List<String> groupByFields){
 			return groupBy(groupByFields,null);
 		}
 		public ISelectGroupByQuery groupBy(String groupByField, IHavingCondition havingCtr){
 			return groupBy(new List<String>{groupByField},havingCtr);
+		}
+		public ISelectGroupByQuery groupBy(IDateFunctionWrap groupByFunc, IHavingCondition havingCtr){
+			return groupBy(new List<String>{groupByFunc+''},havingCtr);
+		}
+		public ISelectGroupByQuery groupBy(IDayOnlyFunctionWrap groupByFunc, IHavingCondition havingCtr){
+			return groupBy(new List<String>{groupByFunc+''},havingCtr);
 		}
 		public ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr){
 			this.sQuery+=' GROUP BY '+String.join(groupByFields, ',');
@@ -897,12 +873,27 @@ public class QB {
 
 		public List<String> getMatches(List<String> inList){
 			List<String> outList = new List<String>();
-			
 			for (String elem : inList) {
 				if(Pattern.matches(ptrn.toUpperCase(),elem.toUpperCase()))
 			    	outList.add(elem);
 			}
 			return outList;
+		}
+	}
+
+
+	/**
+	* @description DateLiteral : defines a date literal
+	*/
+	public class DateLiteral {
+		private final String dateLiteral;
+
+		public DateLiteral(String dateLiteral){
+			this.dateLiteral=dateLiteral;
+		}
+
+		public override String toString(){
+			return dateLiteral;
 		}
 	}
 
@@ -977,17 +968,13 @@ public class QB {
 					|| obj instanceof Boolean;
 		}
 
-		public Boolean isValidHavingConditionOperator(String operator){
+		public Boolean isValidFieldConditionOperator(String operator){
 			return operator == '=' 
 					|| operator == '!='
 					|| operator == '>'
 					|| operator == '<'
 					|| operator == '>='
-					|| operator == '<=';
-		}
-
-		public Boolean isValidFieldConditionOperator(String operator){
-			return isValidHavingConditionOperator(operator)
+					|| operator == '<='
 					|| operator == 'LIKE';
 		}
 
@@ -1008,6 +995,11 @@ public class QB {
 		public String datetimeToUTC(Datetime dt){
 			return dt.formatGMT('yyyy-MM-dd\'T\'HH:mm:ss.SSSZ');
 		}
+
+		public String ifNull(String str1,String str2){
+  			if(str1 == null )  return str2;
+  			return str1;
+  		}
 	}
 
 	/**
@@ -1016,7 +1008,6 @@ public class QB {
 	private class ErrorMessage {
 		public final String unkownOperator='Unkown Operator';
 		public final String operatorDoNotHandleMultiValues='Only the operators EQUAL & NOTEQUAL can handle a list of values';
-		public final String wrapperInputsNull='Error all inputs of the Wrapper are null';
 		public final String emptyListAsValue='Error Value is an Empty List';
 		public final String badValueType='Error Bad Value Type';
 		public final String maxBindVariable='Error only one bind variable is allowed';

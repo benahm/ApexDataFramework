@@ -262,19 +262,19 @@ private class QBTest {
 	private static void dateLiteralsTest() {
 		Test.startTest();
 
-		System.assertEquals('LAST_N_DAYS:1',QB.LAST_N_DAYS(1));
-		System.assertEquals('NEXT_N_DAYS:1',QB.NEXT_N_DAYS(1));
-		System.assertEquals('NEXT_N_WEEKS:1',QB.NEXT_N_WEEKS(1));
-		System.assertEquals('LAST_N_WEEKS:1',QB.LAST_N_WEEKS(1));
-		System.assertEquals('NEXT_N_MONTHS:1',QB.NEXT_N_MONTHS(1));
-		System.assertEquals('LAST_N_MONTHS:1',QB.LAST_N_MONTHS(1));
-		System.assertEquals('NEXT_N_QUARTERS:1',QB.NEXT_N_QUARTERS(1));
-		System.assertEquals('LAST_N_QUARTERS:1',QB.LAST_N_QUARTERS(1));
-		System.assertEquals('NEXT_N_YEARS:1',QB.NEXT_N_YEARS(1));
-		System.assertEquals('LAST_N_YEARS:1',QB.LAST_N_YEARS(1));
-		System.assertEquals('NEXT_N_FISCAL_QUARTERS:1',QB.NEXT_N_FISCAL_QUARTERS(1));
-		System.assertEquals('LAST_N_FISCAL_QUARTERS:1',QB.LAST_N_FISCAL_QUARTERS(1));
-		System.assertEquals('LAST_N_FISCAL_YEARS:1',QB.LAST_N_FISCAL_YEARS(1));
+		System.assertEquals('LAST_N_DAYS:1',QB.LAST_N_DAYS(1).toString());
+		System.assertEquals('NEXT_N_DAYS:1',QB.NEXT_N_DAYS(1).toString());
+		System.assertEquals('NEXT_N_WEEKS:1',QB.NEXT_N_WEEKS(1).toString());
+		System.assertEquals('LAST_N_WEEKS:1',QB.LAST_N_WEEKS(1).toString());
+		System.assertEquals('NEXT_N_MONTHS:1',QB.NEXT_N_MONTHS(1).toString());
+		System.assertEquals('LAST_N_MONTHS:1',QB.LAST_N_MONTHS(1).toString());
+		System.assertEquals('NEXT_N_QUARTERS:1',QB.NEXT_N_QUARTERS(1).toString());
+		System.assertEquals('LAST_N_QUARTERS:1',QB.LAST_N_QUARTERS(1).toString());
+		System.assertEquals('NEXT_N_YEARS:1',QB.NEXT_N_YEARS(1).toString());
+		System.assertEquals('LAST_N_YEARS:1',QB.LAST_N_YEARS(1).toString());
+		System.assertEquals('NEXT_N_FISCAL_QUARTERS:1',QB.NEXT_N_FISCAL_QUARTERS(1).toString());
+		System.assertEquals('LAST_N_FISCAL_QUARTERS:1',QB.LAST_N_FISCAL_QUARTERS(1).toString());
+		System.assertEquals('LAST_N_FISCAL_YEARS:1',QB.LAST_N_FISCAL_YEARS(1).toString());
 			
 		Test.stopTest();
 	}
@@ -284,6 +284,7 @@ private class QBTest {
 	private static void selectFieldsClauseTest() {
 		Test.startTest();
 
+		System.assertEquals('SELECT Id',QB.select_x().toString());
 		System.assertEquals('SELECT ',QB.select_x('*').toString());
 		System.assertEquals('SELECT ',QB.select_x('?').toString());
 		System.assertEquals('SELECT ',QB.select_x('+').toString());
@@ -333,9 +334,9 @@ private class QBTest {
 		System.assertEquals('SELECT Name1,WEEK_IN_YEAR(Name2)',
 								QB.select_x('Name1')
 								.addFunction(QB.week_in_year('Name2')).toString());
-		System.assertEquals('SELECT Name1,DATE_ONLY(Name2)',
+		System.assertEquals('SELECT Name1,DAY_ONLY(Name2)',
 								QB.select_x('Name1')
-								.addFunction(QB.date_only('Name2')).toString());
+								.addFunction(QB.day_only('Name2')).toString());
 		System.assertEquals('SELECT Name1,TOLABEL(Name2)',
 								QB.select_x('Name1')
 								.addFunction(QB.toLabel('Name2')).toString());
@@ -396,9 +397,15 @@ private class QBTest {
 		System.assertEquals('SELECT Name FROM Account GROUP BY CALENDAR_MONTH(Name)',QB.select_x('Name')
 														.from_x('Account')
 														.groupBy(QB.calendar_month('Name')).toString());
-		System.assertEquals('SELECT Name FROM Account GROUP BY DATE_ONLY(Name)',QB.select_x('Name')
+		System.assertEquals('SELECT Name FROM Account GROUP BY DAY_ONLY(Name)',QB.select_x('Name')
 														.from_x('Account')
-														.groupBy(QB.date_only('Name')).toString());
+														.groupBy(QB.day_only('Name')).toString());
+		System.assertEquals('SELECT Name FROM Account GROUP BY CALENDAR_MONTH(Name) HAVING COUNT(Name) = 1',QB.select_x('Name')
+														.from_x('Account')
+														.groupBy(QB.calendar_month('Name'),QB.count('Name').eq(1)).toString());
+		System.assertEquals('SELECT Name FROM Account GROUP BY DAY_ONLY(Name) HAVING COUNT(Name) = 1',QB.select_x('Name')
+														.from_x('Account')
+														.groupBy(QB.day_only('Name'),QB.count('Name').eq(1)).toString());
 		System.assertEquals('SELECT Name FROM Account GROUP BY Name1,Name2',QB.select_x('Name')
 														.from_x('Account')
 														.groupBy(new List<String>{'Name1','Name2'}).toString());
@@ -564,6 +571,7 @@ private class QBTest {
 		System.assertEquals(0,QB.select_x('Name').from_x('Account').getMap().values().size());
 		System.assertEquals(1,QB.select_x('Name').from_x('ApexClass').where_x('Name','=','QB').getList().size());
 		System.assertEquals(1,QB.select_x('Name').from_x('ApexClass').where_x('Name','=','QB').getMap().values().size());
+		// TODO
 
 		Test.stopTest();
 	}
