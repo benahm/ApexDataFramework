@@ -12,7 +12,7 @@
   
 ### 2. Group by with a having condition  
 
-## Example 1 ##
+**Example 1**
 
   ```apex
   QB.select_x(QB.count('Id'),'Type')
@@ -23,7 +23,7 @@
   SELECT COUNT(Id) FROM Account GROUP BY Type HAVING COUNT(Id) > 1
   ```
 
-## Example 2 ##
+**Example 2**
 
   ```apex
   QB.select_x(QB.count('Id'),'Type')
