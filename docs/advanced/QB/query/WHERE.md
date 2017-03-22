@@ -71,15 +71,28 @@ QB supports only one bind variable per query
 
 ### 4. Where with a date literal
 
+**Example 1**
+
   ```apex
   QB.select_x('Name')
     .from_x('Account')
     .where_x('CreatedDate','<',QB.YESTERDAY)
   ```
+
   ```sql
   SELECT Name FROM Account WHERE CreatedDate < YESTERDAY
   ```
-QB supports only one bind variable per query
+
+**Example 2**
+
+  ```apex
+  QB.select_x('Name')
+    .from_x('Account')
+    .where_x('CloseDate','<',QB.LAST_N_DAYS(1))
+  ```
+  ```sql
+  SELECT Name FROM Account WHERE CreatedDate < LAST_N_DAYS:1
+  ```
 
 ## Next
 
