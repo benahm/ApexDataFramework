@@ -19,3 +19,7 @@
   ```sql
   SELECT COUNT(Id) FROM Account GROUP BY Type HAVING COUNT(Id)>1
   ```
+
+## Next
+
+* [Order by clause](ORDERBY.md) 
