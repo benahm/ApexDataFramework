@@ -969,14 +969,6 @@ public class QB {
 			return null;
 		}
 
-		public List<String> escapeSingleQuotes(List<String> values){
-			List<String> escapedValues=new List<String>();
-			for(String value:values){
-				escapedValues.add(String.escapeSingleQuotes(value));
-			}
-			return escapedValues;
-		}
-
 		public Boolean isNumberOrBoolean(Object obj){
 			return obj instanceof Integer 
 					|| obj instanceof Double

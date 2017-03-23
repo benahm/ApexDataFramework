@@ -18,7 +18,7 @@
 private class DAOTest {
 	
 	@isTest 
-	private static void findTest() {
+	static void findTest() {
 		Test.startTest();
  		 
 		System.assertEquals(0,DAO.base('Account').find(new List<Id>()).size());
@@ -62,7 +62,7 @@ private class DAOTest {
 	}
 	
 	@isTest 
-	private static void findMapTest() {
+	static void findMapTest() {
 		Test.startTest();
 
 		System.assertEquals(0,DAO.base('Account').findMap(new List<Id>()).values().size());
@@ -107,7 +107,7 @@ private class DAOTest {
 
 
 	@isTest
-	private static void findOneTest(){
+	static void findOneTest(){
 		Test.startTest();
 
 		System.assertEquals(null,DAO.base('Account').findOne());
