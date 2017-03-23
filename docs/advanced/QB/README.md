@@ -8,6 +8,6 @@
   * [Order by keyword](query/ORDERBY.md)
   * [Limit keyword](query/LIMIT.md)
   * [Offset Keyword](query/OFFSET.md)
-
+* [Running a Query](RUN.md)
 
 
