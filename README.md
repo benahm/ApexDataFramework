@@ -1,5 +1,10 @@
 # ApexDataFramework
 
+<a href="https://githubsfdeploy.herokuapp.com?owner=benahm&repo=ApexDataFramework">
+  <img alt="Deploy to Salesforce"
+       src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
+</a>
+
  **Work in progress**
  
  Loading…
