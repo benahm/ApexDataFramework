@@ -302,7 +302,9 @@ public class QB {
 	*/
 	public interface IQuery{
 		List<SObject> getList();
+		List<AggregateResult> getAggrList();
 		Map<Id, SObject> getMap();
+		Integer getCount();
 		String toString();
 	}
 	public interface ISelectFromQuery extends IQuery{
@@ -623,28 +625,28 @@ public class QB {
 	}
 
 	/**
-	* @description Condition : field condition
+	* @description Condition : wrap condition
 	*/
 	public class Condition extends ACondition { 
 		private String sCondition;
 
-		public Condition(Wrapper wrp,Op operator,Object value){
-			this(wrp,util.operatorToString(operator),value);
+		public Condition(Wrapper wrp,Op op,Object val){
+			this(wrp,util.operatorToString(op),val);
 		}
-		public Condition(Wrapper wrp,String operator,Object value){
-			if(isList(value)){ // List values
-				String listVal=parseListValue((List<Object>)value);
-				if(operator == '='){ // EQUAL
+		public Condition(Wrapper wrp,String op,Object val){
+			if(isList(val)){ // List value
+				String listVal=parseListValue((List<Object>)val);
+				if(op == '='){ // EQUAL
 					this.sCondition=wrp+' IN '+listVal;
-				} else if(operator == '!='){ // NOT EQUAL
+				} else if(op == '!='){ // NOT EQUAL
 					this.sCondition=wrp+' NOT IN '+listVal;
 				} else {
 					throw new QBConditionException(errMsg.operatorDoNotHandleMultiValues);
 				}
-			}else { // Single value
-				String val=parseValue(value);
-				if(util.isValidFieldConditionOperator(operator))
-					this.sCondition=wrp+' '+operator+' '+val;
+			}else { // One value
+				String oneVal=parseOneValue(val);
+				if(util.isValidFieldConditionOperator(op))
+					this.sCondition=wrp+' '+op+' '+oneVal;
 				else 
 					throw new QBConditionException(errMsg.unkownOperator);
 			}
@@ -657,13 +659,13 @@ public class QB {
 				throw new QBConditionException(errMsg.emptyListAsValue);
 			String result='';
 			for(Object val:values){
-				result+=parseValue(val)+',';
+				result+=parseOneValue(val)+',';
 			}
 			result=result.removeEnd(',');
 			return '('+result+')';
 		}
 
-		private String parseValue(Object value){
+		private String parseOneValue(Object value){
 			if(value == null) // null
 				return 'NULL';
 			if(util.isNumberOrBoolean(value)) // number or boolean
@@ -672,7 +674,7 @@ public class QB {
 				return String.valueOf((Date)value);
 			if(value instanceof Datetime) // datetime
 				return util.datetimeToUTC((Datetime)value);
-			if(value instanceof String) // string
+			if(value instanceof String || value instanceof Id) // string or id
 				return singleQuote+String.escapeSingleQuotes(value+'')+singleQuote;
 			if(value instanceof BindType || value instanceof DateLiteral) // bindType or dateLiteral
 				return value+'';
@@ -758,8 +760,19 @@ public class QB {
 			return resultList;
 		}
 
+		public List<AggregateResult> getAggrList(){
+			return (List<AggregateResult>)getList();
+		}
+
 		public map<Id,SObject> getMap(){
 			return new Map<Id,SObject>(getList());
+		}
+
+		public Integer getCount(){
+			Integer resultCount=Database.countQuery(toString());
+			clearBindVariables();
+			return resultCount;
+
 		}
 	}
 

@@ -569,11 +569,152 @@ private class QBTest {
 
 		System.assertEquals(0,QB.select_x('Name').from_x('Account').getList().size());
 		System.assertEquals(0,QB.select_x('Name').from_x('Account').getMap().values().size());
-		System.assertEquals(1,QB.select_x('Name').from_x('ApexClass').where_x('Name','=','QB').getList().size());
-		System.assertEquals(1,QB.select_x('Name').from_x('ApexClass').where_x('Name','=','QB').getMap().values().size());
-		// TODO
 
 		Test.stopTest();
 	}
-	
+
+
+	@isTest 
+	private static void runSelectWhereQueryTest() {
+		Test.startTest();
+
+		System.assertEquals(1,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x('Name','=','QB').getList().size());
+		System.assertEquals(1,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x('Name','=','QB').getMap().values().size());
+		System.assertEquals(1,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x(QB.field('Name').eq('QB')).getList().size());
+		System.assertEquals(1,QB.select_x('Name,Body')
+								.from_x('ApexClass')
+								.where_x(QB.field('Name').eq('QB')).getList().size());
+		System.assertEquals(1,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x(QB.fieldExpr('Name','=','QB')).getList().size());
+		System.assertEquals(1,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x(QB.not_x(QB.field('Name').ne('QB'))).getList().size());
+		System.assertEquals(1,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x(QB.and_x(QB.field('Name').eq('QB'),QB.field('IsValid').ne(false))).getList().size());
+		System.assertEquals(1,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x(QB.and_x(QB.field('Name').eq('QB'),QB.field('Name').ne('QBTest')).add(QB.field('IsValid').ne(false))).getList().size());
+		System.assertEquals(2,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest'))).getList().size());
+		System.assertEquals(2,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')).add(QB.field('Name').eq('QBTest'))).getList().size());
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	private static void runSelectGroupByQueryTest() {
+		Test.startTest();
+
+		List<AggregateResult> aggregateResult;
+
+		System.assertEquals(2,QB.select_x(QB.count())
+								.from_x('ApexClass')
+								.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest'))).getCount());
+
+		aggregateResult=QB.select_x(QB.count('Id')).from_x('ApexClass')
+						.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest'))).getAggrList();
+
+		System.assertNotEquals(null,aggregateResult);
+		System.assertNotEquals(null,aggregateResult.get(0));
+		System.assertEquals(2,aggregateResult.get(0).get('expr0'));
+
+		aggregateResult=QB.select_x(QB.count('Id').alias('MyCount')).from_x('ApexClass')
+						.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest'))).getAggrList();
+
+		System.assertNotEquals(null,aggregateResult);
+		System.assertNotEquals(null,aggregateResult.get(0));
+		System.assertEquals(2,aggregateResult.get(0).get('MyCount'));
+
+		aggregateResult=QB.select_x(QB.count('Id').alias('MyCount')).from_x('ApexClass')
+						.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')))
+						.groupBy('Name').getAggrList();
+
+		System.assertNotEquals(null,aggregateResult);
+		System.assertNotEquals(null,aggregateResult.get(0));
+		System.assertNotEquals(null,aggregateResult.get(1));
+		System.assertEquals(1,aggregateResult.get(0).get('MyCount'));
+		System.assertEquals(1,aggregateResult.get(1).get('MyCount'));
+
+		aggregateResult=QB.select_x(QB.count('Id').alias('MyCount'))
+					.addField('Name')
+					.from_x('ApexClass')
+					.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')))
+					.groupBy('Name').getAggrList();
+
+		System.assertNotEquals(null,aggregateResult);
+		System.assertNotEquals(null,aggregateResult.get(0));
+		System.assertNotEquals(null,aggregateResult.get(1));
+		System.assertEquals(1,aggregateResult.get(0).get('MyCount'));
+		System.assertNotEquals(null,aggregateResult.get(0).get('Name'));
+		System.assertEquals(1,aggregateResult.get(1).get('MyCount'));
+		System.assertNotEquals(null,aggregateResult.get(1).get('Name'));
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	private static void runSelectOrderByQueryTest() {
+		Test.startTest();
+
+		List<SObject> result;
+
+		result=QB.select_x('Name')
+				.from_x('ApexClass')
+				.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')))
+				.orderBy('Name').getList();
+
+		System.assertNotEquals(null,result);
+		System.assertEquals(2,result.size());
+		System.assertEquals('QB',result.get(0).get('Name'));
+		System.assertEquals('QBTest',result.get(1).get('Name'));
+
+		result=QB.select_x('Name')
+				.from_x('ApexClass')
+				.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')))
+				.orderBy('Name',QB.descNullsFirst()).getList();
+
+		System.assertNotEquals(null,result);
+		System.assertEquals(2,result.size());
+		System.assertEquals('QBTest',result.get(0).get('Name'));
+		System.assertEquals('QB',result.get(1).get('Name'));
+
+		Test.stopTest();
+	}
+
+
+	@isTest 
+	private static void runSelectLimitQueryTest() {
+		Test.startTest();
+
+		System.assertEquals(1,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')))
+								.limitTo(1).getList().size());
+
+		Test.stopTest();
+	}
+
+	@isTest 
+	private static void runSelectOffsetQueryTest() {
+		Test.startTest();
+
+		System.assertEquals(1,QB.select_x('Name')
+								.from_x('ApexClass')
+								.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')))
+								.offset(1).getList().size());
+
+		Test.stopTest();
+	}
+
 }
