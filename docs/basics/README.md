@@ -6,4 +6,5 @@ If you want to know further more about this framework please read the advanced s
 * [Query builder](QB/README.md)
   * [Building a Condition](QB/CONDITION.md)
   * [Building a Query](QB/QUERY.md)
+  * [Running a Query](QB/RUN.md)
 * [Data Access Object](DAO.md)
