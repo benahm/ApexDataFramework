@@ -10,5 +10,6 @@
     * [Order by keyword](QB/query/ORDERBY.md)
     * [Limit keyword](QB/query/LIMIT.md)
     * [Offset Keyword](QB/query/OFFSET.md)
+  * [Running a Query](QB/RUN.md)
 * [Data Access Object](DAO/README.md)
     * [Find method](DAO/FIND.md)
