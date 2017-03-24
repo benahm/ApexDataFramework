@@ -30,6 +30,8 @@ public class QB {
 
 	private static final Map <String, Schema.SObjectType> globalSchemaMap;
 
+	private QB(){}
+
 	static {
 	    globalSchemaMap = Schema.getGlobalDescribe();
 	}
@@ -83,6 +85,7 @@ public class QB {
 	public static IHavingCondition not_x(IHavingCondition cnd){
 		return new NotCondition(cnd) ;
 	}
+
 
 	/**
 	* @description Apply the logical operator AND to two conditions
@@ -473,12 +476,12 @@ public class QB {
 	/**
 	* @description ACondition : Abstract class for a single condition
 	*/
-	public abstract class ACondition implements IFieldCondition,IHavingCondition{}
+	private abstract class ACondition implements IFieldCondition,IHavingCondition{}
 
 	/**
 	* @description NotCondition : NOT applied to a condition
 	*/
-	public class NotCondition extends ACondition {
+	private class NotCondition extends ACondition {
 		private String sCondition;
 
 		public NotCondition(ICondition cnd){
@@ -494,9 +497,14 @@ public class QB {
 	* @description AMultiCondition : Abstract class for conditions that can be
 	* 			      applied to multiple conditions
 	*/
-	public abstract class AMultiCondition implements IFieldMultiCondition,IHavingMultiCondition {
+	private abstract class AMultiCondition implements IFieldMultiCondition,IHavingMultiCondition {
 		protected String sCondition;
+
 		protected abstract String getOperator();
+
+		public AMultiCondition(ICondition cnd1, ICondition cnd2){
+			this.sCondition='('+cnd1+')'+' '+getOperator()+' '+'('+cnd2+')';
+		}
 
 		public AMultiCondition add(ICondition cnd){
 			this.sCondition+=' '+getOperator()+' '+'('+cnd+')';
@@ -511,11 +519,11 @@ public class QB {
 	/**
 	* @description AndCondition : AND applied to multiple conditions
 	*/
-	public class AndCondition extends AMultiCondition {
+	private class AndCondition extends AMultiCondition {
 		private final String operator = 'AND';
 
 		public AndCondition(ICondition cnd1, ICondition cnd2){
-			this.sCondition='('+cnd1+')'+' '+operator+' '+'('+cnd2+')';
+			super(cnd1,cnd2);
 		}
 
 		public override String getOperator(){
@@ -526,11 +534,11 @@ public class QB {
 	/**
 	* @description AndCondition : OR applied to multiple conditions
 	*/
-	public class OrCondition extends AMultiCondition {
+	private class OrCondition extends AMultiCondition {
 		private final String operator = 'OR';
 
 		public OrCondition(ICondition cnd1, ICondition cnd2){
-			this.sCondition='('+cnd1+')'+' '+operator+' '+'('+cnd2+')';
+			super(cnd1,cnd2);
 		}
 
 		public override String getOperator(){
@@ -541,13 +549,13 @@ public class QB {
 	/**
 	* @description AWrapper : Abstract class for the wrapper 
 	*/
-	public abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IDateFunctionWrap,IDayOnlyFunctionWrap,IToLabelFunctionWrap,IFormatFunctionWrap,
+	private abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IDateFunctionWrap,IDayOnlyFunctionWrap,IToLabelFunctionWrap,IFormatFunctionWrap,
 											  IAliasAggregateFunctionWrap,IAliasDateFunctionWrap,IAliasDayOnlyFunctionWrap{} 
 
 	/**
 	* @description Wrapper : field or function wrapper
 	*/
-	public class Wrapper extends AWrapper{
+	private class Wrapper extends AWrapper{
 		private String sWrap;
 
 		public Wrapper(String fieldName){
@@ -627,7 +635,7 @@ public class QB {
 	/**
 	* @description Condition : wrap condition
 	*/
-	public class Condition extends ACondition { 
+	private class Condition extends ACondition { 
 		private String sCondition;
 
 		public Condition(Wrapper wrp,Op op,Object val){
@@ -653,8 +661,7 @@ public class QB {
 
 		}
 
-		private String parseListValue(List<Object> value){
-			List<Object> values=(List<Object>)value;
+		private String parseListValue(List<Object> values){
 			if(values.isEmpty()) 
 				throw new QBConditionException(errMsg.emptyListAsValue);
 			String result='';
@@ -690,12 +697,12 @@ public class QB {
 		}
 	}
 
-	public abstract class ASelectClause implements ISelectClause{}
+	private abstract class ASelectClause implements ISelectClause{}
 
 	/**
 	* @description SelectClause : select clause
 	*/
-	public class SelectClause extends ASelectClause{
+	private class SelectClause extends ASelectClause{
 		private String sQuery;
 		private final Regex rgx;
 
@@ -752,7 +759,7 @@ public class QB {
 		}
 	}
 
-	public abstract class ASelectQuery implements ISelectFromQuery,ISelectWhereQuery,ISelectGroupByQuery,ISelectOrderByQuery,ISelectLimitQuery,ISelectOffsetQuery {
+	private abstract class ASelectQuery implements ISelectFromQuery,ISelectWhereQuery,ISelectGroupByQuery,ISelectOrderByQuery,ISelectLimitQuery,ISelectOffsetQuery {
 
 		public List<SObject> getList(){
 			List<SObject> resultList=new List<SObject>(Database.query(toString()));
@@ -779,7 +786,7 @@ public class QB {
 	/**
 	* @description SelectQuery : select query without a where clause
 	*/
-	public class SelectQuery extends ASelectQuery {
+	private class SelectQuery extends ASelectQuery {
 		private String sQuery;
 
 		public SelectQuery(String sObjectName, String soqlSelectClause){
