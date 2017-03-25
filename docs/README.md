@@ -7,7 +7,7 @@
      * [Building a Condition](/docs/basics/QB/CONDITION.md)
      * [Building a Query](/docs/basics/QB/QUERY.md)
      * [Running a Query](/docs/basics/QB/RUN.md)
-  * [Data Access Object](/docs/basics/DAO.md)
+  * [Data Mapper](/docs/basics/DAO.md)
 * [Advanced](/docs/advanced/README.md)
   * [Query Builder](/docs/advanced/QB/README.md)
     * [Building a Condition](/docs/advanced/QB/condition/README.md)
