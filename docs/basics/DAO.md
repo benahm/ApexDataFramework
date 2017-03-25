@@ -1,6 +1,6 @@
-## Data Access Object
+## Data Mapper
 
-The DAO class offers the powerful find method to query the Salesforce database without writing SOQL queries 
+The DM class offers the powerful find method to query the Salesforce database without writing SOQL queries 
 
 
 ### Find method
@@ -19,7 +19,7 @@ See the examples below
 1. **Query by list of Ids**
 
   ```apex
-  List<Account> accs=DAO.base('Account').find(listIds)
+  List<Account> accs=DM.base('Account').find(listIds)
   ```
 
 
@@ -30,7 +30,7 @@ See the examples below
 2. **Query by list of Ids and specify field names to select**
 
   ```apex
-  List<Account> accs=DAO.base('Account').find(listIds,'Id,Name')
+  List<Account> accs=DM.base('Account').find(listIds,'Id,Name')
   ```
 
 
@@ -41,7 +41,7 @@ See the examples below
 3. **Query by list of values for a given field**
   
   ```apex
-  List<Account> accs=DAO.base('Account').find('Name',listNames,'Id')
+  List<Account> accs=DM.base('Account').find('Name',listNames,'Id')
   ```
 
 
@@ -52,7 +52,7 @@ See the examples below
 4. **Query by condition**
   
   ```apex
-  List<Account> accs=DAO.base('Account').find(QB.fieldExpr('Type','=','Prospect'),'Id')
+  List<Account> accs=DM.base('Account').find(QB.fieldExpr('Type','=','Prospect'),'Id')
   ```
 
 
@@ -63,7 +63,7 @@ See the examples below
 5. **Query by specifying a query built by the Query Builder**
   
   ```apex
-  List<Account> accs=DAO.base('Account').find(QB.select_x('Name').from_x('Account'))
+  List<Account> accs=DM.base('Account').find(QB.select_x('Name').from_x('Account'))
   ```
 
 
