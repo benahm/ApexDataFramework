@@ -188,3 +188,8 @@ Equivalent to :
   ```apex
   (COUNT(Name) = 100) OR (COUNT(Name) > 100) OR (COUNT(Name) < 100)
   ```
+
+
+## Next
+
+* [Building a Query](QUERY.md) 
