@@ -7,4 +7,15 @@ Each query has the following methods, to run the query
 * _getMap()_ : run a query and get a map of Id and SObject 
 * _getCount()_ : run a count query and get and Integer
 
+Some examples below 
 
+#### Basic examples
+
+1. **Get a list of sObjects**
+
+  ```apex
+  List<Account> accList = QB.select_x('Name')
+                            .from_x('Account')
+                            .limitTo(10)
+                            .getList();
+  ```
