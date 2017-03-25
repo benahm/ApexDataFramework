@@ -68,3 +68,7 @@ SOQL equivalent:
 --------  
 >*__NOTE__: 
 >'select', 'from' and 'where' are all reserved words in apex and can not be used as names of methods, to get around the >suffix '__\_x__' is appended to the reserved words*
+
+## Next
+
+* [Running a Query](RUN.md) 
