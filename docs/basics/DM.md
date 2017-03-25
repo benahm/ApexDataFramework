@@ -70,3 +70,7 @@ Some examples below
   ```apex
   List<Account> accs=[select Name from Account]
   ```
+
+## Next
+
+* [Advanced](/docs/advanced/README.md) 
