@@ -44,3 +44,7 @@ Some examples below
                     .from_x('Account')
                     .getCount();
   ```
+
+## Next
+
+* [Data Mapper](../DM.md) 
