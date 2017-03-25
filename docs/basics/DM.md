@@ -63,7 +63,7 @@ Some examples below
 5. **Query by specifying a query built by the Query Builder**
   
   ```apex
-  List<Account> accs=DM.base('Account').find(QB.select_x('Name').from_x('Account'))
+  List<Account> accs=DM.base('Account').find(QB.select_x('Name').from_x('Account')).getList()
   ```
 
 
