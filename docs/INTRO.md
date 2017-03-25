@@ -4,8 +4,8 @@ In big Salesforce project if you don't follow some basic rules you will rapidly 
 
 Here we present a framework that will help you access your salesforce data without having to rewrite the same SOQL query each time
 
-The framwework holds in two main classes QB & DAO
+The framwework holds in two main classes QB & DM
 
 *QB* : Query Builder let you build soql queries 
 
-*DAO* : Data Access Object offers methods to access data in Salesforce 
+*DM* : Data Mapper offers methods to access data in Salesforce 
