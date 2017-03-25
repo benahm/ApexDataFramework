@@ -852,7 +852,7 @@ public class QB {
 			return addOrder(new List<String>{orderByField},orderType);
 		}
 		public ISelectOrderByQuery addOrder(List<String> orderByFields, OrderType orderType){
-			this.sQuery+=' '+String.join(orderByFields,' ');
+			this.sQuery+=', '+String.join(orderByFields,',');
 			if(orderType != null)
 				this.sQuery+=orderType;
 			return this;
@@ -1021,7 +1021,7 @@ public class QB {
 		public final String operatorDoNotHandleMultiValues='Only the operators EQUAL & NOTEQUAL can handle a list of values';
 		public final String emptyListAsValue='Error Value is an Empty List';
 		public final String badValueType='Error Bad Value Type';
-		public final String maxBindVariable='Error only one bind variable is allowed';
+		public final String maxBindVariable='Error max number of bind variables exceeded ';
 	}
 
 	// Exceptions
