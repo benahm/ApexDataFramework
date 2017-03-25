@@ -18,6 +18,17 @@
   ```apex
   QB.select_x('Name')
     .from_x('Account')
+    .where_x(QB.not_x(QB.field('Name').eq('Acme Corporation')))
+  ```
+  ```sql
+  SELECT Name FROM Account WHERE NOT (Name = 'Acme Corporation')
+  ```
+
+**Example 2**
+
+  ```apex
+  QB.select_x('Name')
+    .from_x('Account')
     .where_x(QB.and_x(QB.field('Name').eq('Acme Corporation'), 
                       QB.fieldExpr('Type','=','Prospect')
                       )
@@ -27,7 +38,7 @@
   SELECT Name FROM Account WHERE Name = 'Acme Corporation' AND Type = 'Prospect'
   ```
 
-**Example 2**
+**Example 3**
 
   ```apex
   QB.select_x('Name')
@@ -42,7 +53,7 @@
   SELECT Name FROM Account WHERE Name = 'Acme Corporation' AND (Type = 'Prospect' OR Type = 'Customer')
   ```
   
-**Example 3**
+**Example 4**
 
   ```apex
   QB.select_x('Name')
