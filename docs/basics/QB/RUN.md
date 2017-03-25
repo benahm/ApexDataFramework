@@ -19,3 +19,12 @@ Some examples below
                             .limitTo(10)
                             .getList();
   ```
+
+2. **Get a list of aggregate results**
+
+  ```apex
+  List<AggregateResult> accList = QB.select_x(QB.count('Name'))
+                                    .from_x('Account')
+                                    .groupBy('Type')
+                                    .getAggrList();
+  ```
