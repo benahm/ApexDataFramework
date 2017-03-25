@@ -15,7 +15,7 @@
 * @description Test Class for the Query Builder
 */
 @isTest
-private class DAOTest {
+private class DMTest {
 	
 	@isTest 
 	static void findTest() {

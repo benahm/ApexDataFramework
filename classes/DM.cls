@@ -1,9 +1,9 @@
 /**
 * @author benahm
 * @date 2017
-* @description DAO Class
+* @description DM Class
 */
-public class DAO{
+public class DM{
 
 	public static IBase base(String sObjectName){
 		return new Base(sObjectName);
@@ -212,7 +212,7 @@ public class DAO{
 
 	}
 
-	public class Meta /*implements INT_DAO_META*/{
+	public class Meta /*implements */{
 		/* Request handle meta data */
 	}
 
