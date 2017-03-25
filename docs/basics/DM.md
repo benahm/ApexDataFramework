@@ -7,10 +7,10 @@ The DM class offers the powerful find method to query the Salesforce database wi
 
 The find method offers a flexible way to query data in Salesforce
 
-* find(ids, fieldNames)
-* find(fieldName, fieldValues, fieldNames)
-* find(Condition, fieldNames) 
-* find(Query)
+* _find(ids, fieldNames)_
+* _find(fieldName, fieldValues, fieldNames)_
+* _find(Condition, fieldNames)_
+* _find(Query)_
 
 See the examples below
 
