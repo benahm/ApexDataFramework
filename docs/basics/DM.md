@@ -12,7 +12,7 @@ The find method offers a flexible way to query data in Salesforce
 * _find(Condition, fieldNames)_
 * _find(Query)_
 
-See the examples below
+Some examples below
 
 #### Basic examples
 
