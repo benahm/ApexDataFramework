@@ -1,3 +1,3 @@
-## Data Access Object
+## Data Mapper
 
 * [Find method](FIND.md)
