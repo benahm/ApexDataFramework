@@ -9,7 +9,7 @@
   ```sql
   SELECT Name FROM Account ORDER BY Name
   ```
-### 2. Order by a field with options
+### 2. Order by a field with order type
   ```apex
   QB.select_x('Name')
     .from_x('Account')
@@ -18,9 +18,9 @@
   ```sql
   SELECT Name FROM Account ORDER BY Name ASC NULLS LAST
   ```
-### 3. Order by multiple fields with options  
+### 3. Order by multiple fields with order type  
   ```apex
-  QB.select_x('Name,Type')
+  QB.select_x('Name')
     .from_x('Account')
     .orderBy('Name',QB.ascNullsLast())
     .addOrder('Type'.QB.descNullsFirst())
