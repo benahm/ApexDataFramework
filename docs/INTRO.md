@@ -9,3 +9,7 @@ The framwework holds in two main classes QB & DM
 *QB* : Query Builder let you build soql queries 
 
 *DM* : Data Mapper offers methods to access Salesforce data
+
+## Next
+
+* [Basics](basics) 
