@@ -22,6 +22,6 @@
       * [Limit keyword](/docs/advanced/QB/query/LIMIT.md)
       * [Offset Keyword](/docs/advanced/QB/query/OFFSET.md)
     * [Running a Query](/docs/advanced/QB/RUN.md)
-  * [Data Access Object](/docs/advanced/DAO/README.md)
+  * [Data Mapper](/docs/advanced/DAO/README.md)
     * [Find method](/docs/advanced/DAO/FIND.md)
 * [FAQ](/docs/FAQ.md)
