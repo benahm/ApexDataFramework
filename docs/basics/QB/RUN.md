@@ -31,7 +31,7 @@ Some examples below
 3. **Get a map of sObjects**
 
   ```apex
-  Map<Id,Account> aMap = QB.select_x('Name')
+  Map<Id,SObject> aMap = QB.select_x('Name')
                           .from_x('Account')
                           .limitTo(10)
                           .getList();
