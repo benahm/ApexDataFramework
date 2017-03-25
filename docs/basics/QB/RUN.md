@@ -13,25 +13,34 @@ Some examples below
 1. **Get a list of sObjects**
 
   ```apex
-  List<Account> accList = QB.select_x('Name')
-                            .from_x('Account')
-                            .limitTo(10)
-                            .getList();
+  List<Account> aList = QB.select_x('Name')
+                          .from_x('Account')
+                          .limitTo(10)
+                          .getList();
   ```
 
 2. **Get a list of aggregate results**
 
   ```apex
-  List<AggregateResult> accMap = QB.select_x(QB.count('Name'))
-                                    .from_x('Account')
-                                    .groupBy('Type')
-                                    .getList();
+  List<AggregateResult> aList = QB.select_x(QB.count('Name'))
+                                  .from_x('Account')
+                                  .groupBy('Type')
+                                  .getList();
+  ```
+  
+3. **Get a map of sObjects**
+
+  ```apex
+  Map<Id,Account> aMap = QB.select_x('Name')
+                          .from_x('Account')
+                          .limitTo(10)
+                          .getList();
   ```
 
 3. **Get a count**
 
   ```apex
-  Integer accCount = QB.select_x(QB.count())
-                                    .from_x('Account')
-                                    .getCount();
+  Integer aCount = QB.select_x(QB.count())
+                    .from_x('Account')
+                    .getCount();
   ```
