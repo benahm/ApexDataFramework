@@ -37,7 +37,7 @@ Some examples below
                           .getList();
   ```
 
-3. **Get a count**
+4. **Get a count**
 
   ```apex
   Integer aCount = QB.select_x(QB.count())
