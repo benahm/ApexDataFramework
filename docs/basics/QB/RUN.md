@@ -3,7 +3,6 @@
 Each query has the following methods, to run the query
 
 * _getList()_  : run a query and get a list of SObject
-* _getAggrList()_ : run an aggregate query and get a list of AggregateResult
 * _getMap()_ : run a query and get a map of Id and SObject 
 * _getCount()_ : run a count query and get and Integer
 
@@ -23,8 +22,16 @@ Some examples below
 2. **Get a list of aggregate results**
 
   ```apex
-  List<AggregateResult> accList = QB.select_x(QB.count('Name'))
+  List<AggregateResult> accMap = QB.select_x(QB.count('Name'))
                                     .from_x('Account')
                                     .groupBy('Type')
-                                    .getAggrList();
+                                    .getList();
+  ```
+
+3. **Get a count**
+
+  ```apex
+  Integer accCount = QB.select_x(QB.count())
+                                    .from_x('Account')
+                                    .getCount();
   ```
