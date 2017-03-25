@@ -1,7 +1,7 @@
 ## Basics
 This section will give you a quick overview of the framework with some basic examples 
 
-If you want to know further more about this framework please read the advanced section 
+If you want to know further more about this framework please read the [advanced](/docs/advanced/README.md) section 
 
 * [Query builder](QB/README.md)
   * [Building a Condition](QB/CONDITION.md)
