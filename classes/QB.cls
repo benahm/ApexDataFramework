@@ -305,7 +305,6 @@ public class QB {
 	*/
 	public interface IQuery{
 		List<SObject> getList();
-		List<AggregateResult> getAggrList();
 		Map<Id, SObject> getMap();
 		Integer getCount();
 		String toString();
@@ -765,10 +764,6 @@ public class QB {
 			List<SObject> resultList=new List<SObject>(Database.query(toString()));
 			clearBindVariables();
 			return resultList;
-		}
-
-		public List<AggregateResult> getAggrList(){
-			return (List<AggregateResult>)getList();
 		}
 
 		public map<Id,SObject> getMap(){

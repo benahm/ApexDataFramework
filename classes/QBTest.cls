@@ -623,14 +623,14 @@ private class QBTest {
 								.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest'))).getCount());
 
 		aggregateResult=QB.select_x(QB.count('Id')).from_x('ApexClass')
-						.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest'))).getAggrList();
+						.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest'))).getList();
 
 		System.assertNotEquals(null,aggregateResult);
 		System.assertNotEquals(null,aggregateResult.get(0));
 		System.assertEquals(2,aggregateResult.get(0).get('expr0'));
 
 		aggregateResult=QB.select_x(QB.count('Id').alias('MyCount')).from_x('ApexClass')
-						.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest'))).getAggrList();
+						.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest'))).getList();
 
 		System.assertNotEquals(null,aggregateResult);
 		System.assertNotEquals(null,aggregateResult.get(0));
@@ -638,7 +638,7 @@ private class QBTest {
 
 		aggregateResult=QB.select_x(QB.count('Id').alias('MyCount')).from_x('ApexClass')
 						.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')))
-						.groupBy('Name').getAggrList();
+						.groupBy('Name').getList();
 
 		System.assertNotEquals(null,aggregateResult);
 		System.assertNotEquals(null,aggregateResult.get(0));
@@ -650,7 +650,7 @@ private class QBTest {
 					.addField('Name')
 					.from_x('ApexClass')
 					.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')))
-					.groupBy('Name').getAggrList();
+					.groupBy('Name').getList();
 
 		System.assertNotEquals(null,aggregateResult);
 		System.assertNotEquals(null,aggregateResult.get(0));
@@ -664,7 +664,7 @@ private class QBTest {
 					.addField('Status')
 					.from_x('ApexClass')
 					.where_x(QB.or_x(QB.field('Name').eq('QB'),QB.field('Name').eq('QBTest')))
-					.groupBy('Status',QB.count('Name').gt(1)).getAggrList();
+					.groupBy('Status',QB.count('Name').gt(1)).getList();
 
 		System.assertNotEquals(null,aggregateResult);
 		System.assertNotEquals(null,aggregateResult.get(0));
