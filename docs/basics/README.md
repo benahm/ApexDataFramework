@@ -7,4 +7,4 @@ If you want to know further more about this framework please read the advanced s
   * [Building a Condition](QB/CONDITION.md)
   * [Building a Query](QB/QUERY.md)
   * [Running a Query](QB/RUN.md)
-* [Data Access Object](DAO.md)
+* [Data Mapper](DAO.md)
