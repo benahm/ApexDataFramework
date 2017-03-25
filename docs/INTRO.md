@@ -1,8 +1,8 @@
 # Introduction
 
-In big Salesforce project if you don't follow some basic rules you will rapidly end up with SOQL queries spread all around your classes
+In big Salesforce projects if you don't follow some basic rules you will rapidly end up with SOQL queries spread all around your classes
 
-Here we present a framework that will help you access your salesforce data without having to rewrite the same SOQL query each time
+Here we present you a framework that will help you access your salesforce data from a single point without having to rewrite the same SOQL query each time
 
 The framwework holds in two main classes QB & DM
 
