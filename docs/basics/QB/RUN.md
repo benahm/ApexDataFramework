@@ -2,9 +2,9 @@
 
 Each query has the following methods, to run the query
 
-* getList()  : run a query and get a list of SObject
-* getAggrList() : run an aggregate query and get a list of AggregateResult
-* getMap() : run a query and get a map of Id and SObject 
-* getCount() : run a count query and get and Integer
+* _getList()_  : run a query and get a list of SObject
+* _getAggrList()_ : run an aggregate query and get a list of AggregateResult
+* _getMap()_ : run a query and get a map of Id and SObject 
+* _getCount()_ : run a count query and get and Integer
 
 
