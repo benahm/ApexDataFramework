@@ -1,6 +1,6 @@
 ## Data Mapper
 
-The DM class offers the powerful find method to query the Salesforce database without writing SOQL queries 
+The DM class offers the powerful ``find`` method to query the Salesforce database without writing SOQL queries 
 
 
 ### Find method
