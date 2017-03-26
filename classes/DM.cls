@@ -5,7 +5,7 @@
 */
 public class DM{
 
-	public static IBase base(String sObjectName){
+	public static IBase Base(String sObjectName){
 		return new Base(sObjectName);
 	}
 
@@ -71,35 +71,40 @@ public class DM{
 
 	}
 
-	public virtual class Base implements IBase{
-		private final String sObjectName;
+	public class Base extends ABase{
+		private String sObjectName;
 
 		public Base(String sObjectName){
 			this.sObjectName=sObjectName;
 		}
 
+		public override String getSObjectName(){
+			return sObjectName;
+		}
+	}
+
+	public abstract class ABase implements IBase{
+
+		protected abstract String getSObjectName();
 
 		/* find a list */
 		public List<SObject> find(List<Id> ids){
-			return find(ids,'*',0);
+			return find(ids,'*',null);
 		}
 		public List<SObject> find(Set<Id> ids){
-			return find(new List<Id>(ids),'*',0);
+			return find(new List<Id>(ids),'*',null);
 		}
 		public List<SObject> find(Set<Id> ids, String fieldNames){
-			return find(new List<Id>(ids),fieldNames,0);
+			return find(new List<Id>(ids),fieldNames,null);
 		}
 		public List<SObject> find(List<Id> ids, String fieldNames){
-			return find(ids,fieldNames,0);
+			return find(ids,fieldNames,null);
 		}
 		public List<SObject> find(Set<Id> ids, String fieldNames, Integer limitOption){
-			return find(new List<Id>(ids),fieldNames,0);
+			return find(new List<Id>(ids),fieldNames,null);
 		}
 		public List<SObject> find(List<Id> ids, String fieldNames, Integer limitOption){
-			return QB.select_x(fieldNames)
-			  		 .from_x(sObjectName)
-		  			 .where_x('Id','=',QB.bind(ids))
-		  			 .getList();
+			return find('Id',ids,fieldNames,limitOption);
 		}
 		public List<SObject> find(String fieldName, Object value){
 			return find(fieldName,value,'*',null);
@@ -108,11 +113,7 @@ public class DM{
 			return find(fieldName,value,fieldNames,null);
 		}
 		public List<SObject> find(String fieldName, Object value, String fieldNames, Integer limitOption){
-				return QB.select_x(fieldNames)
-				  		 .from_x(sObjectName)
-			  			 .where_x(fieldName,'=',QB.bind(value))
-			  			 .limitTo(limitOption)
-			  			 .getList();
+			return find(QB.field(fieldName).eq(QB.bind(value)),fieldNames,limitOption);
 		}
 		public List<SObject> find(QB.IFieldCondition condition){
 			return find(condition,'*',null);
@@ -122,7 +123,7 @@ public class DM{
 		}
 		public List<SObject> find(QB.IFieldCondition condition, String fieldNames, Integer limitOption){
 			return QB.select_x(fieldNames)
-			  		 .from_x(sObjectName)
+			  		 .from_x(getSObjectName())
 		  			 .where_x(condition)
 		  			 .limitTo(limitOption)
 		  			 .getList();
@@ -177,7 +178,7 @@ public class DM{
 		/* find one record */
 		public SObject findOne(){
 			return getOne(QB.select_x('*')
-				  		 .from_x(sObjectName)
+				  		 .from_x(getSObjectName())
 			  			 .limitTo(1)
 			  			 .getList());
 		}
@@ -210,10 +211,6 @@ public class DM{
 			return listObj.get(0);
 		}
 
-	}
-
-	public class Meta /*implements */{
-		/* Request handle meta data */
 	}
 
 }
