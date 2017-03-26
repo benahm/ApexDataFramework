@@ -9,8 +9,6 @@
 
 -----
 
-A framework that holds in two classes
-
 ![overview](/docs/assets/overview.PNG)
 
 ### [Documentation](/docs/README.md)
