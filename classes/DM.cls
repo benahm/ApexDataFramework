@@ -12,62 +12,187 @@ public class DM{
 	public interface IBase{
 
 		/* find a list */
-
 		// find list by ids
-		List<SObject> find(List<Id> ids);
-		List<SObject> find(Set<Id> ids);
-		List<SObject> find(List<Id> ids, String fieldNames);
-		List<SObject> find(Set<Id> ids, String fieldNames);
-		List<SObject> find(List<Id> ids, String fieldNames, Integer limitOption);
-		List<SObject> find(Set<Id> ids, String fieldNames, Integer limitOption);
+		List<SObject> findById(List<Id> ids);
+		List<SObject> findById(Set<Id> ids);
+		List<SObject> findById(List<Id> ids, String fieldNames);
+		List<SObject> findById(Set<Id> ids, String fieldNames);
+		List<SObject> findById(List<Id> ids, String fieldNames, Integer limitOption);
+		List<SObject> findById(Set<Id> ids, String fieldNames, Integer limitOption);
 
 		// find list by a specific field
-		List<SObject> find(String fieldName, Object value);
-		List<SObject> find(String fieldName, Object value, String fieldNames);
-		List<SObject> find(String fieldName, Object value, String fieldNames,Integer limitOption);
+		List<SObject> findBy(String fieldName, Object value);
+		List<SObject> findBy(String fieldName, Object value, String fieldNames);
+		List<SObject> findBy(String fieldName, Object value, String fieldNames,Integer limitOption);
 		
 		// find a list by condition
-		List<SObject> find(QB.IFieldCondition condition);
-		List<SObject> find(QB.IFieldCondition condition, String fieldNames);
-		List<SObject> find(QB.IFieldCondition condition, String fieldNames, Integer limitOption);
+		List<SObject> findBy(QB.IFieldCondition condition);
+		List<SObject> findBy(QB.IFieldCondition condition, String fieldNames);
+		List<SObject> findBy(QB.IFieldCondition condition, String fieldNames, Integer limitOption);
 
 		// find a list by query
-		List<SObject> find(QB.IQuery query);
+		List<SObject> findBy(QB.IQuery query);
 
 
 		/* find a map */
-
 		// find list by ids
-		Map<Id,SObject> findMap(List<Id> ids);
-		Map<Id,SObject> findMap(Set<Id> ids);
-		Map<Id,SObject> findMap(List<Id> ids, String fieldNames);
-		Map<Id,SObject> findMap(Set<Id> ids, String fieldNames);
-		Map<Id,SObject> findMap(List<Id> ids, String fieldNames, Integer limitOption);
-		Map<Id,SObject> findMap(Set<Id> ids, String fieldNames, Integer limitOption);
+		Map<Id,SObject> findMapById(List<Id> ids);
+		Map<Id,SObject> findMapById(Set<Id> ids);
+		Map<Id,SObject> findMapById(List<Id> ids, String fieldNames);
+		Map<Id,SObject> findMapById(Set<Id> ids, String fieldNames);
+		Map<Id,SObject> findMapById(List<Id> ids, String fieldNames, Integer limitOption);
+		Map<Id,SObject> findMapById(Set<Id> ids, String fieldNames, Integer limitOption);
 
 		// find list by a specific field
-		Map<Id,SObject> findMap(String fieldName, Object value);
-		Map<Id,SObject> findMap(String fieldName, Object value, String fieldNames);
-		Map<Id,SObject> findMap(String fieldName, Object value, String fieldNames,Integer limitOption);
+		Map<Id,SObject> findMapBy(String fieldName, Object value);
+		Map<Id,SObject> findMapBy(String fieldName, Object value, String fieldNames);
+		Map<Id,SObject> findMapBy(String fieldName, Object value, String fieldNames,Integer limitOption);
 		
 		// find a list by condition
-		Map<Id,SObject> findMap(QB.IFieldCondition condition);
-		Map<Id,SObject> findMap(QB.IFieldCondition condition, String fieldNames);
-		Map<Id,SObject> findMap(QB.IFieldCondition condition, String fieldNames, Integer limitOption);
+		Map<Id,SObject> findMapBy(QB.IFieldCondition condition);
+		Map<Id,SObject> findMapBy(QB.IFieldCondition condition, String fieldNames);
+		Map<Id,SObject> findMapBy(QB.IFieldCondition condition, String fieldNames, Integer limitOption);
 
 		// find a list by query
-		Map<Id,SObject> findMap(QB.IQuery query);
+		Map<Id,SObject> findMapBy(QB.IQuery query);
 
 
 		/* find one record */
 		SObject findOne();
-		SObject findOne(List<Id> id);
-		SObject findOne(List<Id> id, String fieldNames);
-		SObject findOne(String fieldName, Object value);
-		SObject findOne(String fieldName, Object value, String fieldNames);
-		SObject findOne(QB.IFieldCondition condition);
-		SObject findOne(QB.IFieldCondition condition, String fieldNames);
-		SObject findOne(QB.IQuery query);
+		SObject findOneById(List<Id> id);
+		SObject findOneById(List<Id> id, String fieldNames);
+		SObject findOneBy(String fieldName, Object value);
+		SObject findOneBy(String fieldName, Object value, String fieldNames);
+		SObject findOneBy(QB.IFieldCondition condition);
+		SObject findOneBy(QB.IFieldCondition condition, String fieldNames);
+		SObject findOneBy(QB.IQuery query);
+
+	}
+
+	public abstract class ABase implements IBase{
+
+		protected abstract String getSObjectName();
+
+		/* find a list */
+		public List<SObject> findById(List<Id> ids){
+			return findById(ids,'*',null);
+		}
+		public List<SObject> findById(Set<Id> ids){
+			return findById(new List<Id>(ids),'*',null);
+		}
+		public List<SObject> findById(Set<Id> ids, String fieldNames){
+			return findById(new List<Id>(ids),fieldNames,null);
+		}
+		public List<SObject> findById(List<Id> ids, String fieldNames){
+			return findById(ids,fieldNames,null);
+		}
+		public List<SObject> findById(Set<Id> ids, String fieldNames, Integer limitOption){
+			return findById(new List<Id>(ids),fieldNames,null);
+		}
+		public List<SObject> findById(List<Id> ids, String fieldNames, Integer limitOption){
+			return findBy('Id',ids,fieldNames,limitOption);
+		}
+		public List<SObject> findBy(String fieldName, Object value){
+			return findBy(fieldName,value,'*',null);
+		}
+		public List<SObject> findBy(String fieldName, Object value, String fieldNames){
+			return findBy(fieldName,value,fieldNames,null);
+		}
+		public List<SObject> findBy(String fieldName, Object value, String fieldNames, Integer limitOption){
+			return findBy(QB.field(fieldName).eq(QB.bind(value)),fieldNames,limitOption);
+		}
+		public List<SObject> findBy(QB.IFieldCondition condition){
+			return findBy(condition,'*',null);
+		}
+		public List<SObject> findBy(QB.IFieldCondition condition, String fieldNames){
+			return findBy(condition,fieldNames,null);
+		}
+		public List<SObject> findBy(QB.IFieldCondition condition, String fieldNames, Integer limitOption){
+			return QB.select_x(fieldNames)
+			  		 .from_x(getSObjectName())
+		  			 .where_x(condition)
+		  			 .limitTo(limitOption)
+		  			 .getList();
+		}
+		public List<SObject> findBy(QB.IQuery query){
+			return query.getList();
+		}
+
+
+		/* find a map */
+		public Map<Id,SObject> findMapById(List<Id> ids){
+			return new Map<Id,SObject>(findById(Ids));
+		}
+		public Map<Id,SObject> findMapById(Set<Id> ids){
+			return new Map<Id,SObject>(findById(Ids));
+		}
+		public Map<Id,SObject> findMapById(Set<Id> ids, String fieldNames){
+			return new Map<Id,SObject>(findById(Ids,fieldNames));
+		}
+		public Map<Id,SObject> findMapById(List<Id> ids, String fieldNames){
+			return new Map<Id,SObject>(findById(Ids,fieldNames));
+		}
+		public Map<Id,SObject> findMapById(Set<Id> ids, String fieldNames, Integer limitOption){
+			return new Map<Id,SObject>(findById(Ids,fieldNames,limitOption));
+		}
+		public Map<Id,SObject> findMapById(List<Id> ids, String fieldNames, Integer limitOption){
+			return new Map<Id,SObject>(findById(Ids,fieldNames,limitOption));
+		}
+		public Map<Id,SObject> findMapBy(String fieldName, Object value){
+			return new Map<Id,SObject>(findBy(fieldName,value));
+		}
+		public Map<Id,SObject> findMapBy(String fieldName, Object value, String fieldNames){
+			return new Map<Id,SObject>(findBy(fieldName,value,fieldNames));
+		}
+		public Map<Id,SObject> findMapBy(String fieldName, Object value, String fieldNames, Integer limitOption){
+			return new Map<Id,SObject>(findBy(fieldName,value,fieldNames,limitOption));
+		}
+		public Map<Id,SObject> findMapBy(QB.IFieldCondition condition){
+			return new Map<Id,SObject>(findBy(condition));
+		}
+		public Map<Id,SObject> findMapBy(QB.IFieldCondition condition, String fieldNames){
+			return new Map<Id,SObject>(findBy(condition,fieldNames));
+		}
+		public Map<Id,SObject> findMapBy(QB.IFieldCondition condition, String fieldNames, Integer limitOption){
+			return new Map<Id,SObject>(findBy(condition,fieldNames,limitOption));
+		}
+		public Map<Id,SObject> findMapBy(QB.IQuery query){
+			return new Map<Id,SObject>(findBy(query));
+		}
+
+
+		/* find one record */
+		public SObject findOne(){
+			return getOne(findBy((QB.IFieldCondition)null,'*',1));
+		}
+		public SObject findOneById(List<Id> ids){
+			return findOneById(ids,'*');
+		}
+		public SObject findOneById(List<Id> ids, String fieldNames){
+			return getOne(findById(ids,fieldNames));
+		}
+		public SObject findOneBy(String fieldName, Object value){
+			return findOneBy(fieldName,value,'*');
+		}
+		public SObject findOneBy(String fieldName, Object value, String fieldNames){
+			return getOne(findBy(fieldName,value,fieldNames));
+		}
+		public SObject findOneBy(QB.IFieldCondition condition){
+			return findOneBy(condition,'*');
+		}
+		public SObject findOneBy(QB.IFieldCondition condition, String fieldNames){
+			return getOne(findBy(condition,fieldNames));
+		}
+		public SObject findOneBy(QB.IQuery query){
+			return getOne(findBy(query));
+		}
+
+
+		/* private methods */
+		private SObject getOne(List<SObject> listObj){
+			if(listObj.isEmpty()) return null;
+			return listObj.get(0);
+		}
 
 	}
 
@@ -81,136 +206,6 @@ public class DM{
 		public override String getSObjectName(){
 			return sObjectName;
 		}
-	}
-
-	public abstract class ABase implements IBase{
-
-		protected abstract String getSObjectName();
-
-		/* find a list */
-		public List<SObject> find(List<Id> ids){
-			return find(ids,'*',null);
-		}
-		public List<SObject> find(Set<Id> ids){
-			return find(new List<Id>(ids),'*',null);
-		}
-		public List<SObject> find(Set<Id> ids, String fieldNames){
-			return find(new List<Id>(ids),fieldNames,null);
-		}
-		public List<SObject> find(List<Id> ids, String fieldNames){
-			return find(ids,fieldNames,null);
-		}
-		public List<SObject> find(Set<Id> ids, String fieldNames, Integer limitOption){
-			return find(new List<Id>(ids),fieldNames,null);
-		}
-		public List<SObject> find(List<Id> ids, String fieldNames, Integer limitOption){
-			return find('Id',ids,fieldNames,limitOption);
-		}
-		public List<SObject> find(String fieldName, Object value){
-			return find(fieldName,value,'*',null);
-		}
-		public List<SObject> find(String fieldName, Object value, String fieldNames){
-			return find(fieldName,value,fieldNames,null);
-		}
-		public List<SObject> find(String fieldName, Object value, String fieldNames, Integer limitOption){
-			return find(QB.field(fieldName).eq(QB.bind(value)),fieldNames,limitOption);
-		}
-		public List<SObject> find(QB.IFieldCondition condition){
-			return find(condition,'*',null);
-		}
-		public List<SObject> find(QB.IFieldCondition condition, String fieldNames){
-			return find(condition,fieldNames,null);
-		}
-		public List<SObject> find(QB.IFieldCondition condition, String fieldNames, Integer limitOption){
-			return QB.select_x(fieldNames)
-			  		 .from_x(getSObjectName())
-		  			 .where_x(condition)
-		  			 .limitTo(limitOption)
-		  			 .getList();
-		}
-		public List<SObject> find(QB.IQuery query){
-			return query.getList();
-		}
-
-
-		/* find a map */
-		public Map<Id,SObject> findMap(List<Id> ids){
-			return new Map<Id,SObject>(find(Ids));
-		}
-		public Map<Id,SObject> findMap(Set<Id> ids){
-			return new Map<Id,SObject>(find(Ids));
-		}
-		public Map<Id,SObject> findMap(Set<Id> ids, String fieldNames){
-			return new Map<Id,SObject>(find(Ids,fieldNames));
-		}
-		public Map<Id,SObject> findMap(List<Id> ids, String fieldNames){
-			return new Map<Id,SObject>(find(Ids,fieldNames));
-		}
-		public Map<Id,SObject> findMap(Set<Id> ids, String fieldNames, Integer limitOption){
-			return new Map<Id,SObject>(find(Ids,fieldNames,limitOption));
-		}
-		public Map<Id,SObject> findMap(List<Id> ids, String fieldNames, Integer limitOption){
-			return new Map<Id,SObject>(find(Ids,fieldNames,limitOption));
-		}
-		public Map<Id,SObject> findMap(String fieldName, Object value){
-			return new Map<Id,SObject>(find(fieldName,value));
-		}
-		public Map<Id,SObject> findMap(String fieldName, Object value, String fieldNames){
-			return new Map<Id,SObject>(find(fieldName,value,fieldNames));
-		}
-		public Map<Id,SObject> findMap(String fieldName, Object value, String fieldNames, Integer limitOption){
-			return new Map<Id,SObject>(find(fieldName,value,fieldNames,limitOption));
-		}
-		public Map<Id,SObject> findMap(QB.IFieldCondition condition){
-			return new Map<Id,SObject>(find(condition));
-		}
-		public Map<Id,SObject> findMap(QB.IFieldCondition condition, String fieldNames){
-			return new Map<Id,SObject>(find(condition,fieldNames));
-		}
-		public Map<Id,SObject> findMap(QB.IFieldCondition condition, String fieldNames, Integer limitOption){
-			return new Map<Id,SObject>(find(condition,fieldNames,limitOption));
-		}
-		public Map<Id,SObject> findMap(QB.IQuery query){
-			return new Map<Id,SObject>(find(query));
-		}
-
-
-		/* find one record */
-		public SObject findOne(){
-			return getOne(QB.select_x('*')
-				  		 .from_x(getSObjectName())
-			  			 .limitTo(1)
-			  			 .getList());
-		}
-		public SObject findOne(List<Id> ids){
-			return findOne(ids,'*');
-		}
-		public SObject findOne(List<Id> ids, String fieldNames){
-			return getOne(find(ids,fieldNames));
-		}
-		public SObject findOne(String fieldName, Object value){
-			return findOne(fieldName,value,'*');
-		}
-		public SObject findOne(String fieldName, Object value, String fieldNames){
-			return getOne(find(fieldName,value,fieldNames));
-		}
-		public SObject findOne(QB.IFieldCondition condition){
-			return findOne(condition,'*');
-		}
-		public SObject findOne(QB.IFieldCondition condition, String fieldNames){
-			return getOne(find(condition,fieldNames));
-		}
-		public SObject findOne(QB.IQuery query){
-			return getOne(find(query));
-		}
-
-
-		/* private methods */
-		private SObject getOne(List<SObject> listObj){
-			if(listObj.isEmpty()) return null;
-			return listObj.get(0);
-		}
-
 	}
 
 }
