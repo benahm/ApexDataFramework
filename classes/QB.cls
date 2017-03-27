@@ -789,7 +789,7 @@ public class QB {
 		}
 
 		public ISelectWhereQuery where_x(IFieldCondition cnd){
-			this.sQuery+=' WHERE '+cnd;
+			if(cnd != null) this.sQuery+=' WHERE '+cnd;
 			return this;
 		}
 		public ISelectWhereQuery where_x(String fieldName, Op operator, Object value){
@@ -821,9 +821,8 @@ public class QB {
 			return groupBy(new List<String>{groupByFunc+''},havingCtr);
 		}
 		public ISelectGroupByQuery groupBy(List<String> groupByFields, IHavingCondition havingCtr){
-			this.sQuery+=' GROUP BY '+String.join(groupByFields, ',');
-			if(havingCtr!=null)
-				this.sQuery+=' HAVING '+havingCtr;
+			if(groupByFields != null) this.sQuery+=' GROUP BY '+String.join(groupByFields, ',');
+			if(havingCtr!=null) this.sQuery+=' HAVING '+havingCtr;
 			return this;
 		}
 
@@ -837,9 +836,8 @@ public class QB {
 			return orderBy(new List<String>{orderByField},orderType);
 		}
 		public ISelectOrderByQuery orderBy(List<String> orderByFields, OrderType orderType){
-			this.sQuery+=' ORDER BY '+String.join(orderByFields,',');
-			if(orderType != null)
-				this.sQuery+=orderType;
+			if(orderByFields != null) this.sQuery+=' ORDER BY '+String.join(orderByFields,',');
+			if(orderType != null) this.sQuery+=orderType;
 			return this;
 		}
 		public ISelectOrderByQuery addOrder(String orderByField){
@@ -852,23 +850,18 @@ public class QB {
 			return addOrder(new List<String>{orderByField},orderType);
 		}
 		public ISelectOrderByQuery addOrder(List<String> orderByFields, OrderType orderType){
-			this.sQuery+=', '+String.join(orderByFields,',');
-			if(orderType != null)
-				this.sQuery+=orderType;
+			if(orderByFields != null) this.sQuery+=', '+String.join(orderByFields,',');
+			if(orderType != null) this.sQuery+=orderType;
 			return this;
 		}
 
 		public ISelectLimitQuery limitTo(Integer lmt){
-			if(lmt != null){
-				this.sQuery+=' LIMIT '+lmt;
-			}
+			if(lmt != null) this.sQuery+=' LIMIT '+lmt;
 			return this;
 		}
 
 		public ISelectOffsetQuery offset(Integer ofst){
-			if(ofst != null){
-				this.sQuery+=' OFFSET '+ofst;
-			}
+			if(ofst != null) this.sQuery+=' OFFSET '+ofst;
 			return this;
 		}
 
