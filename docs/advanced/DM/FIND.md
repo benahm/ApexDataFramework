@@ -49,10 +49,13 @@ Find method offers different ways to query salesforce data
 ### Find a map of SObject
 
 <table>
+<thead>
 <tr>
   <th>Method</th>
   <th>Supported signatures</th>
 </tr>
+</thead>
+<tbody>
 <tr>
   <td><em>findMapById</em></td>
   <td>
@@ -83,19 +86,32 @@ Find method offers different ways to query salesforce data
 
 
 <table>
+<thead>
 <tr>
-  <td><em>findOne</em></td>
-  <td>find one record</td>
+  <th>Method</th>
+  <th>Supported signatures</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><em>findOneById</em></td>
   <td>
 <pre lang='apex'> 
 * findOne()  // select all fields where limit is 1 
-* findOne(ids) // select all fields where Id in ids
-* findOne(ids, fieldNames) // select fieldNames where Id in ids
-* findOne(fieldName, fieldValue) // select all fields where fieldName is equal to fieldValue
-* findOne(fieldName, fieldValue, fieldNames) // select fieldNames where fieldName is equal to fieldValue
-* findOne(Condition) // select all fields where condition is true
-* findOne(Condition, fieldNames) // select fieldNames where condition is true
-* findOne(Query) // get one from Query results
+* findOneById(ids) // select all fields where Id in ids
+* findOneById(ids, fieldNames) // select fieldNames where Id in ids
+</pre>  
+  </td>
+</tr>
+<tr>
+  <td><em>findOneBy</em></td>
+  <td>
+<pre lang='apex'> 
+* findOneBy(fieldName, fieldValue) // select all fields where fieldName is equal to fieldValue
+* findOneBy(fieldName, fieldValue, fieldNames) // select fieldNames where fieldName is equal to fieldValue
+* findOneBy(Condition) // select all fields where condition is true
+* findOneBy(Condition, fieldNames) // select fieldNames where condition is true
+* findOneBy(Query) // get one from Query results
 </pre>  
   </td>
 </tr>
