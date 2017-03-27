@@ -109,7 +109,6 @@ Find method offers different ways to query salesforce data
   <td><em>findOneById</em></td>
   <td>
 <pre lang='apex'> 
-* findOne()  // select all fields where limit is 1 
 * findOneById(ids) // select all fields where Id in ids
 * findOneById(ids, fieldNames) // select fieldNames where Id in ids
 </pre>  
