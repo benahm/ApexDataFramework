@@ -2,7 +2,7 @@
 
 Find method offers different ways to query salesforce data 
 
-### Find a list of SObject
+### Find a list of sObject
 
 <table>
 <thead>
@@ -46,7 +46,7 @@ Find method offers different ways to query salesforce data
 
 -----
 
-### Find a map of SObject
+### Find a map of sObject
 
 <table>
 <thead>
@@ -84,6 +84,8 @@ Find method offers different ways to query salesforce data
 </tr>
 </table>
 
+
+### Find an sObject
 
 <table>
 <thead>
