@@ -2,53 +2,87 @@
 
 Find method offers different ways to query salesforce data 
 
+### Find a list of SObject
 
 <table>
 <thead>
 <tr>
   <th>Method</th>
-  <th>Description</th>
   <th>Supported signatures</th>
 </tr>
 </thead>
-<tbody><tr>
-  <td><em>find</em></td>
-  <td>find a list</td>
+<tbody>
+<tr>
+  <td>
+  <em>findById</em>
+  </td>
   <td>
 <pre lang='apex'>  
-* find(ids) // select all fields where Id in ids
-* find(ids, fieldNames) // select fieldNames where Id in ids
-* find(ids, fieldNames, limitOption) // select fieldNames where Id in ids limit to limitOption
-* find(fieldName, fieldValues) // select all fields where fieldName in fieldValues
-* find(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
-* find(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
-* find(Condition) // select all fields where condition is true
-* find(Condition, fieldNames) // select fieldNames where condition is true
-* find(Condition, fieldNames, limitOption) // select fieldNames where condition is true limit to limitOption
-* find(Query) // get Query results
+* findById(ids) // select all fields where Id in ids
+* findById(ids, fieldNames) // select fieldNames where Id in ids
+* findById(ids, fieldNames, limitOption) // select fieldNames where Id in ids limit to limitOption
 </pre>
   </td>
 </tr>
-<tr></tr>
 <tr>
-  <td><em>findMap</em></td>
-  <td>find a map</td>
+</tr>
+<tr>
+  <td>
+  <em>findBy</em>
+  </td>
+  <td>
+<pre lang='apex'>  
+* findBy(fieldName, fieldValues) // select all fields where fieldName in fieldValues
+* findBy(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
+* findBy(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
+* findBy(Condition) // select all fields where condition is true
+* findBy(Condition, fieldNames) // select fieldNames where condition is true
+* findBy(Condition, fieldNames, limitOption) // select fieldNames where condition is true limit to limitOption
+* findBy(Query) // get Query results
+</pre>
+  </td>
+</tr>
+</table>
+
+-----
+
+### Find a map of SObject
+
+<table>
+<tr>
+  <th>Method</th>
+  <th>Supported signatures</th>
+</tr>
+<tr>
+  <td><em>findMapById</em></td>
   <td>
 <pre lang='apex'> 
-* findMap(ids) // select all fields where Id in ids
-* findMap(ids, fieldNames) // select fieldNames where Id in ids
-* findMap(ids, fieldNames, limitOption) // select fieldNames where Id in ids limit to limitOption
-* findMap(fieldName, fieldValues) // select all fields where fieldName in fieldValues
-* findMap(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
-* findMap(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
-* findMap(Condition) // select all fields where condition is true
-* findMap(Condition, fieldNames) // select fieldNames where condition is true 
-* findMap(Condition, fieldNames, limitOption) // select fieldNames where condition is true limit to limitOption
-* findMap(Query) // get Query results
+* findMapById(ids) // select all fields where Id in ids
+* findMapById(ids, fieldNames) // select fieldNames where Id in ids
+* findMapById(ids, fieldNames, limitOption) // select fieldNames where Id in ids limit to limitOption
 </pre>
   </td>
 </tr>
-<tr></tr>
+<tr>
+</tr>
+<tr>
+  <td><em>findMapBy</em></td>
+  <td>
+<pre lang='apex'> 
+* findMapBy(fieldName, fieldValues) // select all fields where fieldName in fieldValues
+* findMapBy(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
+* findMapBy(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
+* findMapBy(Condition) // select all fields where condition is true
+* findMapBy(Condition, fieldNames) // select fieldNames where condition is true 
+* findMapBy(Condition, fieldNames, limitOption) // select fieldNames where condition is true limit to limitOption
+* findMapBy(Query) // get Query results
+</pre>
+  </td>
+</tr>
+</table>
+
+
+<table>
 <tr>
   <td><em>findOne</em></td>
   <td>find one record</td>
