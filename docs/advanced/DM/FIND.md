@@ -21,6 +21,7 @@ Find method offers different ways to query salesforce data
 * findById(ids) // select all fields where Id in ids
 * findById(ids, fieldNames) // select fieldNames where Id in ids
 * findById(ids, fieldNames, limitOption) // select fieldNames where Id in ids limit to limitOption
+* findById(ids, fieldNames, whereOption) // select fieldNames where Id in ids with the whereOption
 </pre>
   </td>
 </tr>
