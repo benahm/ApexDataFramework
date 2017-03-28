@@ -24,4 +24,6 @@
     * [Running a Query](/docs/advanced/QB/RUN.md)
   * [Data Mapper](/docs/advanced/DM/README.md)
     * [Find method](/docs/advanced/DM/FIND.md)
+* [Usage](/docs/USAGE.md)
+* [Contributing](/docs/CONTRIBUTE.md)
 * [FAQ](/docs/FAQ.md)
