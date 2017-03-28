@@ -7,3 +7,7 @@
   ```sql
   SELECT Id FROM Account OFFSET 100
   ```
+
+## Next
+
+* [Advanced](../RUN.md) 
