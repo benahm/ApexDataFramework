@@ -26,7 +26,7 @@
 
   ```apex
   public class DM_Account {
-    public static final Base base = new DM.Base();
+    public static final Base base = new DM.Base('Account');
 
     /* custom methods */
     public List<Account> findByIdWithContacts(List<Id> ids){
