@@ -20,7 +20,6 @@ Find method offers different ways to query salesforce data
 <pre lang='apex'>  
 * findById(ids) // select all fields where Id in ids
 * findById(ids, fieldNames) // select fieldNames where Id in ids
-* findById(ids, fieldNames, limitOption) // select fieldNames where Id in ids limit to limitOption
 * findById(ids, fieldNames, whereOption) // select fieldNames where Id in ids with the whereOption
 </pre>
   </td>
@@ -38,7 +37,7 @@ Find method offers different ways to query salesforce data
 * findBy(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
 * findBy(Condition) // select all fields where condition is true
 * findBy(Condition, fieldNames) // select fieldNames where condition is true
-* findBy(Condition, fieldNames, limitOption) // select fieldNames where condition is true limit to limitOption
+* findBy(Condition, fieldNames, whereOption) // select fieldNames where condition is true with the whereOption
 * findBy(Query) // get Query results
 </pre>
   </td>
@@ -63,7 +62,7 @@ Find method offers different ways to query salesforce data
 <pre lang='apex'> 
 * findMapById(ids) // select all fields where Id in ids
 * findMapById(ids, fieldNames) // select fieldNames where Id in ids
-* findMapById(ids, fieldNames, limitOption) // select fieldNames where Id in ids limit to limitOption
+* findMapById(ids, fieldNames, whereOption) // select fieldNames where Id in ids with the whereOption
 </pre>
   </td>
 </tr>
@@ -78,7 +77,7 @@ Find method offers different ways to query salesforce data
 * findMapBy(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
 * findMapBy(Condition) // select all fields where condition is true
 * findMapBy(Condition, fieldNames) // select fieldNames where condition is true 
-* findMapBy(Condition, fieldNames, limitOption) // select fieldNames where condition is true limit to limitOption
+* findMapBy(Condition, fieldNames, whereOption) // select fieldNames where condition is true with the whereOption
 * findMapBy(Query) // get Query results
 </pre>
   </td>
