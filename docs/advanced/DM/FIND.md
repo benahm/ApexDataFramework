@@ -34,7 +34,7 @@ Find method offers different ways to query salesforce data
 <pre lang='apex'>  
 * findBy(fieldName, fieldValues) // select all fields where fieldName in fieldValues
 * findBy(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
-* findBy(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
+* findBy(fieldName, fieldValues, fieldNames, whereOption) // select fieldNames where fieldName in fieldValues with the whereOption
 * findBy(Condition) // select all fields where condition is true
 * findBy(Condition, fieldNames) // select fieldNames where condition is true
 * findBy(Condition, fieldNames, whereOption) // select fieldNames where condition is true with the whereOption
@@ -74,7 +74,7 @@ Find method offers different ways to query salesforce data
 <pre lang='apex'> 
 * findMapBy(fieldName, fieldValues) // select all fields where fieldName in fieldValues
 * findMapBy(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
-* findMapBy(fieldName, fieldValues, fieldNames, limitOption) // select fieldNames where fieldName in fieldValues limit to limitOption
+* findMapBy(fieldName, fieldValues, fieldNames, whereOption) // select fieldNames where fieldName in fieldValues with the whereOption
 * findMapBy(Condition) // select all fields where condition is true
 * findMapBy(Condition, fieldNames) // select fieldNames where condition is true 
 * findMapBy(Condition, fieldNames, whereOption) // select fieldNames where condition is true with the whereOption
