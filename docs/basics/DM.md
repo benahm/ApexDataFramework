@@ -2,10 +2,11 @@
 
 The DM class offers the powerful ``find`` method to query the Salesforce database without writing SOQL queries 
 
+For more advanced examples please see the [advanced section](/docs/advanced/DM/FIND.md)
 
 ### Find method
 
-The find method offers a flexible way to query data in Salesforce
+The find method offers a flexible way to query data in Salesforce here is an introduction
 
 * _findById(ids, fieldNames)_
 * _findBy(fieldName, fieldValues, fieldNames)_
