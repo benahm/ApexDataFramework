@@ -33,7 +33,8 @@ Access custom methods :
   ```
 
 -----
-  
+
+### Pattern 2
 
   ```apex
   public class DM_Account {
