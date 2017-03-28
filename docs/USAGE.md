@@ -1,5 +1,6 @@
 ## Usage
 
+### Pattern 1
 
   ```apex
   public class DM_Account {
@@ -19,7 +20,17 @@
   }
   ```
 
+Access base methods :
+
+  ```apex
+  List<Account> listAccounts=DM_Account.base.findById(accountIds);
+  ```
   
+Access custom methods :
+
+  ```apex
+  List<Account> listAccounts=DM_Account.base.findByIdWithContacts(accountIds);
+  ```
 
 -----
   
@@ -34,4 +45,16 @@
     }
 
   }
+  ```
+
+Access base methods :
+
+  ```apex
+  List<Account> listAccounts=DM_Account.base.findById(accountIds);
+  ```
+  
+Access custom methods :
+
+  ```apex
+  List<Account> listAccounts=DM_Account.findByIdWithContacts(accountIds);
   ```
