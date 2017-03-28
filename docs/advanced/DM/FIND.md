@@ -20,7 +20,7 @@ Find method offers different ways to query salesforce data
 <pre lang='apex'>  
 * findById(ids) // select all fields where Id in ids
 * findById(ids, fieldNames) // select fieldNames where Id in ids
-* findById(ids, fieldNames, whereOption) // select fieldNames where Id in ids with the whereOption
+* findById(ids, fieldNames, appendOptions) // select fieldNames where Id in ids with the appendOptions
 </pre>
   </td>
 </tr>
@@ -34,10 +34,10 @@ Find method offers different ways to query salesforce data
 <pre lang='apex'>  
 * findBy(fieldName, fieldValues) // select all fields where fieldName in fieldValues
 * findBy(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
-* findBy(fieldName, fieldValues, fieldNames, whereOption) // select fieldNames where fieldName in fieldValues with the whereOption
+* findBy(fieldName, fieldValues, fieldNames, appendOptions) // select fieldNames where fieldName in fieldValues with the appendOptions
 * findBy(Condition) // select all fields where condition is true
 * findBy(Condition, fieldNames) // select fieldNames where condition is true
-* findBy(Condition, fieldNames, whereOption) // select fieldNames where condition is true with the whereOption
+* findBy(Condition, fieldNames, appendOptions) // select fieldNames where condition is true with the appendOptions
 * findBy(Query) // get Query results
 </pre>
   </td>
@@ -74,10 +74,10 @@ Find method offers different ways to query salesforce data
 <pre lang='apex'> 
 * findMapBy(fieldName, fieldValues) // select all fields where fieldName in fieldValues
 * findMapBy(fieldName, fieldValues, fieldNames) // select fieldNames where fieldName in fieldValues
-* findMapBy(fieldName, fieldValues, fieldNames, whereOption) // select fieldNames where fieldName in fieldValues with the whereOption
+* findMapBy(fieldName, fieldValues, fieldNames, appendOptions) // select fieldNames where fieldName in fieldValues with the appendOptions
 * findMapBy(Condition) // select all fields where condition is true
 * findMapBy(Condition, fieldNames) // select fieldNames where condition is true 
-* findMapBy(Condition, fieldNames, whereOption) // select fieldNames where condition is true with the whereOption
+* findMapBy(Condition, fieldNames, appendOptions) // select fieldNames where condition is true with the appendOptions
 * findMapBy(Query) // get Query results
 </pre>
   </td>
