@@ -34,7 +34,7 @@ Some examples below
   Map<Id,SObject> aMap = QB.select_x('Name')
                           .from_x('Account')
                           .limitTo(10)
-                          .getList();
+                          .getMap();
   ```
 
 4. **Get a count**
