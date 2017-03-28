@@ -118,11 +118,17 @@ private class QBTest {
 
 		System.assertEquals('COUNT() = 1',QB.count().eq(1).toString());
 		System.assertEquals('COUNT(Name) = 1',QB.count('Name').eq(1).toString());
+		System.assertEquals('COUNT(Name) = 1',QB.count(Account.Name).eq(1).toString());
 		System.assertEquals('COUNT_DISTINCT(Name) = 1',QB.count_distinct('Name').eq(1).toString());
+		System.assertEquals('COUNT_DISTINCT(Name) = 1',QB.count_distinct(Account.Name).eq(1).toString());
 		System.assertEquals('AVG(Name) = 1',QB.avg('Name').eq(1).toString());
+		System.assertEquals('AVG(Name) = 1',QB.avg(Account.Name).eq(1).toString());
 		System.assertEquals('MIN(Name) = 1',QB.min('Name').eq(1).toString());
+		System.assertEquals('MIN(Name) = 1',QB.min(Account.Name).eq(1).toString());
 		System.assertEquals('MAX(Name) = 1',QB.max('Name').eq(1).toString());
+		System.assertEquals('MAX(Name) = 1',QB.max(Account.Name).eq(1).toString());
 		System.assertEquals('SUM(Name) = 1',QB.sum('Name').eq(1).toString());
+		System.assertEquals('SUM(Name) = 1',QB.sum(Account.Name).eq(1).toString());
 
 		System.assertEquals('COUNT() != 1',QB.count().ne(1).toString());
 		System.assertEquals('COUNT() > 1',QB.count().gt(1).toString());
@@ -376,6 +382,9 @@ private class QBTest {
 														.from_x('Account').toString());
 		System.assertEquals('SELECT Name FROM Account',QB.select_x('Name')
 														.from_x(Account.sObjectType).toString());
+		System.assertEquals('SELECT Name FROM Account WHERE 1=1',QB.select_x('Name')
+														.from_x('Account')
+														.append(' WHERE 1=1').toString());
 		System.assertEquals('SELECT Name FROM Account WHERE Name = \'Value\'',QB.select_x('Name')
 														.from_x('Account')
 														.where_x('Name',QB.Op.EQ,'Value').toString());
@@ -524,15 +533,15 @@ private class QBTest {
 		System.assertEquals('SELECT Name FROM Account ORDER BY Name DESC NULLS LAST',QB.select_x('Name')
 														.from_x('Account')
 														.orderBy('Name',QB.descNullsLast()).toString());
-		System.assertEquals('SELECT Name FROM Account ORDER BY Name1 DESC NULLS LAST Name2',QB.select_x('Name')
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name1 DESC NULLS LAST,Name2',QB.select_x('Name')
 														.from_x('Account')
 														.orderBy('Name1',QB.descNullsLast())
 														.addOrder('Name2').toString());
-		System.assertEquals('SELECT Name FROM Account ORDER BY Name1 DESC NULLS LAST Name2 Name3',QB.select_x('Name')
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name1 DESC NULLS LAST,Name2,Name3',QB.select_x('Name')
 														.from_x('Account')
 														.orderBy('Name1',QB.descNullsLast())
 														.addOrder(new List<String>{'Name2','Name3'}).toString());
-		System.assertEquals('SELECT Name FROM Account ORDER BY Name1 DESC NULLS LAST Name2 ASC NULLS FIRST',QB.select_x('Name')
+		System.assertEquals('SELECT Name FROM Account ORDER BY Name1 DESC NULLS LAST,Name2 ASC NULLS FIRST',QB.select_x('Name')
 														.from_x('Account')
 														.orderBy('Name1',QB.descNullsLast())
 														.addOrder('Name2',QB.ascNullsFirst()).toString());

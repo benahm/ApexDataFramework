@@ -28,14 +28,14 @@ private class DMTest {
 		System.assertEquals(0,dmAccount.findById(new Set<Id>()).size());
 		System.assertEquals(0,dmAccount.findById(new List<Id>(),'Id,Name').size());
 		System.assertEquals(0,dmAccount.findById(new Set<Id>(),'Id,Name').size());
-		System.assertEquals(0,dmAccount.findById(new List<Id>(),'Id,Name',1).size());
-		System.assertEquals(0,dmAccount.findById(new Set<Id>(),'Id,Name',1).size());
+		System.assertEquals(0,dmAccount.findById(new List<Id>(),'Id,Name','LIMIT 1').size());
+		System.assertEquals(0,dmAccount.findById(new Set<Id>(),'Id,Name','LIMIT 1').size());
 		System.assertEquals(0,dmAccount.findBy('Name','Test').size());
 		System.assertEquals(0,dmAccount.findBy('Name','Test','Id,Name').size());
-		System.assertEquals(0,dmAccount.findBy('Name','Test','Id,Name',1).size());
+		System.assertEquals(0,dmAccount.findBy('Name','Test','Id,Name','LIMIT 1').size());
 		System.assertEquals(0,dmAccount.findBy(QB.field('Name').eq('Test')).size());
 		System.assertEquals(0,dmAccount.findBy(QB.field('Name').eq('Test'),'Id,Name').size());
-		System.assertEquals(0,dmAccount.findBy(QB.field('Name').eq('Test'),'Id,Name',1).size());
+		System.assertEquals(0,dmAccount.findBy(QB.field('Name').eq('Test'),'Id,Name','LIMIT 1').size());
 		System.assertEquals(0,dmAccount.findBy(QB.select_x('Id,Name').from_x('Account')).size());
 
 		
@@ -46,15 +46,15 @@ private class DMTest {
 		System.assertEquals(1,dmApexClass.findById(new Set<Id>{dmClass.Id}).size());
 		System.assertEquals(1,dmApexClass.findById(new List<Id>{dmClass.Id},'Id,Name').size());
 		System.assertEquals(1,dmApexClass.findById(new Set<Id>{dmClass.Id},'Id,Name').size());
-		System.assertEquals(1,dmApexClass.findById(new List<Id>{dmClass.Id},'Id,Name',1).size());
-		System.assertEquals(1,dmApexClass.findById(new Set<Id>{dmClass.Id},'Id,Name',1).size());
+		System.assertEquals(1,dmApexClass.findById(new List<Id>{dmClass.Id},'Id,Name','LIMIT 1').size());
+		System.assertEquals(1,dmApexClass.findById(new Set<Id>{dmClass.Id},'Id,Name','LIMIT 1').size());
 
 		System.assertEquals(1,dmApexClass.findBy('Name','DM').size());
 		System.assertEquals(1,dmApexClass.findBy('Name','DM','Id').size());
-		System.assertEquals(1,dmApexClass.findBy('Name','DM','Id,Name',1).size());
+		System.assertEquals(1,dmApexClass.findBy('Name','DM','Id,Name','LIMIT 1').size());
 		System.assertEquals(1,dmApexClass.findBy(QB.field('Name').eq('DM')).size());
 		System.assertEquals(1,dmApexClass.findBy(QB.field('Name').eq('DM'),'Id,Name').size());
-		System.assertEquals(1,dmApexClass.findBy(QB.field('Name').eq('DM'),'Id,Name',1).size());
+		System.assertEquals(1,dmApexClass.findBy(QB.field('Name').eq('DM'),'Id,Name','LIMIT 1').size());
 		System.assertEquals(1,dmApexClass.findBy(QB.select_x('Id,Name')
 														.from_x('ApexClass')
 														.where_x('Name','=','DM')).size());
@@ -73,14 +73,14 @@ private class DMTest {
 		System.assertEquals(0,dmAccount.findMapById(new Set<Id>()).values().size());
 		System.assertEquals(0,dmAccount.findMapById(new List<Id>(),'Id,Name').values().size());
 		System.assertEquals(0,dmAccount.findMapById(new Set<Id>(),'Id,Name').values().size());
-		System.assertEquals(0,dmAccount.findMapById(new List<Id>(),'Id,Name',1).values().size());
-		System.assertEquals(0,dmAccount.findMapById(new Set<Id>(),'Id,Name',1).values().size());
+		System.assertEquals(0,dmAccount.findMapById(new List<Id>(),'Id,Name','LIMIT 1').values().size());
+		System.assertEquals(0,dmAccount.findMapById(new Set<Id>(),'Id,Name','LIMIT 1').values().size());
 		System.assertEquals(0,dmAccount.findMapBy('Name','Test').values().size());
 		System.assertEquals(0,dmAccount.findMapBy('Name','Test','Id,Name').values().size());
-		System.assertEquals(0,dmAccount.findMapBy('Name','Test','Id,Name',1).values().size());
+		System.assertEquals(0,dmAccount.findMapBy('Name','Test','Id,Name','LIMIT 1').values().size());
 		System.assertEquals(0,dmAccount.findMapBy(QB.field('Name').eq('Test')).values().size());
 		System.assertEquals(0,dmAccount.findMapBy(QB.field('Name').eq('Test'),'Id,Name').values().size());
-		System.assertEquals(0,dmAccount.findMapBy(QB.field('Name').eq('Test'),'Id,Name',1).values().size());
+		System.assertEquals(0,dmAccount.findMapBy(QB.field('Name').eq('Test'),'Id,Name','LIMIT 1').values().size());
 		System.assertEquals(0,dmAccount.findMapBy(QB.select_x('Id,Name').from_x('Account')).values().size());
 
 		
@@ -91,15 +91,15 @@ private class DMTest {
 		System.assertEquals(1,dmApexClass.findMapById(new Set<Id>{dmClass.Id}).values().size());
 		System.assertEquals(1,dmApexClass.findMapById(new List<Id>{dmClass.Id},'Id,Name').values().size());
 		System.assertEquals(1,dmApexClass.findMapById(new Set<Id>{dmClass.Id},'Id,Name').values().size());
-		System.assertEquals(1,dmApexClass.findMapById(new List<Id>{dmClass.Id},'Id,Name',1).values().size());
-		System.assertEquals(1,dmApexClass.findMapById(new Set<Id>{dmClass.Id},'Id,Name',1).values().size());
+		System.assertEquals(1,dmApexClass.findMapById(new List<Id>{dmClass.Id},'Id,Name','LIMIT 1').values().size());
+		System.assertEquals(1,dmApexClass.findMapById(new Set<Id>{dmClass.Id},'Id,Name','LIMIT 1').values().size());
 		
 		System.assertEquals(1,dmApexClass.findMapBy('Name','DM').values().size());
 		System.assertEquals(1,dmApexClass.findMapBy('Name','DM','Id').values().size());
-		System.assertEquals(1,dmApexClass.findMapBy('Name','DM','Id,Name',1).values().size());
+		System.assertEquals(1,dmApexClass.findMapBy('Name','DM','Id,Name','LIMIT 1').values().size());
 		System.assertEquals(1,dmApexClass.findMapBy(QB.field('Name').eq('DM')).values().size());
 		System.assertEquals(1,dmApexClass.findMapBy(QB.field('Name').eq('DM'),'Id,Name').values().size());
-		System.assertEquals(1,dmApexClass.findMapBy(QB.field('Name').eq('DM'),'Id,Name',1).values().size());
+		System.assertEquals(1,dmApexClass.findMapBy(QB.field('Name').eq('DM'),'Id,Name','LIMIT 1').values().size());
 		System.assertEquals(1,dmApexClass.findMapBy(QB.select_x('Id,Name')
 														.from_x('ApexClass')
 														.where_x('Name','=','DM')).values().size());

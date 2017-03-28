@@ -115,117 +115,147 @@ public class QB {
 
 	/**
 	* @description Wrap a field
-	* @param name : field name
+	* @param fieldName : field name
 	* @return IFieldWrap
 	*/
-	public static IFieldWrap field(String name){
-		return new Wrapper(name);
-	}	
+	public static IFieldWrap field(String fieldName){
+		return new Wrapper(fieldName);
+	}
+	public static IFieldWrap field(Schema.SObjectField field){
+		return field(field.getDescribe().getName());
+	}		
 
 	/**
 	* @description Field expression
-	* @param name : field name
+	* @param fieldName : field name
 	* @param operator : operator
 	* @return IFieldCondition
 	*/
-	public static IFieldCondition fieldExpr(String name, Op operator, Object value){
-		return new Wrapper(name).op(operator,value);
+	public static IFieldCondition fieldExpr(String fieldName, Op operator, Object value){
+		return new Wrapper(fieldName).op(operator,value);
+	}	
+	public static IFieldCondition fieldExpr(Schema.SObjectField field, Op operator, Object value){
+		return fieldExpr(field.getDescribe().getName(),operator,value);
 	}
-	public static IFieldCondition fieldExpr(String name, String operator, Object value){
-		return new Wrapper(name).op(operator,value);
+	public static IFieldCondition fieldExpr(String fieldName, String operator, Object value){
+		return new Wrapper(fieldName).op(operator,value);
+	}
+	public static IFieldCondition fieldExpr(Schema.SObjectField field, String operator, Object value){
+		return fieldExpr(field.getDescribe().getName(),operator,value);
 	}
 
-	/**
-	* @description Bind a variable
-	* @return BindType
-	*/
-	public static BindType bind(Object bindVarValue){
-		if(qbBindVariable != null)
-			throw new QBBindException(errMsg.maxBindVariable);
-
-		qbBindVariable=bindVarValue;
-		return new BindType('qbBindVariable');
-	}
 
 	/**
 	* @description SOQL aggregate functions
 	* @return IAggregateFunctionWrap
 	*/
-	public static IAggregateFunctionWrap count(){
-		return new Wrapper(null,'COUNT');
-	}
-	public static IAggregateFunctionWrap count(String fieldName){
-		return new Wrapper(fieldName,'COUNT');
-	}
-	public static IAggregateFunctionWrap count_distinct(String fieldName){
-		return new Wrapper(fieldName,'COUNT_DISTINCT');
-	}
-	public static IAggregateFunctionWrap avg(String fieldName){
-		return new Wrapper(fieldName,'AVG');
-	}
-	public static IAggregateFunctionWrap min(String fieldName){
-		return new Wrapper(fieldName,'MIN');
-	}
-	public static IAggregateFunctionWrap max(String fieldName){
-		return new Wrapper(fieldName,'MAX');
-	}
-	public static IAggregateFunctionWrap sum(String fieldName){
-		return new Wrapper(fieldName,'SUM');
-	}
+	public static IAggregateFunctionWrap count(){ return new Wrapper(null,'COUNT'); }
+	
+	public static IAggregateFunctionWrap count(String fieldName){ return new Wrapper(fieldName,'COUNT'); }
+	public static IAggregateFunctionWrap count(Schema.SObjectField field){ return count(field.getDescribe().getName());	}
+	
+	public static IAggregateFunctionWrap count_distinct(String fieldName){ return new Wrapper(fieldName,'COUNT_DISTINCT'); }
+	public static IAggregateFunctionWrap count_distinct(Schema.SObjectField field){ return count_distinct(field.getDescribe().getName());	}
+	
+	public static IAggregateFunctionWrap avg(String fieldName){ return new Wrapper(fieldName,'AVG'); }
+	public static IAggregateFunctionWrap avg(Schema.SObjectField field){ return avg(field.getDescribe().getName());	}
+	
+	public static IAggregateFunctionWrap min(String fieldName){ return new Wrapper(fieldName,'MIN'); }
+	public static IAggregateFunctionWrap min(Schema.SObjectField field){ return min(field.getDescribe().getName());	}
+	
+	public static IAggregateFunctionWrap max(String fieldName){ return new Wrapper(fieldName,'MAX'); }
+	public static IAggregateFunctionWrap max(Schema.SObjectField field){ return max(field.getDescribe().getName());	}
+	
+	public static IAggregateFunctionWrap sum(String fieldName){ return new Wrapper(fieldName,'SUM'); }
+	public static IAggregateFunctionWrap sum(Schema.SObjectField field){ return sum(field.getDescribe().getName());	}
+
 
 	/**
 	* @description SOQL date functions
 	* @return IDateFunctionWrap
 	*/
-	public static IDateFunctionWrap calendar_month(String fieldName){
-		return new Wrapper(fieldName,'CALENDAR_MONTH');
-	}
-	public static IDateFunctionWrap calendar_quarter(String fieldName){
-		return new Wrapper(fieldName,'CALENDAR_QUARTER');
-	}
-	public static IDateFunctionWrap calendar_year(String fieldName){
-		return new Wrapper(fieldName,'CALENDAR_YEAR');
-	}
-	public static IDateFunctionWrap day_in_month(String fieldName){
-		return new Wrapper(fieldName,'DAY_IN_MONTH');
-	}
-	public static IDateFunctionWrap day_in_week(String fieldName){
-		return new Wrapper(fieldName,'DAY_IN_WEEK');
-	}
-	public static IDateFunctionWrap fiscal_month(String fieldName){
-		return new Wrapper(fieldName,'FISCAL_MONTH');
-	}
-	public static IDateFunctionWrap fiscal_quarter(String fieldName){
-		return new Wrapper(fieldName,'FISCAL_QUARTER');
-	}
-	public static IDateFunctionWrap fiscal_year(String fieldName){
-		return new Wrapper(fieldName,'FISCAL_YEAR');
-	}
-	public static IDateFunctionWrap hour_in_day(String fieldName){
-		return new Wrapper(fieldName,'HOUR_IN_DAY');
-	}
-	public static IDateFunctionWrap week_in_month(String fieldName){
-		return new Wrapper(fieldName,'WEEK_IN_MONTH');
-	}
-	public static IDateFunctionWrap week_in_year(String fieldName){
-		return new Wrapper(fieldName,'WEEK_IN_YEAR');
-	}
+	public static IDateFunctionWrap calendar_month(String fieldName){ return new Wrapper(fieldName,'CALENDAR_MONTH'); }	
+	public static IDateFunctionWrap calendar_month(Schema.SObjectField field){ return calendar_month(field.getDescribe().getName()); }
+	public static IDateFunctionWrap calendar_month(IConvertTimeZoneFunctionWrap func){ return calendar_quarter(func.toString()); }	
+
+	public static IDateFunctionWrap calendar_quarter(String fieldName){	return new Wrapper(fieldName,'CALENDAR_QUARTER'); }	
+	public static IDateFunctionWrap calendar_quarter(Schema.SObjectField field){ return calendar_quarter(field.getDescribe().getName()); }
+	public static IDateFunctionWrap calendar_quarter(IConvertTimeZoneFunctionWrap func){ return calendar_quarter(func.toString()); }	
+
+	public static IDateFunctionWrap calendar_year(String fieldName){ return new Wrapper(fieldName,'CALENDAR_YEAR'); }
+	public static IDateFunctionWrap calendar_year(Schema.SObjectField field){ return calendar_year(field.getDescribe().getName()); }
+	public static IDateFunctionWrap calendar_year(IConvertTimeZoneFunctionWrap func){ return calendar_year(func.toString()); }
+
+	public static IDateFunctionWrap day_in_month(String fieldName){ return new Wrapper(fieldName,'DAY_IN_MONTH'); }	
+	public static IDateFunctionWrap day_in_month(Schema.SObjectField field){ return day_in_month(field.getDescribe().getName()); }
+	public static IDateFunctionWrap day_in_month(IConvertTimeZoneFunctionWrap func){ return day_in_month(func.toString()); }	
+
+
+	public static IDateFunctionWrap day_in_week(String fieldName){ return new Wrapper(fieldName,'DAY_IN_WEEK'); }	
+	public static IDateFunctionWrap day_in_week(Schema.SObjectField field){ return day_in_week(field.getDescribe().getName()); }
+	public static IDateFunctionWrap day_in_week(IConvertTimeZoneFunctionWrap func){ return day_in_week(func.toString()); }	
+
+	public static IDateFunctionWrap fiscal_month(String fieldName){ return new Wrapper(fieldName,'FISCAL_MONTH'); }
+	public static IDateFunctionWrap fiscal_month(Schema.SObjectField field){ return fiscal_month(field.getDescribe().getName()); }
+	public static IDateFunctionWrap fiscal_month(IConvertTimeZoneFunctionWrap func){ return fiscal_month(func.toString()); }
+
+	public static IDateFunctionWrap fiscal_quarter(String fieldName){ return new Wrapper(fieldName,'FISCAL_QUARTER'); }
+	public static IDateFunctionWrap fiscal_quarter(Schema.SObjectField field){ return fiscal_quarter(field.getDescribe().getName()); }
+	public static IDateFunctionWrap fiscal_quarter(IConvertTimeZoneFunctionWrap func){ return fiscal_quarter(func.toString()); }
+
+	public static IDateFunctionWrap fiscal_year(String fieldName){ return new Wrapper(fieldName,'FISCAL_YEAR'); }
+	public static IDateFunctionWrap fiscal_year(Schema.SObjectField field){ return fiscal_year(field.getDescribe().getName()); }
+	public static IDateFunctionWrap fiscal_year(IConvertTimeZoneFunctionWrap func){ return fiscal_year(func.toString()); }
+
+	public static IDateFunctionWrap hour_in_day(String fieldName){ return new Wrapper(fieldName,'HOUR_IN_DAY'); }
+	public static IDateFunctionWrap hour_in_day(Schema.SObjectField field){ return hour_in_day(field.getDescribe().getName()); }
+	public static IDateFunctionWrap hour_in_day(IConvertTimeZoneFunctionWrap func){ return hour_in_day(func.toString()); }
+
+	public static IDateFunctionWrap week_in_month(String fieldName){ return new Wrapper(fieldName,'WEEK_IN_MONTH'); }
+	public static IDateFunctionWrap week_in_month(Schema.SObjectField field){ return week_in_month(field.getDescribe().getName()); }
+	public static IDateFunctionWrap week_in_month(IConvertTimeZoneFunctionWrap func){ return week_in_month(func.toString()); }
+
+	public static IDateFunctionWrap week_in_year(String fieldName){ return new Wrapper(fieldName,'WEEK_IN_YEAR'); }
+	public static IDateFunctionWrap week_in_year(Schema.SObjectField field){ return week_in_year(field.getDescribe().getName()); }
+	public static IDateFunctionWrap week_in_year(IConvertTimeZoneFunctionWrap func){ return week_in_year(func.toString()); }
+
 
 	/**
 	* @description Day_only function
 	* @return IDayOnlyFunctionWrap
 	*/
-	public static IDayOnlyFunctionWrap day_only(String fieldName){
-		return new Wrapper(fieldName,'DAY_ONLY');
-	}
+	public static IDayOnlyFunctionWrap day_only(String fieldName){ return new Wrapper(fieldName,'DAY_ONLY'); }
+	public static IDayOnlyFunctionWrap day_only(Schema.SObjectField field){ return day_only(field.getDescribe().getName()); }
+	public static IDayOnlyFunctionWrap day_only(IConvertTimeZoneFunctionWrap func){ return day_only(func.toString()); }
+
+	/**
+	* @description ConvertTimeZone function
+	* @return IConvertTimeZoneFunctionWrap
+	*/
+	public static IConvertTimeZoneFunctionWrap convertTimeZone(String fieldName){ return new Wrapper(fieldName,'CONVERTTIMEZONE'); }
+	public static IConvertTimeZoneFunctionWrap convertTimeZone(Schema.SObjectField field){ return ConvertTimeZone(field.getDescribe().getName()); }
+
+	/**
+	* @description ConvertCurrency function
+	* @return IConvertCurrencyFunctionWrap
+	*/
+	public static IConvertCurrencyFunctionWrap convertCurrency(String fieldName){ return new Wrapper(fieldName,'CONVERTCURRENCY'); }
+	public static IConvertCurrencyFunctionWrap convertCurrency(Schema.SObjectField field){ return convertCurrency(field.getDescribe().getName()); }
 
 	/**
 	* @description ToLabel function
 	* @return IToLabelFunctionWrap
 	*/
-	public static IToLabelFunctionWrap toLabel(String fieldName){
-		return new Wrapper(fieldName,'TOLABEL');
-	}
+	public static IToLabelFunctionWrap toLabel(String fieldName){ return new Wrapper(fieldName,'TOLABEL'); }
+	public static IToLabelFunctionWrap toLabel(Schema.SObjectField field){ return toLabel(field.getDescribe().getName()); }
+
+	/**
+	* @description Format function
+	* @return IFormatFunctionWrap
+	*/
+	public static IFormatFunctionWrap format(String fieldName){ return new Wrapper(fieldName,'FORMAT'); }
+	public static IFormatFunctionWrap format(Schema.SObjectField field){ return format(field.getDescribe().getName()); }
+	public static IFormatFunctionWrap format(IFunctionWrap func){ return format(func.toString()); }
 
 	/**
 	* @description Select clause
@@ -264,6 +294,18 @@ public class QB {
 		return new OrderType('DESC','LAST');
 	}
 
+	/**
+	* @description Bind a variable
+	* @return BindType
+	*/
+	public static BindType bind(Object bindVarValue){
+		if(qbBindVariable != null)
+			throw new QBBindException(errMsg.maxBindVariable);
+
+		qbBindVariable=bindVarValue;
+		return new BindType('qbBindVariable');
+	}
+
 	/* private methods */
 	private static void clearBindVariables(){
 		qbBindVariable=null;
@@ -295,6 +337,7 @@ public class QB {
 		ISelectClause addFields(List<String> fieldNames);
 		ISelectClause addFunction(IFunctionWrap func);
 		ISelectClause addSubQuery(IQuery query);
+
 		ISelectFromQuery from_x(String sObjectName);
 		ISelectFromQuery from_x(Schema.sObjectType sObjectType); 
 		String toString();
@@ -310,6 +353,8 @@ public class QB {
 		String toString();
 	}
 	public interface ISelectFromQuery extends IQuery{
+		ISelectFromQuery append(String str);
+
 		ISelectWhereQuery where_x(IFieldCondition cnd);
 		ISelectWhereQuery where_x(String fieldName, Op operator, Object value);
 		ISelectWhereQuery where_x(String fieldName, String operator, Object value);
@@ -333,6 +378,8 @@ public class QB {
 		ISelectOffsetQuery offset(Integer ofst);
 	}
 	public interface ISelectWhereQuery extends IQuery{
+		ISelectWhereQuery append(String str);
+
 		ISelectGroupByQuery groupBy(String groupByField);
 		ISelectGroupByQuery groupBy(IDateFunctionWrap groupByFunc);
 		ISelectGroupByQuery groupBy(IDayOnlyFunctionWrap groupByFunc);
@@ -352,6 +399,8 @@ public class QB {
 		ISelectOffsetQuery offset(Integer ofst);
 	}
 	public interface ISelectGroupByQuery extends IQuery{
+		ISelectWhereQuery append(String str); 
+
 		ISelectOrderByQuery orderBy(String orderByField);
 		ISelectOrderByQuery orderBy(List<String> orderByFields);
 		ISelectOrderByQuery orderBy(String orderByField, OrderType orderType);
@@ -362,6 +411,8 @@ public class QB {
 		ISelectOffsetQuery offset(Integer ofst);
 	}
 	public interface ISelectOrderByQuery extends IQuery{
+		ISelectWhereQuery append(String str);
+
 		ISelectOrderByQuery addOrder(String orderByField);
 		ISelectOrderByQuery addOrder(List<String> orderByFields);
 		ISelectOrderByQuery addOrder(String orderByField, OrderType orderType);
@@ -372,9 +423,13 @@ public class QB {
 		ISelectOffsetQuery offset(Integer ofst);
 	}
 	public interface ISelectLimitQuery extends IQuery{
+		ISelectWhereQuery append(String str);
+
 		ISelectOffsetQuery offset(Integer ofst);
 	}
-	public interface ISelectOffsetQuery extends IQuery{}
+	public interface ISelectOffsetQuery extends IQuery{
+		ISelectWhereQuery append(String str);
+	}
 
 	/**
 	* @description Wrapper interfaces
@@ -459,6 +514,21 @@ public class QB {
 		IAliasDayOnlyFunctionWrap alias(String alias);
 	}
 	public interface IAliasDayOnlyFunctionWrap extends IFunctionWrap{}
+	public interface IConvertTimeZoneFunctionWrap extends IFunctionWrap{
+		IHavingCondition eq(Datetime value);
+		IHavingCondition equal(Datetime value);
+		IHavingCondition ne(Datetime value);
+		IHavingCondition notEqual(Datetime value);
+		IHavingCondition gt(Datetime value);
+		IHavingCondition greaterThan(Datetime value);
+		IHavingCondition lt(Datetime value);
+		IHavingCondition lessThan(Datetime value);
+		IHavingCondition ge(Datetime value);
+		IHavingCondition greaterOrEqual(Datetime value);
+		IHavingCondition le(Datetime value);
+		IHavingCondition lessOrEqual(Datetime value);
+	}
+	public interface IConvertCurrencyFunctionWrap extends IFunctionWrap{}
 	public interface IToLabelFunctionWrap extends IFunctionWrap{
 		IFieldCondition eq(String value);
 		IFieldCondition equal(String value);
@@ -548,7 +618,7 @@ public class QB {
 	/**
 	* @description AWrapper : Abstract class for the wrapper 
 	*/
-	private abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IDateFunctionWrap,IDayOnlyFunctionWrap,IToLabelFunctionWrap,IFormatFunctionWrap,
+	private abstract class AWrapper implements IFieldWrap,IAggregateFunctionWrap,IDateFunctionWrap,IDayOnlyFunctionWrap,IConvertTimeZoneFunctionWrap,IConvertCurrencyFunctionWrap,IToLabelFunctionWrap,IFormatFunctionWrap,
 											  IAliasAggregateFunctionWrap,IAliasDateFunctionWrap,IAliasDayOnlyFunctionWrap{} 
 
 	/**
@@ -733,14 +803,12 @@ public class QB {
 			this.sQuery+=','+String.join(fieldNames,',');
 			return this;
 		}
-
 		public ISelectClause addFunction(IFunctionWrap func){
 			this.sQuery+=','+func;
 			return this;
 		}
-
 		public ISelectClause addSubQuery(IQuery query){
-			sQuery+=','+'('+query+')';
+			this.sQuery+=','+'('+query+')';
 			return this;
 		}
 
@@ -786,6 +854,11 @@ public class QB {
 
 		public SelectQuery(String sObjectName, String soqlSelectClause){
 			this.sQuery=soqlSelectClause+' FROM '+sObjectName;
+		}
+
+		public ASelectQuery append(String str){
+			this.sQuery+=String.escapeSingleQuotes(str);
+			return this;
 		}
 
 		public ISelectWhereQuery where_x(IFieldCondition cnd){
@@ -850,7 +923,7 @@ public class QB {
 			return addOrder(new List<String>{orderByField},orderType);
 		}
 		public ISelectOrderByQuery addOrder(List<String> orderByFields, OrderType orderType){
-			if(orderByFields != null) this.sQuery+=', '+String.join(orderByFields,',');
+			if(orderByFields != null) this.sQuery+=','+String.join(orderByFields,',');
 			if(orderType != null) this.sQuery+=orderType;
 			return this;
 		}
