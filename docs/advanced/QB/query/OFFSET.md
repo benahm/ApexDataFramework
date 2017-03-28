@@ -10,4 +10,4 @@
 
 ## Next
 
-* [Advanced](../RUN.md) 
+* [Running a Query](../RUN.md) 
