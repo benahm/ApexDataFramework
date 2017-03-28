@@ -62,7 +62,7 @@ Find method offers different ways to query salesforce data
 <pre lang='apex'> 
 * findMapById(ids) // select all fields where Id in ids
 * findMapById(ids, fieldNames) // select fieldNames where Id in ids
-* findMapById(ids, fieldNames, whereOption) // select fieldNames where Id in ids with the whereOption
+* findMapById(ids, fieldNames, appendOptions) // select fieldNames where Id in ids with the appendOptions
 </pre>
   </td>
 </tr>
