@@ -4,7 +4,9 @@ The Query builder (QB) let you build complex conditions to use in the where clau
 
 Below an overview of the conditions you can build with QB
 
-### Operators
+### Logical operators
+
+QB support all SOQL logical operators
 
 <table>
 <thead>
@@ -72,6 +74,8 @@ Below an overview of the conditions you can build with QB
 </table>
 
 ### Conditions
+
+The table below describe all the conditions you'll be able to build using QB
 
 <table>
 <thead>
