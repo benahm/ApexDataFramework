@@ -11,7 +11,6 @@ The find method offers a flexible way to query data in Salesforce here is an int
 * _findById(ids, fieldNames)_
 * _findBy(fieldName, fieldValues, fieldNames)_
 * _findBy(Condition, fieldNames)_
-* _findBy(Query)_
 
 Some examples below
 
@@ -59,17 +58,6 @@ Some examples below
 
   ```apex
   List<Account> accs=[select Id from Account where Type='Prospect']
-  ```
-
-5. **Query by specifying a query built by the Query Builder**
-  
-  ```apex
-  List<Account> accs=DM.base('Account').findBy(QB.select_x('Name').from_x('Account'))
-  ```
-
-
-  ```apex
-  List<Account> accs=[select Name from Account]
   ```
 
 ## Next
