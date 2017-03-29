@@ -189,6 +189,9 @@ Equivalent to :
   (COUNT(Name) = 100) OR (COUNT(Name) > 100) OR (COUNT(Name) < 100)
   ```
 
+--------  
+>*__NOTE__: 
+>'and', 'or' and 'not' are all reserved words in apex and can not be used as names of methods, to get around the >suffix '__\_x__' is appended to the reserved words*
 
 ## Next
 

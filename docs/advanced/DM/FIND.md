@@ -38,7 +38,6 @@ Find method offers different ways to query salesforce data
 * findBy(Condition) // select all fields where condition is true
 * findBy(Condition, fieldNames) // select fieldNames where condition is true
 * findBy(Condition, fieldNames, appendOptions) // select fieldNames where condition is true with the appendOptions
-* findBy(Query) // get Query results
 </pre>
   </td>
 </tr>
@@ -78,7 +77,6 @@ Find method offers different ways to query salesforce data
 * findMapBy(Condition) // select all fields where condition is true
 * findMapBy(Condition, fieldNames) // select fieldNames where condition is true 
 * findMapBy(Condition, fieldNames, appendOptions) // select fieldNames where condition is true with the appendOptions
-* findMapBy(Query) // get Query results
 </pre>
   </td>
 </tr>
@@ -124,7 +122,6 @@ Find method offers different ways to query salesforce data
 * findOneBy(fieldName, fieldValue, fieldNames) // select fieldNames where fieldName is equal to fieldValue
 * findOneBy(Condition) // select all fields where condition is true
 * findOneBy(Condition, fieldNames) // select fieldNames where condition is true
-* findOneBy(Query) // get one from Query results
 </pre>  
   </td>
 </tr>

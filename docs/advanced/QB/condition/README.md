@@ -4,6 +4,84 @@ The Query builder (QB) let you build complex conditions to use in the where clau
 
 Below an overview of the conditions you can build with QB
 
+* [Logical operators](#logical-operators)
+* [Conditions](#conditions)
+  * [Field condition](#field-condition)
+  * [Having condition](#having-condition)
+
+### Logical operators
+
+QB support all SOQL logical operators
+
+<table>
+<thead>
+<tr>
+  <th>SOQL Keyword</th>
+  <th>Query Builder</th>
+  <th>Signature</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><em>NOT</em></td>
+  <td>not_x</td>
+  <td>
+    <pre lang="apex">
+  QB.not_x(fieldCondition) 
+  QB.not_x(havingCondition)
+  </pre>
+  </td>
+  <td></td>
+</tr>
+<tr></tr>
+<tr>
+  <td><em>AND</em></td>
+  <td>and_x</td>
+  <td>
+    <pre lang="apex">
+  QB.and_x(fieldCondition,fieldCondition) 
+  QB.and_x(havingCondition,havingCondition)
+  </pre>
+  </td>
+  <td>QB.and_x can be chained with the "add" method to add more conditions 
+  
+  Example : 
+  <pre lang="apex">
+  QB.and_x(fieldCondition,fieldCondition)
+    .add(fieldCondition) 
+  QB.and_x(havingCondition,havingCondition)
+    .add(havingCondition)
+  </pre>
+  </td>
+</tr>
+<tr></tr>
+<tr>
+  <td><em>OR</em></td>
+  <td>or_x</td>
+  <td>
+    <pre lang="apex">
+  QB.or_x(fieldCondition,fieldCondition) 
+  QB.or_x(havingCondition,havingCondition)
+  </pre>
+  </td>
+  <td>QB.or_x can be chained with the "add" method to add more conditions 
+  
+  Example : 
+  <pre lang="apex">
+  QB.or_x(fieldCondition,fieldCondition)
+    .add(fieldCondition) 
+  QB.or_x(havingCondition,havingCondition)
+    .add(havingCondition)
+  </pre>
+  </td>
+</tr>
+</table>
+
+### Conditions
+
+The table below describe all the conditions you'll be able to build using QB
+
 <table>
 <thead>
 <tr>
@@ -175,7 +253,38 @@ Below an overview of the conditions you can build with QB
 </table>
 
 
-## Details of building a Condition
+#### Field condition
 
-* [Field condition](FIELD.md)
-* [Having condition](HAVING.md)
+
+<table>
+<thead>
+<tr>
+  <th>fieldCondition </th>
+  <th>Query Builder</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Simple field condition</td>
+  <td> 
+  <pre lang="apex">
+  QB.field(fieldName).eq(value) 
+  QB.fiedExpr(fieldName,op,value)
+  QB.toLabel(fieldName).eq(value)
+  </pre>
+  </td>
+</tr>
+<tr></tr>
+<tr>
+  <td>Composite condition</td>
+  <td> 
+  <pre lang="apex">
+  QB.not_x(fieldCondition) 
+  QB.and_x(fieldCondition,fieldCondition)
+  QB.or_x(fieldCondition,fieldCondition)
+  </pre>
+  </td>
+</tr>
+</table>
+
+
