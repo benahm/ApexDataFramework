@@ -4,6 +4,9 @@ The Query builder (QB) let you build complex conditions to use in the where clau
 
 Below an overview of the conditions you can build with QB
 
+* [Field condition](#field-condition)
+* [Having condition](HAVING.md)
+
 ### Logical operators
 
 QB support all SOQL logical operators
@@ -284,5 +287,4 @@ The table below describe all the conditions you'll be able to build using QB
 </tr>
 </table>
 
-* [Field condition](FIELD.md)
-* [Having condition](HAVING.md)
+
