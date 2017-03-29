@@ -4,8 +4,11 @@ The Query builder (QB) let you build complex conditions to use in the where clau
 
 Below an overview of the conditions you can build with QB
 
-* [Field condition](#field-condition)
-* [Having condition](HAVING.md)
+* [Logical operators](#logical-operators)
+* [Conditions](#conditions)
+* [Type](#types)
+  * [Field condition](#field-condition)
+  * [Having condition](#having-condition)
 
 ### Logical operators
 
