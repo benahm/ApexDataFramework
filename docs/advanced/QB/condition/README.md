@@ -4,6 +4,8 @@ The Query builder (QB) let you build complex conditions to use in the where clau
 
 Below an overview of the conditions you can build with QB
 
+### Operators
+
 <table>
 <thead>
 <tr>
@@ -13,7 +15,8 @@ Below an overview of the conditions you can build with QB
   <th>Description</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
   <td><em>NOT</em></td>
   <td>not_x</td>
   <td>
@@ -24,7 +27,51 @@ Below an overview of the conditions you can build with QB
   </td>
   <td></td>
 </tr>
+<tr></tr>
+<tr>
+  <td><em>AND</em></td>
+  <td>and_x</td>
+  <td>
+    <pre lang="apex">
+  QB.and_x(fieldCondition,fieldCondition) 
+  QB.and_x(havingCondition,havingCondition)
+  </pre>
+  </td>
+  <td>QB.and_x can be chained with the "add" method to add more conditions 
+  
+  Example : 
+  <pre lang="apex">
+  QB.and_x(fieldCondition,fieldCondition)
+    .add(fieldCondition) 
+  QB.and_x(havingCondition,havingCondition)
+    .add(havingCondition)
+  </pre>
+  </td>
+</tr>
+<tr></tr>
+<tr>
+  <td><em>OR</em></td>
+  <td>or_x</td>
+  <td>
+    <pre lang="apex">
+  QB.or_x(fieldCondition,fieldCondition) 
+  QB.or_x(havingCondition,havingCondition)
+  </pre>
+  </td>
+  <td>QB.or_x can be chained with the "add" method to add more conditions 
+  
+  Example : 
+  <pre lang="apex">
+  QB.or_x(fieldCondition,fieldCondition)
+    .add(fieldCondition) 
+  QB.or_x(havingCondition,havingCondition)
+    .add(havingCondition)
+  </pre>
+  </td>
+</tr>
 </table>
+
+### Conditions
 
 <table>
 <thead>
