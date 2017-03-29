@@ -4,6 +4,13 @@ The Query builder (QB) let you build complex conditions to use in the where clau
 
 Below an overview of the conditions you can build with QB
 
+| SOQL Keyword | Query Builder | input | Description        |
+|--------------|---------------|------------|--------------------|
+| *NOT*     | not_x      | fieldCondition/havingCondition         |                    |
+| *AND*       | and_x        | fieldCondition/havingCondition    |                    |
+| *OR*      | or_x       | fieldCondition/havingCondition    |                    |
+
+
 <table>
 <thead>
 <tr>
