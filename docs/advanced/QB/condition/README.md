@@ -255,12 +255,13 @@ The table below describe all the conditions you'll be able to build using QB
 
 #### Field condition
 
+field condition is a condition that can be used in the where clause
 
 <table>
 <thead>
 <tr>
-  <th>fieldCondition </th>
-  <th>Query Builder</th>
+  <th>FieldCondition </th>
+  <th>Examples</th>
 </tr>
 </thead>
 <tbody>
@@ -287,4 +288,54 @@ The table below describe all the conditions you'll be able to build using QB
 </tr>
 </table>
 
+#### Having condition
+
+having condition is a condition that can be used in the having clause
+
+<table>
+<thead>
+<tr>
+  <th>HavingCondition </th>
+  <th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Simple field condition</td>
+  <td> 
+  <pre lang="apex">
+  QB.count().eq(value) 
+  QB.count_distinct(fieldName).eq(value) 
+  QB.avg(fieldName).eq(value) 
+  QB.min(fieldName).eq(value) 
+  QB.max(fieldName).eq(value) 
+  QB.sum(fieldName).eq(value) 
+  QB.calendar_month(fieldName).eq(value) 
+  QB.calendar_quarter(fieldName).eq(value) 
+  QB.calendar_year(fieldName).eq(value) 
+  QB.day_in_month(fieldName).eq(value) 
+  QB.day_in_week(fieldName).eq(value) 
+  QB.fiscal_month(fieldName).eq(value) 
+  QB.fiscal_quarter(fieldName).eq(value) 
+  QB.fiscal_year(fieldName).eq(value) 
+  QB.hour_in_day(fieldName).eq(value) 
+  QB.week_in_month(fieldName).eq(value) 
+  QB.week_in_year(fieldName).eq(value)
+  QB.day_only(fieldName).eq(value)
+  QB.calendar_month(convertTimeZone(fieldName)).eq(value)
+  </pre>
+  </td>
+</tr>
+<tr></tr>
+<tr>
+  <td>Composite condition</td>
+  <td> 
+  <pre lang="apex">
+  QB.not_x(havingCondition) 
+  QB.and_x(havingCondition,havingCondition)
+  QB.or_x(havingCondition,havingCondition)
+  </pre>
+  </td>
+</tr>
+</table>
 
