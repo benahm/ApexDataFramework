@@ -33,9 +33,6 @@ public class DM{
 		List<SObject> findBy(QB.IFieldCondition condition, String fieldNames);
 		List<SObject> findBy(QB.IFieldCondition condition, String fieldNames, String appendOptions);
 
-		// find a list by query
-		List<SObject> findBy(QB.IQuery query);
-
 
 		/* find a map */
 		// find list by ids
@@ -56,9 +53,6 @@ public class DM{
 		Map<Id,SObject> findMapBy(QB.IFieldCondition condition, String fieldNames);
 		Map<Id,SObject> findMapBy(QB.IFieldCondition condition, String fieldNames, String appendOptions);
 
-		// find a list by query
-		Map<Id,SObject> findMapBy(QB.IQuery query);
-
 
 		/* find one record */
 		SObject findOne();
@@ -68,7 +62,6 @@ public class DM{
 		SObject findOneBy(String fieldName, Object value, String fieldNames);
 		SObject findOneBy(QB.IFieldCondition condition);
 		SObject findOneBy(QB.IFieldCondition condition, String fieldNames);
-		SObject findOneBy(QB.IQuery query);
 
 	}
 
@@ -126,9 +119,6 @@ public class DM{
 		  			 .append(' '+appendOptions)
 		  			 .getList();
 		}
-		public List<SObject> findBy(QB.IQuery query){
-			return query.getList();
-		}
 
 
 		/* find a map */
@@ -168,10 +158,6 @@ public class DM{
 		public Map<Id,SObject> findMapBy(QB.IFieldCondition condition, String fieldNames, String appendOptions){
 			return new Map<Id,SObject>(findBy(condition,fieldNames,appendOptions));
 		}
-		public Map<Id,SObject> findMapBy(QB.IQuery query){
-			return new Map<Id,SObject>(findBy(query));
-		}
-
 
 		/* find one record */
 		public SObject findOne(){
@@ -195,10 +181,6 @@ public class DM{
 		public SObject findOneBy(QB.IFieldCondition condition, String fieldNames){
 			return getOne(findBy(condition,fieldNames));
 		}
-		public SObject findOneBy(QB.IQuery query){
-			return getOne(findBy(query));
-		}
-
 
 		/* private methods */
 		private SObject getOne(List<SObject> listObj){

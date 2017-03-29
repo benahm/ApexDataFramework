@@ -36,7 +36,6 @@ private class DMTest {
 		System.assertEquals(0,dmAccount.findBy(QB.field('Name').eq('Test')).size());
 		System.assertEquals(0,dmAccount.findBy(QB.field('Name').eq('Test'),'Id,Name').size());
 		System.assertEquals(0,dmAccount.findBy(QB.field('Name').eq('Test'),'Id,Name','LIMIT 1').size());
-		System.assertEquals(0,dmAccount.findBy(QB.select_x('Id,Name').from_x('Account')).size());
 
 		
 		ApexClass dmClass=(ApexClass)DM.base('ApexClass').findOneBy('Name','DM','Id');
@@ -55,9 +54,6 @@ private class DMTest {
 		System.assertEquals(1,dmApexClass.findBy(QB.field('Name').eq('DM')).size());
 		System.assertEquals(1,dmApexClass.findBy(QB.field('Name').eq('DM'),'Id,Name').size());
 		System.assertEquals(1,dmApexClass.findBy(QB.field('Name').eq('DM'),'Id,Name','LIMIT 1').size());
-		System.assertEquals(1,dmApexClass.findBy(QB.select_x('Id,Name')
-														.from_x('ApexClass')
-														.where_x('Name','=','DM')).size());
 
 		Test.stopTest();
 	}
@@ -81,7 +77,6 @@ private class DMTest {
 		System.assertEquals(0,dmAccount.findMapBy(QB.field('Name').eq('Test')).values().size());
 		System.assertEquals(0,dmAccount.findMapBy(QB.field('Name').eq('Test'),'Id,Name').values().size());
 		System.assertEquals(0,dmAccount.findMapBy(QB.field('Name').eq('Test'),'Id,Name','LIMIT 1').values().size());
-		System.assertEquals(0,dmAccount.findMapBy(QB.select_x('Id,Name').from_x('Account')).values().size());
 
 		
 		ApexClass dmClass=(ApexClass)dmApexClass.findOneBy('Name','DM','Id');
@@ -100,9 +95,6 @@ private class DMTest {
 		System.assertEquals(1,dmApexClass.findMapBy(QB.field('Name').eq('DM')).values().size());
 		System.assertEquals(1,dmApexClass.findMapBy(QB.field('Name').eq('DM'),'Id,Name').values().size());
 		System.assertEquals(1,dmApexClass.findMapBy(QB.field('Name').eq('DM'),'Id,Name','LIMIT 1').values().size());
-		System.assertEquals(1,dmApexClass.findMapBy(QB.select_x('Id,Name')
-														.from_x('ApexClass')
-														.where_x('Name','=','DM')).values().size());
 
 		Test.stopTest();
 	}
@@ -120,7 +112,6 @@ private class DMTest {
 		System.assertEquals(null,dmAccount.findOneBy('Name','Test','Id,Name'));
 		System.assertEquals(null,dmAccount.findOneBy(QB.field('Name').eq('Test')));
 		System.assertEquals(null,dmAccount.findOneBy(QB.field('Name').eq('Test'),'Id,Name'));
-		System.assertEquals(null,dmAccount.findOneBy(QB.select_x('Id,Name').from_x('Account')));
 		System.assertNotEquals(null,dmApexClass.findOne());
 
 
@@ -133,9 +124,6 @@ private class DMTest {
 		System.assertNotEquals(null,dmApexClass.findOneBy('Name','DM','Id'));
 		System.assertNotEquals(null,dmApexClass.findOneBy(QB.field('Name').eq('DM')));
 		System.assertNotEquals(null,dmApexClass.findOneBy(QB.field('Name').eq('DM'),'Id,Name'));
-		System.assertNotEquals(null,dmApexClass.findOneBy(QB.select_x('Id,Name')
-														.from_x('ApexClass')
-														.where_x('Name','=','DM')));
 
 		Test.stopTest();
 	}
