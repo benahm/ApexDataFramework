@@ -6,7 +6,6 @@ Below an overview of the conditions you can build with QB
 
 * [Logical operators](#logical-operators)
 * [Conditions](#conditions)
-* [Type](#types)
   * [Field condition](#field-condition)
   * [Having condition](#having-condition)
 
@@ -253,8 +252,6 @@ The table below describe all the conditions you'll be able to build using QB
 </tbody>
 </table>
 
-
-### Types
 
 #### Field condition
 
