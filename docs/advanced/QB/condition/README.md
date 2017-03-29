@@ -4,12 +4,27 @@ The Query builder (QB) let you build complex conditions to use in the where clau
 
 Below an overview of the conditions you can build with QB
 
-| SOQL Keyword | Query Builder | input | Description        |
-|--------------|---------------|------------|--------------------|
-| *NOT*     | not_x      | fieldCondition/havingCondition         |                    |
-| *AND*       | and_x        | fieldCondition/havingCondition    |                    |
-| *OR*      | or_x       | fieldCondition/havingCondition    |                    |
-
+<table>
+<thead>
+<tr>
+  <th>SOQL Keyword</th>
+  <th>Query Builder</th>
+  <th>Signature</th>
+  <th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+  <td><em>NOT</em></td>
+  <td>not_x</td>
+  <td>
+    <pre lang="apex">
+  QB.not_x(fieldCondition) 
+  QB.not_x(havingCondition)
+  </pre>
+  </td>
+  <td></td>
+</tr>
+</table>
 
 <table>
 <thead>
