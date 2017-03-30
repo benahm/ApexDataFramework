@@ -28,7 +28,7 @@ DM class for the Account sObject :
   List<Account> listAccounts=DM_Account.base.findById(accountIds);
   ```
   
-**Accessing custom methods from DM_Account:*
+**Accessing custom methods from DM_Account:**
 
   ```apex
   List<Account> listAccounts=DM_Account.findByIdWithContacts(accountIds);
