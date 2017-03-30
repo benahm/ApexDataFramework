@@ -7,13 +7,17 @@
 <thead>
 <tr>
   <th>Method</th>
-  <th>Result</th>
+  <th>Description</th>
+  <th>Example</th>
 </tr>
 </thead>
 <tbody>
 <tr>
   <td>
   <em>getList</em>
+  </td>
+  <td>
+    return a list of sObject or a list of aggregateResult
   </td>
   <td>
     <pre lang='apex'>ListAccount aList = QB.select_x('Name')
@@ -28,6 +32,9 @@
 <tr>
   <td>
   <em>getMap</em>
+  </td>
+   <td>
+    return a map of Id and sObject
   </td>
   <td>
 <pre lang='apex'>  
