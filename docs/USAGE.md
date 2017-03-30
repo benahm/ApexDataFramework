@@ -15,8 +15,16 @@ DM class for the Account sObject :
     public static final DM.IBase base = new DM.Base('Account');
 
     /* custom methods */
+    // method 1
     public List<Account> findByIdWithContacts(List<Id> ids){
       return base.findById(ids,'Id,(select FirstName,LastName from contacts)');
+    }
+    
+    // method 2
+    public Integer getCount(){
+      return QB.select_x(QB.count())
+               .from_x('Account')
+               .getCount();
     }
 
   }
@@ -31,5 +39,9 @@ DM class for the Account sObject :
 **Accessing custom methods from DM_Account:**
 
   ```apex
+  // method 1
   List<Account> listAccounts=DM_Account.findByIdWithContacts(accountIds);
+  
+  // method 2
+  Integer aCount=DM_Account.getCount();
   ```
