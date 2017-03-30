@@ -33,15 +33,15 @@ DM class for the Account sObject :
 **Accessing base methods from DM_Account:**
 
   ```apex
-  List<Account> listAccounts=DM_Account.base.findById(accountIds);
+  List<Account> listAccounts = DM_Account.base.findById(accountIds);
   ```
   
 **Accessing custom methods from DM_Account:**
 
   ```apex
   // method 1
-  List<Account> listAccounts=DM_Account.findByIdWithContacts(accountIds);
+  List<Account> listAccounts = DM_Account.findByIdWithContacts(accountIds);
   
   // method 2
-  Integer aCount=DM_Account.getCount();
+  Integer aCount = DM_Account.getCount();
   ```
