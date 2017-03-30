@@ -1,7 +1,9 @@
 ## FAQ
 
-### Table of Contents
 * [Question 1](#Question1)
+* [Question 2](#Question1)
+* [Question 3](#Question1)
+* [Question 4](#Question1)
 
 
 -----
