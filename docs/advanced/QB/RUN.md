@@ -44,6 +44,7 @@
     </pre>
   </td>
 </tr>
+<tr></tr>
 <tr>
   <td>
   <em>getCount</em>
