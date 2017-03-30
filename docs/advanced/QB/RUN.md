@@ -1,6 +1,7 @@
 ## Running a Query
 
 
+QB offers different methods to run the built query, depending on the expected result 
 
 
 <table>
