@@ -50,7 +50,7 @@
   <em>getCount</em>
   </td>
    <td>
-    return integer (count fo sObject)
+    return integer (count of sObject)
   </td>
   <td>
     <pre lang='apex'>Integer aCount = QB.select_x(QB.count())
