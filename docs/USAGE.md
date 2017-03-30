@@ -15,12 +15,12 @@ DM class for the Account sObject :
     public static final DM.IBase base = new DM.Base('Account');
 
     /* custom methods */
-    // method 1
+    // method 1 - based on one of base.find* methods
     public static List<Account> findByIdWithContacts(List<Id> ids){
       return base.findById(ids,'Id,(select FirstName,LastName from contacts)');
     }
     
-    // method 2
+    // method 2 - based on the query builder (QB)
     public static Integer getCount(){
       return QB.select_x(QB.count())
                .from_x('Account')
