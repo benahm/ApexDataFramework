@@ -1,6 +1,6 @@
 ## Usage
 
-Follow the pattern below integrate the ApexDataFramework in your project 
+Follow the pattern below to integrate the ApexDataFramework in your project 
 
 ### Pattern
 
