@@ -20,7 +20,7 @@
     return a list of sObject or a list of aggregateResult
   </td>
   <td>
-    <pre lang='apex'>ListAccount aList = QB.select_x('Name')
+    <pre lang='apex'>List&lt;Account&gt; aList = QB.select_x('Name')
                         .from_x('Account')
                         .limitTo(10)
                         .getList();
@@ -37,7 +37,7 @@
     return a map of Id and sObject
   </td>
   <td>
-    <pre lang='apex'>ListAccount aList = QB.select_x('Name')
+    <pre lang='apex'>Map&lt;Id,Account&gt; aMap = QB.select_x('Name')
                         .from_x('Account')
                         .limitTo(10)
                         .getMap();
@@ -53,7 +53,7 @@
     return integer (count fo sObject)
   </td>
   <td>
-    <pre lang='apex'>ListAccount aList = QB.select_x(QB.count())
+    <pre lang='apex'>Integer aCount = QB.select_x(QB.count())
                         .from_x('Account')
                         .getCount();
     </pre>
