@@ -19,6 +19,6 @@
 * [Contributing](/docs/CONTRIBUTE.md)
 * [FAQ](/docs/FAQ.md)
 
-### [License](LICENSE.md)
+### [License](LICENSE)
 
 Apache 2.0
