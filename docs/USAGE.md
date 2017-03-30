@@ -6,7 +6,7 @@ Follow the pattern below to integrate the ApexDataFramework in your project
 
 Create a DM class for each standard and custom sObject (when you need to request that object)
 
-**Example:** 
+#### Example:
 
 DM class for the Account sObject :
 
@@ -22,13 +22,13 @@ DM class for the Account sObject :
   }
   ```
 
-Access base methods :
+**Accessing base methods from DM_Account:**
 
   ```apex
   List<Account> listAccounts=DM_Account.base.findById(accountIds);
   ```
   
-Access custom methods :
+**Accessing custom methods from DM_Account:*
 
   ```apex
   List<Account> listAccounts=DM_Account.findByIdWithContacts(accountIds);
