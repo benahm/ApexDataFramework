@@ -16,12 +16,12 @@ DM class for the Account sObject :
 
     /* custom methods */
     // method 1
-    public List<Account> findByIdWithContacts(List<Id> ids){
+    public static List<Account> findByIdWithContacts(List<Id> ids){
       return base.findById(ids,'Id,(select FirstName,LastName from contacts)');
     }
     
     // method 2
-    public Integer getCount(){
+    public static Integer getCount(){
       return QB.select_x(QB.count())
                .from_x('Account')
                .getCount();
