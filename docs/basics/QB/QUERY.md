@@ -33,7 +33,7 @@ SOQL equivalent:
   select Id,Name from Account where Name='Acme Corporation'
   ```
 
-#### 3. Query all the fields of an SObject
+#### 3. Query all the fields of an sObject
 
 Query builder syntax:
   ```apex
