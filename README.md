@@ -20,7 +20,7 @@
 * [FAQ](/docs/FAQ.md)
 
 ### Credits
-This framework is influenced and inspired from :
+This framework is influenced and inspired by :
 
 * [JOOQ](http://www.jooq.org/)
 * [SOQL Builder](http://apex-commons.github.io/query/soql-builder/)
