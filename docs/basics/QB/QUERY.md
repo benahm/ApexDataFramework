@@ -49,7 +49,7 @@ Query builder syntax:
     .from_x('Account')
   ```
   
-#### 5. Select with where options
+#### 5. Advanced select 
 
 Query builder syntax:
   ```apex
