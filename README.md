@@ -1,11 +1,6 @@
 # ApexDataFramework
 
-
- **Work in progress**
- 
- Loading…
- 
-█▒▒▒▒▒▒▒▒▒
+A Framework to access your Salesforce data from Apex with ease
 
 -----
 
