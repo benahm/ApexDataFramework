@@ -4,15 +4,24 @@
 * @description DM Class
 */
 public class DM{
+	private static IBase base=null;
 
 	public static IBase Base(String sObjectName){
-		return new Base(sObjectName);
+		if(base == null)
+			return new Base(sObjectName);
+		return base;
 	}
 
+	/**
+	* @description interface IBase
+	*/
 	public interface IBase{
 
-		/* find a list */
-		// find list by ids
+		/************************* find a list *************************/
+		/**
+		 * @description find a list of sObjects by Id
+		 * @return List<sObject> : list of sObjects
+		 */
 		List<SObject> findById(List<Id> ids);
 		List<SObject> findById(Set<Id> ids);
 		List<SObject> findById(List<Id> ids, String fieldNames);
@@ -20,7 +29,10 @@ public class DM{
 		List<SObject> findById(List<Id> ids, String fieldNames, String appendOptions);
 		List<SObject> findById(Set<Id> ids, String fieldNames, String appendOptions);
 
-		// find list by a specific field
+		/**
+		 * @description find a list of sObjects by given field
+		 * @return List<sObject> : list of sObjects
+		 */
 		List<SObject> findBy(String fieldName, Object value);
 		List<SObject> findBy(Schema.SObjectField field, Object value);
 		List<SObject> findBy(String fieldName, Object value, String fieldNames);
@@ -28,14 +40,20 @@ public class DM{
 		List<SObject> findBy(String fieldName, Object value, String fieldNames,String appendOptions);
 		List<SObject> findBy(Schema.SObjectField field, Object value, String fieldNames,String appendOptions);
 		
-		// find a list by condition
+		/**
+		 * @description find a list of sObjects by condition
+		 * @return List<sObject> : list of sObjects
+		 */
 		List<SObject> findBy(QB.IFieldCondition condition);
 		List<SObject> findBy(QB.IFieldCondition condition, String fieldNames);
 		List<SObject> findBy(QB.IFieldCondition condition, String fieldNames, String appendOptions);
 
 
-		/* find a map */
-		// find list by ids
+		/************************* find a map *************************/
+		/**
+		 * @description find a map of sObjects by Id
+		 * @return Map<Id,sObject> : map of sObjects
+		 */
 		Map<Id,SObject> findMapById(List<Id> ids);
 		Map<Id,SObject> findMapById(Set<Id> ids);
 		Map<Id,SObject> findMapById(List<Id> ids, String fieldNames);
@@ -43,28 +61,60 @@ public class DM{
 		Map<Id,SObject> findMapById(List<Id> ids, String fieldNames, String appendOptions);
 		Map<Id,SObject> findMapById(Set<Id> ids, String fieldNames, String appendOptions);
 
-		// find list by a specific field
+		/**
+		 * @description find a map of sObjects by a given field
+		 * @return Map<Id,sObject> : map of sObjects
+		 */		
 		Map<Id,SObject> findMapBy(String fieldName, Object value);
+		Map<Id,SObject> findMapBy(Schema.SObjectField field, Object value);
 		Map<Id,SObject> findMapBy(String fieldName, Object value, String fieldNames);
+		Map<Id,SObject> findMapBy(Schema.SObjectField field, Object value, String fieldNames);
 		Map<Id,SObject> findMapBy(String fieldName, Object value, String fieldNames,String appendOptions);
+		Map<Id,SObject> findMapBy(Schema.SObjectField field, Object value, String fieldNames,String appendOptions);
 		
-		// find a list by condition
+		/**
+		 * @description find a map of sObjects by condition
+		 * @return Map<Id,sObject> : map of sObjects
+		 */		
 		Map<Id,SObject> findMapBy(QB.IFieldCondition condition);
 		Map<Id,SObject> findMapBy(QB.IFieldCondition condition, String fieldNames);
 		Map<Id,SObject> findMapBy(QB.IFieldCondition condition, String fieldNames, String appendOptions);
 
 
-		/* find one record */
+		/************************* find sObject *************************/
+		/**
+		 * @description find one record whitout criteria
+		 * @return sObject : sObject instance
+		 */
 		SObject findOne();
+
+		/**
+		 * @description find one record by Id
+		 * @return sObject : sObject instance
+		 */
+		SObject findOneById(Id id);
+		SObject findOneById(Set<Id> id);
 		SObject findOneById(List<Id> id);
+		SObject findOneById(Id id, String fieldNames);
+		SObject findOneById(Set<Id> id, String fieldNames);
 		SObject findOneById(List<Id> id, String fieldNames);
+		
+		/**
+		 * @description find one record by a given field
+		 * @return sObject : sObject instance
+		 */
 		SObject findOneBy(String fieldName, Object value);
+		SObject findOneBy(Schema.SObjectField field, Object value);
 		SObject findOneBy(String fieldName, Object value, String fieldNames);
+		SObject findOneBy(Schema.SObjectField field, Object value, String fieldNames);
 		SObject findOneBy(QB.IFieldCondition condition);
 		SObject findOneBy(QB.IFieldCondition condition, String fieldNames);
 
 	}
 
+	/**
+	* @description abstract class ABase
+	*/
 	public abstract class ABase implements IBase{
 
 		protected abstract String getSObjectName();
@@ -143,11 +193,20 @@ public class DM{
 		public Map<Id,SObject> findMapBy(String fieldName, Object value){
 			return new Map<Id,SObject>(findBy(fieldName,value));
 		}
+		public Map<Id,SObject> findMapBy(Schema.SObjectField field, Object value){
+			return new Map<Id,SObject>(findBy(field.getDescribe().getName(),value));
+		}
 		public Map<Id,SObject> findMapBy(String fieldName, Object value, String fieldNames){
 			return new Map<Id,SObject>(findBy(fieldName,value,fieldNames));
+		}		
+		public Map<Id,SObject> findMapBy(Schema.SObjectField field, Object value, String fieldNames){
+			return new Map<Id,SObject>(findBy(field.getDescribe().getName(),value,fieldNames));
 		}
 		public Map<Id,SObject> findMapBy(String fieldName, Object value, String fieldNames, String appendOptions){
 			return new Map<Id,SObject>(findBy(fieldName,value,fieldNames,appendOptions));
+		}
+		public Map<Id,SObject> findMapBy(Schema.SObjectField field, Object value, String fieldNames, String appendOptions){
+			return new Map<Id,SObject>(findBy(field.getDescribe().getName(),value,fieldNames,appendOptions));
 		}
 		public Map<Id,SObject> findMapBy(QB.IFieldCondition condition){
 			return new Map<Id,SObject>(findBy(condition));
@@ -159,12 +218,24 @@ public class DM{
 			return new Map<Id,SObject>(findBy(condition,fieldNames,appendOptions));
 		}
 
-		/* find one record */
+		/* find sObject */
 		public SObject findOne(){
 			return getOne(findBy((QB.IFieldCondition)null,'*',' LIMIT 1'));
 		}
+		public SObject findOneById(Id id){
+			return findOneById(new List<Id>{Id},'*');
+		}
+		public SObject findOneById(Set<Id> ids){
+			return findOneById(new List<Id>(ids),'*');
+		}
 		public SObject findOneById(List<Id> ids){
 			return findOneById(ids,'*');
+		}
+		public SObject findOneById(Id id, String fieldNames){
+			return getOne(findById(new List<Id>{id},fieldNames));
+		}
+		public SObject findOneById(Set<Id> ids, String fieldNames){
+			return getOne(findById(new List<Id>(ids),fieldNames));
 		}
 		public SObject findOneById(List<Id> ids, String fieldNames){
 			return getOne(findById(ids,fieldNames));
@@ -172,8 +243,14 @@ public class DM{
 		public SObject findOneBy(String fieldName, Object value){
 			return findOneBy(fieldName,value,'*');
 		}
+		public SObject findOneBy(Schema.SObjectField field, Object value){
+			return findOneBy(field.getDescribe().getName(),value,'*');
+		}
 		public SObject findOneBy(String fieldName, Object value, String fieldNames){
 			return getOne(findBy(fieldName,value,fieldNames));
+		}
+		public SObject findOneBy(Schema.SObjectField field, Object value, String fieldNames){
+			return getOne(findBy(field.getDescribe().getName(),value,fieldNames));
 		}
 		public SObject findOneBy(QB.IFieldCondition condition){
 			return findOneBy(condition,'*');
@@ -190,6 +267,9 @@ public class DM{
 
 	}
 
+	/**
+	* @description class Base
+	*/
 	public class Base extends ABase{
 		private String sObjectName;
 

@@ -23,8 +23,11 @@ private class QBTest {
 		Test.startTest();
 
 		System.assertEquals('Name = \'Value\'',QB.field('Name').eq('Value').toString());
+		System.assertEquals('Name = \'Value\'',QB.field(Account.Name).eq('Value').toString());
 		System.assertEquals('Name = \'Value\'',QB.fieldExpr('Name',QB.Op.EQ,'Value').toString());
+		System.assertEquals('Name = \'Value\'',QB.fieldExpr(Account.Name,QB.Op.EQ,'Value').toString());
 		System.assertEquals('Name = \'Value\'',QB.fieldExpr('Name','=','Value').toString());
+		System.assertEquals('Name = \'Value\'',QB.fieldExpr(Account.Name,'=','Value').toString());
 		System.assertEquals('Name = \'Value\'',QB.field('Name').equal('Value').toString());
 
 		System.assertEquals('Name IN (\'Value1\',\'Value2\')',QB.field('Name').eq(new List<String>{'Value1','Value2'}).toString());
@@ -40,8 +43,11 @@ private class QBTest {
 		Test.startTest();
 
 		System.assertEquals('Name != \'Value\'',QB.field('Name').ne('Value').toString());
+		System.assertEquals('Name != \'Value\'',QB.field(Account.Name).ne('Value').toString());
 		System.assertEquals('Name != \'Value\'',QB.fieldExpr('Name',QB.Op.NE,'Value').toString());
+		System.assertEquals('Name != \'Value\'',QB.fieldExpr(Account.Name,QB.Op.NE,'Value').toString());
 		System.assertEquals('Name != \'Value\'',QB.fieldExpr('Name','!=','Value').toString());
+		System.assertEquals('Name != \'Value\'',QB.fieldExpr(Account.Name,'!=','Value').toString());
 		System.assertEquals('Name != \'Value\'',QB.field('Name').notEqual('Value').toString());
 
 		System.assertEquals('Name NOT IN (\'Value1\',\'Value2\')',QB.field('Name').ne(new List<String>{'Value1','Value2'}).toString());
@@ -223,7 +229,7 @@ private class QBTest {
 		System.assertEquals('Name = 1960-02-17', QB.field('Name').eq(Date.newinstance(1960, 2, 17)).toString());
 		System.assertEquals('Name = 1960-02-16T23:00:00.000+0000', QB.field('Name').eq(Datetime.newinstance(1960, 2, 17)).toString());
 		System.assertEquals('Name', QB.field('Name').toString());
-		System.assertEquals('Name = :qbBindVariable',QB.field('Name').eq(QB.bind('Value')).toString());
+		System.assertEquals('Name = :bindVariable',QB.field('Name').eq(QB.bind('Value')).toString());
 
 		try{
 			String test=QB.and_x(QB.field('Name1').eq(QB.bind('Value1')),QB.field('Name2').eq(QB.bind('Value2'))).toString();
@@ -307,49 +313,105 @@ private class QBTest {
 								.addFields(new List<String>{'Name2','Name3'}).toString());
 		System.assertEquals('SELECT Name1,Name2',QB.select_x('Name1,Name2').toString());
 		System.assertEquals('SELECT Name1,Name2',QB.select_x(new List<String>{'Name1','Name2'}).toString());
-		System.assertEquals('SELECT Name1,CALENDAR_MONTH(Name2)',
+
+		System.assertEquals('SELECT CALENDAR_MONTH(Name)',
+								QB.select_x(QB.calendar_month('Name')).toString());		
+		System.assertEquals('SELECT CALENDAR_MONTH(Name)',
+								QB.select_x(QB.calendar_month(Account.Name)).toString());
+		System.assertEquals('SELECT CALENDAR_MONTH(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.calendar_month(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT CALENDAR_QUARTER(Name)',
+								QB.select_x(QB.calendar_quarter('Name')).toString());
+		System.assertEquals('SELECT CALENDAR_QUARTER(Name)',
+								QB.select_x(QB.calendar_quarter(Account.Name)).toString());
+		System.assertEquals('SELECT CALENDAR_QUARTER(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.calendar_quarter(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT CALENDAR_YEAR(Name)',
+								QB.select_x(QB.calendar_year('Name')).toString());
+		System.assertEquals('SELECT CALENDAR_YEAR(Name)',
+								QB.select_x(QB.calendar_year(Account.Name)).toString());
+		System.assertEquals('SELECT CALENDAR_YEAR(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.calendar_year(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT DAY_IN_MONTH(Name)',
+								QB.select_x(QB.day_in_month('Name')).toString());
+		System.assertEquals('SELECT DAY_IN_MONTH(Name)',
+								QB.select_x(QB.day_in_month(Account.Name)).toString());
+		System.assertEquals('SELECT DAY_IN_MONTH(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.day_in_month(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT DAY_IN_WEEK(Name)',
+								QB.select_x(QB.day_in_week('Name')).toString());
+		System.assertEquals('SELECT DAY_IN_WEEK(Name)',
+								QB.select_x(QB.day_in_week(Account.Name)).toString());
+		System.assertEquals('SELECT DAY_IN_WEEK(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.day_in_week(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT FISCAL_MONTH(Name)',
+								QB.select_x(QB.fiscal_month('Name')).toString());
+		System.assertEquals('SELECT FISCAL_MONTH(Name)',
+								QB.select_x(QB.fiscal_month(Account.Name)).toString());
+		System.assertEquals('SELECT FISCAL_MONTH(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.fiscal_month(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT FISCAL_QUARTER(Name)',
+								QB.select_x(QB.fiscal_quarter('Name')).toString());
+		System.assertEquals('SELECT FISCAL_QUARTER(Name)',
+								QB.select_x(QB.fiscal_quarter(Account.Name)).toString());
+		System.assertEquals('SELECT FISCAL_QUARTER(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.fiscal_quarter(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT FISCAL_YEAR(Name)',
+								QB.select_x(QB.fiscal_year('Name')).toString());
+		System.assertEquals('SELECT FISCAL_YEAR(Name)',
+								QB.select_x(QB.fiscal_year(Account.Name)).toString());
+		System.assertEquals('SELECT FISCAL_YEAR(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.fiscal_year(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT HOUR_IN_DAY(Name)',
+								QB.select_x(QB.hour_in_day('Name')).toString());
+		System.assertEquals('SELECT HOUR_IN_DAY(Name)',
+								QB.select_x(QB.hour_in_day(Account.Name)).toString());
+		System.assertEquals('SELECT HOUR_IN_DAY(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.hour_in_day(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT WEEK_IN_MONTH(Name)',
+								QB.select_x(QB.week_in_month('Name')).toString());
+		System.assertEquals('SELECT WEEK_IN_MONTH(Name)',
+								QB.select_x(QB.week_in_month(Account.Name)).toString());
+		System.assertEquals('SELECT WEEK_IN_MONTH(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.week_in_month(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT WEEK_IN_YEAR(Name)',
+								QB.select_x(QB.week_in_year('Name')).toString());
+		System.assertEquals('SELECT WEEK_IN_YEAR(Name)',
+								QB.select_x(QB.week_in_year(Account.Name)).toString());
+		System.assertEquals('SELECT WEEK_IN_YEAR(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.week_in_year(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT DAY_ONLY(Name)',
+								QB.select_x(QB.day_only('Name')).toString());
+		System.assertEquals('SELECT DAY_ONLY(Name)',
+								QB.select_x(QB.day_only(Account.Name)).toString());
+		System.assertEquals('SELECT DAY_ONLY(CONVERTTIMEZONE(Name))',
+								QB.select_x(QB.day_only(QB.convertTimeZone('Name'))).toString());
+		System.assertEquals('SELECT CONVERTTIMEZONE(Name)',
+								QB.select_x(QB.convertTimeZone('Name')).toString());
+		System.assertEquals('SELECT CONVERTTIMEZONE(Name)',
+								QB.select_x(QB.convertTimeZone(Account.Name)).toString());
+		System.assertEquals('SELECT CONVERTCURRENCY(Name)',
+								QB.select_x(QB.convertCurrency('Name')).toString());
+		System.assertEquals('SELECT CONVERTCURRENCY(Name)',
+								QB.select_x(QB.convertCurrency(Account.Name)).toString());
+		System.assertEquals('SELECT TOLABEL(Name)',
+								QB.select_x(QB.toLabel('Name')).toString());
+		System.assertEquals('SELECT TOLABEL(Name)',
+								QB.select_x(QB.toLabel(Account.Name)).toString());
+		System.assertEquals('SELECT FORMAT(Name)',
+								QB.select_x(QB.format('Name')).toString());
+		System.assertEquals('SELECT FORMAT(Name)',
+								QB.select_x(QB.format(Account.Name)).toString());
+		System.assertEquals('SELECT FORMAT(TOLABEL(Name))',
+								QB.select_x(QB.format(QB.toLabel('Name'))).toString());
+
+
+		System.assertEquals('SELECT Name1,FORMAT(Name2)',
 								QB.select_x('Name1')
-								.addFunction(QB.calendar_month('Name2')).toString());
-		System.assertEquals('SELECT Name1,CALENDAR_QUARTER(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.calendar_quarter('Name2')).toString());
-		System.assertEquals('SELECT Name1,CALENDAR_YEAR(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.calendar_year('Name2')).toString());
-		System.assertEquals('SELECT Name1,DAY_IN_MONTH(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.day_in_month('Name2')).toString());
-		System.assertEquals('SELECT Name1,DAY_IN_WEEK(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.day_in_week('Name2')).toString());
-		System.assertEquals('SELECT Name1,FISCAL_MONTH(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.fiscal_month('Name2')).toString());
-		System.assertEquals('SELECT Name1,FISCAL_QUARTER(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.fiscal_quarter('Name2')).toString());
-		System.assertEquals('SELECT Name1,FISCAL_YEAR(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.fiscal_year('Name2')).toString());
-		System.assertEquals('SELECT Name1,HOUR_IN_DAY(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.hour_in_day('Name2')).toString());
-		System.assertEquals('SELECT Name1,WEEK_IN_MONTH(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.week_in_month('Name2')).toString());
-		System.assertEquals('SELECT Name1,WEEK_IN_YEAR(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.week_in_year('Name2')).toString());
-		System.assertEquals('SELECT Name1,DAY_ONLY(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.day_only('Name2')).toString());
-		System.assertEquals('SELECT Name1,TOLABEL(Name2)',
-								QB.select_x('Name1')
-								.addFunction(QB.toLabel('Name2')).toString());
+								.addFunction(QB.format('Name2')).toString());
 		System.assertEquals('SELECT Name,(SELECT Name FROM Account)',
 								QB.select_x('Name')
-								.addSubQuery(QB.select_x('Name')
-								.from_x('Account')).toString());
+								.addSubQuery(QB.select_x('Name').from_x('Account')).toString());
 
 		Test.stopTest();
 	}

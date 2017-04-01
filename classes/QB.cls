@@ -16,10 +16,9 @@
 */
 public class QB {
 	private static final String singleQuote='\'';
-	private static final List<String> standardIncludedFields=new List<String>{'Id'};
 	private static final Util util=new Util();
 	private static final ErrorMessage errMsg=new ErrorMessage();
-	private static Object qbBindVariable;
+	private static Object bindVariable;
 	public enum Op {EQ, EQUAL,
 			NE, NOTEQUAL,
 			GT, GREATERTHAN,
@@ -176,7 +175,7 @@ public class QB {
 	*/
 	public static IDateFunctionWrap calendar_month(String fieldName){ return new Wrapper(fieldName,'CALENDAR_MONTH'); }	
 	public static IDateFunctionWrap calendar_month(Schema.SObjectField field){ return calendar_month(field.getDescribe().getName()); }
-	public static IDateFunctionWrap calendar_month(IConvertTimeZoneFunctionWrap func){ return calendar_quarter(func.toString()); }	
+	public static IDateFunctionWrap calendar_month(IConvertTimeZoneFunctionWrap func){ return calendar_month(func.toString()); }	
 
 	public static IDateFunctionWrap calendar_quarter(String fieldName){	return new Wrapper(fieldName,'CALENDAR_QUARTER'); }	
 	public static IDateFunctionWrap calendar_quarter(Schema.SObjectField field){ return calendar_quarter(field.getDescribe().getName()); }
@@ -299,16 +298,16 @@ public class QB {
 	* @return BindType
 	*/
 	public static BindType bind(Object bindVarValue){
-		if(qbBindVariable != null)
+		if(bindVariable != null)
 			throw new QBBindException(errMsg.maxBindVariable);
 
-		qbBindVariable=bindVarValue;
-		return new BindType('qbBindVariable');
+		bindVariable=bindVarValue;
+		return new BindType('bindVariable');
 	}
 
 	/* private methods */
 	private static void clearBindVariables(){
-		qbBindVariable=null;
+		bindVariable=null;
 	}
 
 	/****************************************************************************************/
@@ -514,20 +513,7 @@ public class QB {
 		IAliasDayOnlyFunctionWrap alias(String alias);
 	}
 	public interface IAliasDayOnlyFunctionWrap extends IFunctionWrap{}
-	public interface IConvertTimeZoneFunctionWrap extends IFunctionWrap{
-		IHavingCondition eq(Datetime value);
-		IHavingCondition equal(Datetime value);
-		IHavingCondition ne(Datetime value);
-		IHavingCondition notEqual(Datetime value);
-		IHavingCondition gt(Datetime value);
-		IHavingCondition greaterThan(Datetime value);
-		IHavingCondition lt(Datetime value);
-		IHavingCondition lessThan(Datetime value);
-		IHavingCondition ge(Datetime value);
-		IHavingCondition greaterOrEqual(Datetime value);
-		IHavingCondition le(Datetime value);
-		IHavingCondition lessOrEqual(Datetime value);
-	}
+	public interface IConvertTimeZoneFunctionWrap extends IFunctionWrap{}
 	public interface IConvertCurrencyFunctionWrap extends IFunctionWrap{}
 	public interface IToLabelFunctionWrap extends IFunctionWrap{
 		IFieldCondition eq(String value);
