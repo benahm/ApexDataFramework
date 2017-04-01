@@ -2,11 +2,9 @@
 
 A Framework to access your Salesforce data from Apex with ease
 
------
 
 ![overview](/docs/assets/overview.PNG)
 
------
 
 ### [Documentation](/docs/README.md)
 * [Introduction](/docs/INTRO.md)
