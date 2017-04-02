@@ -110,6 +110,31 @@ public class DM{
 		SObject findOneBy(QB.IFieldCondition condition);
 		SObject findOneBy(QB.IFieldCondition condition, String fieldNames);
 
+		/* DML */
+		/*// insert
+		void insert_x(SObject sObj);
+		void insert_x(List<SObject> listSObj);
+		void insert_x(Set<SObject> setSObj);
+		void insert_x(Map<Id,SObject> mapSObj);
+
+		// update
+		void update_x(SObject sObj);
+		void update_x(List<SObject> listSObj);
+		void update_x(Set<SObject> setSObj);
+		void update_x(Map<Id,SObject> mapSObj);
+
+		// delete
+		void delete_x(SObject sObj);
+		void delete_x(List<SObject> listSObj);
+		void delete_x(Set<SObject> setSObj);
+		void delete_x(Map<Id,SObject> mapSObj);
+
+		// upsert 
+		void upsert_x(SObject sObj);
+		void upsert_x(List<SObject> listSObj);
+		void upsert_x(Set<SObject> setSObj);
+		void upsert_x(Map<Id,SObject> mapSObj);*/
+
 	}
 
 	/**
