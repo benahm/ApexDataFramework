@@ -19,7 +19,7 @@ A Framework to access your Salesforce data from Apex with ease
 - [x] First release ([here](https://github.com/benahm/ApexDataFramework/releases/tag/v0.1))
 - [ ] Add support for DML methods into the DM class
 - [ ] Implement unit of work pattern
-- [ ] Add more SOQL keyword support to the query builder
+- [ ] Add more SOQL keywords support to the query builder
 
 ### Credits
 This framework is influenced and inspired by :
