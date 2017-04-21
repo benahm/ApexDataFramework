@@ -12,7 +12,7 @@
 /**
 * @author benahm
 * @date 2017
-* @description Test Class for the Query Builder
+* @description Test Class for the Data Manager
 */
 @isTest
 private class DMTest {
