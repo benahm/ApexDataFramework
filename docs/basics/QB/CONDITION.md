@@ -1,7 +1,7 @@
 
 ## Building a Condition
 
-QB can build two types of conditions 
+QB can build two types of condition 
 
 * [Field Condition](#field-condition) : condition meant to be used in the where clause 
 * [Having condition](#having-condition) : condition meant to be used in the having clause
