@@ -10,7 +10,7 @@ QB can build two types of conditions
 
 #### 1. Simple field condition:
 
-QB offers differents ways to create a simple field condition 
+QB offers different ways to create a simple field condition 
 
 Field conditions:
 
