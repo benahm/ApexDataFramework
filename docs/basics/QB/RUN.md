@@ -1,6 +1,6 @@
 ## Running a Query
 
-Each query has the following methods, to run the query
+Each QB query has the following methods to run the query
 
 * _getList()_  : run a query and get a list of SObject
 * _getMap()_ : run a query and get a map of Id and SObject 
