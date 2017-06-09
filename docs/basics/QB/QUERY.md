@@ -1,7 +1,7 @@
 
 ## Building a Query
 
-QB is a query builder that offers a simple and friendly API to generate SOQL queries
+QB is a query builder that offers a simple and friendly API to generate most of your SOQL queries
 
 ### Basic examples:
 
