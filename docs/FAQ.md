@@ -1,9 +1,9 @@
 ## FAQ
 
 * [For what does QB & DM stand for?](#for-what-does-qb--dm-stand-for)
-* [Question to defined](#Question)
-* [Question to defined](#Question)
-* [Question to defined](#Question)
+* [Question to be defined](#Question)
+* [Question to be defined](#Question)
+* [Question to be defined](#Question)
 
 
 -----
