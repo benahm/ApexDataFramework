@@ -12,4 +12,4 @@ The framwework holds in two main classes QB & DM (with test classes)
 
 ## Next
 
-* [Basics](basics/README.md) 
+* [Examples](EXAMPLES.md) 
