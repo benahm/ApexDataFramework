@@ -94,7 +94,7 @@ Aggregate function count with no param
   SELECT COUNT() FROM Account
   ```
 
-Aggregate function count with pram
+Aggregate function count with param
 
   ```apex
   QB.select_x(QB.count('Name'))
