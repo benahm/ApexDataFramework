@@ -17,6 +17,7 @@ A Framework to access your Salesforce data from Apex with ease
 ### Roadmap
 
 - [x] First release ([here](https://github.com/benahm/ApexDataFramework/releases/tag/v0.1))
+- [ ] Add CRUD security checking
 - [ ] Add support for DML methods into the DM class
 - [ ] Implement unit of work pattern
 
